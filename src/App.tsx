@@ -1,11 +1,11 @@
-import Button from "antd/es/button";
 import React from "react";
 import "./App.css";
+import { MyHeader } from "./components/MyHeader";
 
 const App: React.FC = () => {
   return (
     <div className="App">
-      <Button type="primary">Button</Button>
+      <MyHeader></MyHeader>
     </div>
   );
 };
