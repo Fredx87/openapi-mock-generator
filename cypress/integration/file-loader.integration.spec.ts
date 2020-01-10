@@ -1,4 +1,4 @@
-import { ANT_MESSAGE_ERROR_CLASS } from "../support/constants";
+import { expectMessage } from "../support/message-checker";
 
 describe("OpenAPI file loading and parsing", () => {
   beforeEach(() => {
@@ -7,7 +7,7 @@ describe("OpenAPI file loading and parsing", () => {
 
   it("should return error when uploading invalid file", () => {
     cy.fixture("openapi-invalid.json").then(fileContent => {
-      cy.contains(".ant-upload", /load openapi/i).within(() => {
+      cy.contains(`[role="button"]`, /load openapi/i).within(() => {
         cy.get("input").upload({
           fileContent,
           fileName: "openapi-invalid.json",
@@ -16,8 +16,6 @@ describe("OpenAPI file loading and parsing", () => {
       });
     });
 
-    cy.get(ANT_MESSAGE_ERROR_CLASS)
-      .contains(/invalid/i)
-      .should("exist");
+    expectMessage("error", /invalid/i);
   });
 });
