@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { message } from "antd";
+import * as E from "fp-ts/es6/Either";
+import { pipe } from "fp-ts/es6/pipeable";
 import { OpenAPIV3 } from "openapi-types";
+import { AppThunk } from "../../store";
+import { openApiParser } from "./openapi-parser";
 
 interface EmptyDocumentState {
   status: "empty";
@@ -37,3 +42,21 @@ const slice = createSlice({
 
 export const { setDocument } = slice.actions;
 export const documentReducer = slice.reducer;
+
+export const parseOpenApiFile = (file: File): AppThunk => dispatch => {
+  openApiParser(file)().then(res =>
+    pipe(
+      res,
+      E.fold(
+        err => {
+          console.error(err);
+          message.error("Invalid OpenApi file");
+        },
+        doc => {
+          dispatch(setDocument(doc));
+          message.success("File loaded successfully");
+        }
+      )
+    )
+  );
+};

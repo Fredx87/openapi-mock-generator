@@ -11,7 +11,8 @@ describe("OpenAPI file loading and parsing", () => {
         cy.get("input").upload({
           fileContent,
           fileName: "openapi-invalid.json",
-          mimeType: "application/json"
+          mimeType: "application/json",
+          encoding: "utf8"
         });
       });
     });
@@ -21,15 +22,17 @@ describe("OpenAPI file loading and parsing", () => {
 
   it("should return success message when uploading valid YAML file", () => {
     cy.fixture("petstore.yaml").then(fileContent => {
+      debugger;
       cy.contains(`[role="button"]`, /load openapi/i).within(() => {
         cy.get("input").upload({
           fileContent,
-          fileName: "openapi-invalid.json",
-          mimeType: "application/json"
+          fileName: "petstore.yaml",
+          mimeType: "application/x-yaml",
+          encoding: "utf8"
         });
       });
     });
 
-    expectMessage("success", /parsed.*success/i);
+    expectMessage("success", /loaded.*success/i);
   });
 });

@@ -1,9 +1,13 @@
-import { Button, Icon, message, Upload } from "antd";
+import { Button, Icon, Upload } from "antd";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { parseOpenApiFile } from "./document-slice";
 
 export const OpenApiLoader: React.FC = () => {
+  const dispatch = useDispatch();
+
   function beforeUpload(file: File): boolean {
-    message.error("Invalid OpenApi file");
+    dispatch(parseOpenApiFile(file));
     return false;
   }
   return (
