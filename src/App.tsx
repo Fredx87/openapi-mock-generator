@@ -2,6 +2,7 @@ import { Layout } from "antd";
 import React from "react";
 import "./App.css";
 import { MyHeader } from "./components/MyHeader";
+import { DocumentTree } from "./features/document/DocumentTree";
 
 const { Header, Sider, Content } = Layout;
 const App: React.FC = () => {
@@ -11,7 +12,9 @@ const App: React.FC = () => {
         <MyHeader></MyHeader>
       </Header>
       <Layout>
-        <Sider></Sider>
+        <Sider theme="light">
+          <DocumentTree></DocumentTree>
+        </Sider>
         <Content></Content>
       </Layout>
     </Layout>
