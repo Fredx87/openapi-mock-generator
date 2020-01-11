@@ -1,12 +1,20 @@
+import { Layout } from "antd";
 import React from "react";
 import "./App.css";
 import { MyHeader } from "./components/MyHeader";
 
+const { Header, Sider, Content } = Layout;
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <MyHeader></MyHeader>
-    </div>
+    <Layout>
+      <Header>
+        <MyHeader></MyHeader>
+      </Header>
+      <Layout>
+        <Sider></Sider>
+        <Content></Content>
+      </Layout>
+    </Layout>
   );
 };
 

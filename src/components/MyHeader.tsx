@@ -1,11 +1,19 @@
-import { PageHeader } from "antd";
 import React from "react";
-import { OpenApiLoader } from "./OpenApiLoader";
+import styled from "styled-components";
+import { OpenApiLoader } from "../features/document/OpenApiLoader";
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Title = styled.h1`
+  color: #fff;
+`;
 
 export const MyHeader: React.FC = () => (
-  <PageHeader
-    backIcon={false}
-    title="OpenApi Fake Generator"
-    extra={[<OpenApiLoader></OpenApiLoader>]}
-  ></PageHeader>
+  <Container>
+    <Title>OpenApi Fake Generator</Title>
+    <OpenApiLoader></OpenApiLoader>
+  </Container>
 );
