@@ -1,12 +1,20 @@
-import Button from "antd/es/button";
+import { Layout } from "antd";
 import React from "react";
 import "./App.css";
+import { MyHeader } from "./components/MyHeader";
 
+const { Header, Sider, Content } = Layout;
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <Button type="primary">Button</Button>
-    </div>
+    <Layout>
+      <Header>
+        <MyHeader></MyHeader>
+      </Header>
+      <Layout>
+        <Sider></Sider>
+        <Content></Content>
+      </Layout>
+    </Layout>
   );
 };
 
