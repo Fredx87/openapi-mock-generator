@@ -2,6 +2,15 @@ import * as t from "io-ts/es6";
 import get from "lodash-es/get";
 import { OpenAPI, OpenAPIV3 } from "openapi-types";
 
+export const operationMethods = [
+  "get",
+  "post",
+  "put",
+  "delete",
+  "options"
+] as const;
+export type OperationMethod = typeof operationMethods[number];
+
 export function isOpenApiV3Document(
   doc: OpenAPI.Document
 ): doc is OpenAPIV3.Document {
