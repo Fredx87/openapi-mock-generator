@@ -5,9 +5,52 @@ import { OpenAPIV3 } from "openapi-types";
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../rootReducer";
+import { getOrResolveRef, isOpenApiComplexType } from "../../shared/utils";
 
 const operationMethods = ["get", "post", "put", "delete", "options"] as const;
 type OperationMethod = typeof operationMethods[number];
+
+const buildRequestBodyNode = (
+  parentKey: string,
+  requestBody: OpenAPIV3.ReferenceObject | OpenAPIV3.RequestBodyObject,
+  document: OpenAPIV3.Document
+): TreeNodeNormal | undefined => {
+  const resolved = getOrResolveRef(requestBody, document);
+  const schema = resolved.content?.["application/json"]?.schema;
+  if (schema) {
+    const resolvedSchema = getOrResolveRef(schema, document);
+    if (isOpenApiComplexType(resolvedSchema)) {
+      return {
+        title: "requestBody",
+        key: `${parentKey}-requestBody`
+      };
+    }
+  }
+};
+
+const buildResponseNodes = (
+  parentKey: string,
+  responses: OpenAPIV3.ResponsesObject,
+  document: OpenAPIV3.Document
+): TreeNodeNormal[] => {
+  const res: TreeNodeNormal[] = [];
+
+  for (const [code, response] of Object.entries(responses)) {
+    const resolvedResponse = getOrResolveRef(response, document);
+    const schema = resolvedResponse.content?.["application/json"]?.schema;
+    if (schema) {
+      const resolvedSchema = getOrResolveRef(schema, document);
+      if (isOpenApiComplexType(resolvedSchema)) {
+        const node: TreeNodeNormal = {
+          title: code,
+          key: `${parentKey}-${code}`
+        };
+        res.push(node);
+      }
+    }
+  }
+  return res;
+};
 
 interface OperationNodeTitleProps {
   method: OperationMethod;
@@ -23,11 +66,41 @@ const OperationNodeTitle: React.FC<OperationNodeTitleProps> = props => {
   );
 };
 
-const buildOperationNode = (
-  path: string,
+const buildOperationTree = (
+  parentKey: string,
   method: OperationMethod,
-  operation: OpenAPIV3.OperationObject
+  operation: OpenAPIV3.OperationObject,
+  document: OpenAPIV3.Document
 ): TreeNodeNormal => {
+  const key = `${parentKey}-${method}`;
+
+  const children: TreeNodeNormal[] = [];
+
+  const { responses, requestBody } = operation;
+
+  if (responses) {
+    const responsesKey = `${key}-responses`;
+    const responsesNodes = buildResponseNodes(
+      responsesKey,
+      responses,
+      document
+    );
+    if (responsesNodes.length > 0) {
+      children.push({
+        title: "responses",
+        key: responsesKey,
+        children: responsesNodes
+      });
+    }
+  }
+
+  if (requestBody) {
+    const requestBodyNode = buildRequestBodyNode(key, requestBody, document);
+    if (requestBodyNode) {
+      children.push(requestBodyNode);
+    }
+  }
+
   return {
     title: (
       <OperationNodeTitle
@@ -35,31 +108,39 @@ const buildOperationNode = (
         operation={operation}
       ></OperationNodeTitle>
     ),
-    key: `path-${path}-${method}`
+    key,
+    children
   };
 };
 
 const buildPathTree = (
-  path: string,
-  pathObj: OpenAPIV3.PathItemObject
+  parentKey: string,
+  pathObj: OpenAPIV3.PathItemObject,
+  document: OpenAPIV3.Document
 ): TreeNodeNormal[] => {
   const res: TreeNodeNormal[] = [];
   for (const method of operationMethods) {
     const operation = pathObj[method];
     if (operation) {
-      res.push(buildOperationNode(path, method, operation));
+      res.push(buildOperationTree(parentKey, method, operation, document));
     }
   }
   return res;
 };
 
-const buildPathsTree = (paths: OpenAPIV3.PathsObject): TreeNodeNormal[] =>
+const buildPathsTree = (
+  paths: OpenAPIV3.PathsObject,
+  document: OpenAPIV3.Document
+): TreeNodeNormal[] =>
   Object.entries(paths).map(
-    ([path, pathObj]): TreeNodeNormal => ({
-      title: path,
-      key: `path-${path}`,
-      children: buildPathTree(path, pathObj)
-    })
+    ([path, pathObj]): TreeNodeNormal => {
+      const key = `path-${path}`;
+      return {
+        title: path,
+        key,
+        children: buildPathTree(key, pathObj, document)
+      };
+    }
   );
 
 const buildSchemasTree = (schemas: Record<string, unknown>): TreeNodeNormal[] =>
@@ -67,33 +148,32 @@ const buildSchemasTree = (schemas: Record<string, unknown>): TreeNodeNormal[] =>
     (name): TreeNodeNormal => ({ title: name, key: `schema-${name}` })
   );
 
-const selectPaths = (state: RootState) =>
-  state.document.status === "loaded" ? state.document.content.paths : undefined;
-
-const selectSchemas = (state: RootState) =>
-  state.document.status === "loaded"
-    ? state.document.content.components?.schemas
-    : undefined;
+const selectDocument = (state: RootState) =>
+  state.document.status === "loaded" ? state.document.content : undefined;
 
 const selectDocumentTree = createSelector(
-  selectPaths,
-  selectSchemas,
-  (paths, schemas): TreeNodeNormal[] => {
+  selectDocument,
+  (document): TreeNodeNormal[] => {
     const res: TreeNodeNormal[] = [];
-    if (paths) {
+
+    if (document) {
+      const { paths, components } = document;
+
       res.push({
         title: "Paths",
         key: "paths",
-        children: buildPathsTree(paths)
+        children: buildPathsTree(paths, document)
       });
+
+      if (components && components.schemas) {
+        res.push({
+          title: "Schemas",
+          key: "schemas",
+          children: buildSchemasTree(components.schemas)
+        });
+      }
     }
-    if (schemas) {
-      res.push({
-        title: "Schemas",
-        key: "schemas",
-        children: buildSchemasTree(schemas)
-      });
-    }
+
     return res;
   }
 );

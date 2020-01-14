@@ -1,5 +1,7 @@
-export function openTreeNode(content: string | RegExp) {
-  cy.contains("li", content).within(() =>
-    cy.findByLabelText(/caret-down/, { selector: "span" }).click()
-  );
+export function toggleTreeNode(element: JQuery<HTMLElement>) {
+  cy.wrap(element)
+    .within(() => {
+      cy.findByLabelText(/caret-down/, { selector: "span" }).click();
+    })
+    .wrap(element);
 }
