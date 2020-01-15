@@ -1,4 +1,4 @@
-import { toggleTreeNode } from "../support/tree";
+import { toggleTreeNode, treeTestId } from "../support/tree";
 import { uploadFile } from "../support/upload-file";
 
 describe("OpenAPI Document Tree", () => {
@@ -8,7 +8,7 @@ describe("OpenAPI Document Tree", () => {
   });
 
   it("pestore-expanded.yaml - should build /pets - get tree correctly", () => {
-    cy.findByTestId("document-tree").within(() => {
+    cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Paths")
         .then(el => toggleTreeNode(el))
         .contains("li", "/pets")
@@ -32,7 +32,7 @@ describe("OpenAPI Document Tree", () => {
   });
 
   it("pestore-expanded.yaml - should build /pets - post tree correctly", () => {
-    cy.findByTestId("document-tree").within(() => {
+    cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Paths")
         .then(el => toggleTreeNode(el))
         .contains("li", "/pets")
@@ -61,7 +61,7 @@ describe("OpenAPI Document Tree", () => {
   });
 
   it("pestore-expanded.yaml - should build /pets/{id} - get tree correctly", () => {
-    cy.findByTestId("document-tree").within(() => {
+    cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Paths")
         .then(el => toggleTreeNode(el))
         .contains("li", "/pets/{id}")
@@ -85,7 +85,7 @@ describe("OpenAPI Document Tree", () => {
   });
 
   it("pestore-expanded.yaml - should build /pets/{id} - delete tree correctly", () => {
-    cy.findByTestId("document-tree").within(() => {
+    cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Paths")
         .then(el => toggleTreeNode(el))
         .contains("li", "/pets/{id}")
@@ -106,7 +106,7 @@ describe("OpenAPI Document Tree", () => {
   });
 
   it("pestore-expanded.yaml - should build Schemas tree correctly", () => {
-    cy.findByTestId("document-tree").within(() => {
+    cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Schemas")
         .then(el => toggleTreeNode(el))
         .within(() => {

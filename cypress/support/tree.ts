@@ -1,3 +1,5 @@
+export const treeTestId = "document-tree";
+
 export function toggleTreeNode(element: JQuery<HTMLElement>) {
   cy.wrap(element)
     .within(() => {
