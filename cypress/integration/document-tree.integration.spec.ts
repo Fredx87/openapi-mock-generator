@@ -1,18 +1,10 @@
 import { toggleTreeNode } from "../support/tree";
+import { uploadFile } from "../support/upload-file";
 
 describe("OpenAPI Document Tree", () => {
   beforeEach(() => {
     cy.visit("/");
-    cy.fixture("pestore-expanded.yaml").then(fileContent => {
-      cy.contains(`[role="button"]`, /load openapi/i).within(() => {
-        cy.get("input").upload({
-          fileContent,
-          fileName: "pestore-expanded.yaml",
-          mimeType: "application/x-yaml",
-          encoding: "utf8"
-        });
-      });
-    });
+    uploadFile("pestore-expanded.yaml");
   });
 
   it("pestore-expanded.yaml - should build /pets - get tree correctly", () => {

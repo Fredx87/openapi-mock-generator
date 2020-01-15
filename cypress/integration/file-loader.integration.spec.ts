@@ -1,5 +1,6 @@
 import { expectMessage } from "../support/message-checker";
 import { toggleTreeNode } from "../support/tree";
+import { uploadFile } from "../support/upload-file";
 
 describe("OpenAPI file loading and parsing", () => {
   beforeEach(() => {
@@ -7,31 +8,12 @@ describe("OpenAPI file loading and parsing", () => {
   });
 
   it("should return error when uploading invalid file", () => {
-    cy.fixture("openapi-invalid.json").then(fileContent => {
-      cy.contains(`[role="button"]`, /load openapi/i).within(() => {
-        cy.get("input").upload({
-          fileContent,
-          fileName: "openapi-invalid.json",
-          mimeType: "application/json",
-          encoding: "utf8"
-        });
-      });
-    });
-
+    uploadFile("openapi-invalid.json", "application/json");
     expectMessage("error", /invalid/i);
   });
 
   it("should return success message and build document tree when uploading valid YAML file", () => {
-    cy.fixture("pestore-expanded.yaml").then(fileContent => {
-      cy.contains(`[role="button"]`, /load openapi/i).within(() => {
-        cy.get("input").upload({
-          fileContent,
-          fileName: "pestore-expanded.yaml",
-          mimeType: "application/x-yaml",
-          encoding: "utf8"
-        });
-      });
-    });
+    uploadFile("pestore-expanded.yaml");
 
     expectMessage("success", /loaded.*success/i);
 
