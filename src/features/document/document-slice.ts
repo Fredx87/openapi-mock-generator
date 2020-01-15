@@ -5,37 +5,39 @@ import { pipe } from "fp-ts/es6/pipeable";
 import { OpenAPIV3 } from "openapi-types";
 import { AppThunk } from "../../store";
 import { openApiParser } from "./openapi-parser";
+import { BranchTreeNode, buildDocumentTree } from "./tree-builder";
 
 interface EmptyDocumentState {
   status: "empty";
-}
-
-interface LoadingDocumentState {
-  status: "loading";
+  tree: BranchTreeNode[];
 }
 
 interface LoadedDocumentState {
   status: "loaded";
   content: OpenAPIV3.Document;
+  tree: BranchTreeNode[];
 }
 
-type DocumentState =
-  | EmptyDocumentState
-  | LoadingDocumentState
-  | LoadedDocumentState;
+type DocumentState = EmptyDocumentState | LoadedDocumentState;
+
+function initialState(): DocumentState {
+  return {
+    status: "empty",
+    tree: []
+  };
+}
 
 const slice = createSlice({
   name: "document",
-  initialState: {
-    status: "empty"
-  } as DocumentState,
+  initialState: initialState(),
   reducers: {
     setDocument: (
       _,
       action: PayloadAction<OpenAPIV3.Document>
     ): LoadedDocumentState => ({
       status: "loaded",
-      content: action.payload
+      content: action.payload,
+      tree: buildDocumentTree(action.payload)
     })
   }
 });

@@ -1,4 +1,5 @@
 import { expectMessage } from "../support/message-checker";
+import { toggleTreeNode } from "../support/tree";
 
 describe("OpenAPI file loading and parsing", () => {
   beforeEach(() => {
@@ -20,13 +21,12 @@ describe("OpenAPI file loading and parsing", () => {
     expectMessage("error", /invalid/i);
   });
 
-  it("should return success message when uploading valid YAML file", () => {
-    cy.fixture("petstore.yaml").then(fileContent => {
-      debugger;
+  it("should return success message and build document tree when uploading valid YAML file", () => {
+    cy.fixture("pestore-expanded.yaml").then(fileContent => {
       cy.contains(`[role="button"]`, /load openapi/i).within(() => {
         cy.get("input").upload({
           fileContent,
-          fileName: "petstore.yaml",
+          fileName: "pestore-expanded.yaml",
           mimeType: "application/x-yaml",
           encoding: "utf8"
         });
@@ -34,5 +34,11 @@ describe("OpenAPI file loading and parsing", () => {
     });
 
     expectMessage("success", /loaded.*success/i);
+
+    cy.findByTestId("document-tree").within(() => {
+      cy.contains("li", "Paths").then(el => toggleTreeNode(el));
+      cy.contains("li", "Schemas").then(el => toggleTreeNode(el));
+      cy.findByText("Pet").should("exist");
+    });
   });
 });
