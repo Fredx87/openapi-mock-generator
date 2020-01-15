@@ -20,12 +20,16 @@ interface LoadedDocumentState {
 
 type DocumentState = EmptyDocumentState | LoadedDocumentState;
 
-const slice = createSlice({
-  name: "document",
-  initialState: {
+function initialState(): DocumentState {
+  return {
     status: "empty",
     tree: []
-  } as DocumentState,
+  };
+}
+
+const slice = createSlice({
+  name: "document",
+  initialState: initialState(),
   reducers: {
     setDocument: (
       _,
