@@ -3,7 +3,7 @@ import {
   newPetModel,
   petModel
 } from "../fixtures/models/petstore-expanded";
-import { clickTreeNode, toggleTreeNode, treeTestId } from "../support/tree";
+import { treeTestId } from "../support/tree";
 import { uploadFile } from "../support/upload-file";
 
 const schemaEditorTestId = "schema-editor";
@@ -17,8 +17,8 @@ describe("Editor", () => {
 
   it("should generate JSON for NewPet model", () => {
     cy.findByTestId(treeTestId).within(() => {
-      cy.contains("li", "Schemas").then(el => toggleTreeNode(el));
-      cy.contains("li", "NewPet").then(el => clickTreeNode(el));
+      cy.contains("li", "Schemas").toggleTreeNode();
+      cy.contains("li", "NewPet").clickTreeNode();
     });
 
     cy.findAllByTestId(schemaEditorTestId).then(elem => {
@@ -41,8 +41,8 @@ describe("Editor", () => {
 
   it("should generate JSON for Error model", () => {
     cy.findByTestId(treeTestId).within(() => {
-      cy.contains("li", "Schemas").then(el => toggleTreeNode(el));
-      cy.contains("li", "Error").then(el => clickTreeNode(el));
+      cy.contains("li", "Schemas").toggleTreeNode();
+      cy.contains("li", "Error").clickTreeNode();
     });
 
     cy.findAllByTestId(schemaEditorTestId).then(elem => {
@@ -65,8 +65,8 @@ describe("Editor", () => {
 
   it("should generate JSON for Pet model", () => {
     cy.findByTestId(treeTestId).within(() => {
-      cy.contains("li", "Schemas").then(el => toggleTreeNode(el));
-      cy.contains("li", "Pet").then(el => clickTreeNode(el));
+      cy.contains("li", "Schemas").toggleTreeNode();
+      cy.contains("li", "Pet").clickTreeNode();
     });
 
     cy.findAllByTestId(schemaEditorTestId).then(elem => {
@@ -94,15 +94,15 @@ describe("Editor", () => {
   it("should generate JSON for /pets - get - 200 response", () => {
     cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Paths")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "/pets")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", /get.*findPets/)
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "responses")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "200")
-        .then(el => clickTreeNode(el));
+        .clickTreeNode();
     });
 
     cy.findAllByTestId(schemaEditorTestId).then(elem => {
@@ -138,15 +138,15 @@ describe("Editor", () => {
   it("should load Error schema for /pets - get - default response", () => {
     cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Paths")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "/pets")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", /get.*findPets/)
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "responses")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "default")
-        .then(el => clickTreeNode(el));
+        .clickTreeNode();
     });
 
     cy.findAllByTestId(schemaEditorTestId).then(elem => {
@@ -159,15 +159,15 @@ describe("Editor", () => {
   it("should load NewPet schema for /pets - post - requestBody", () => {
     cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Paths")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "/pets")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", /get.*findPets/)
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "responses")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "default")
-        .then(el => clickTreeNode(el));
+        .clickTreeNode();
     });
 
     cy.findAllByTestId(schemaEditorTestId).then(elem => {

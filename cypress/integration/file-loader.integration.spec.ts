@@ -1,5 +1,5 @@
 import { expectMessage } from "../support/message-checker";
-import { toggleTreeNode, treeTestId } from "../support/tree";
+import { treeTestId } from "../support/tree";
 import { uploadFile } from "../support/upload-file";
 
 describe("OpenAPI file loading and parsing", () => {
@@ -18,8 +18,8 @@ describe("OpenAPI file loading and parsing", () => {
     expectMessage("success", /loaded.*success/i);
 
     cy.findByTestId(treeTestId).within(() => {
-      cy.contains("li", "Paths").then(el => toggleTreeNode(el));
-      cy.contains("li", "Schemas").then(el => toggleTreeNode(el));
+      cy.contains("li", "Paths").toggleTreeNode();
+      cy.contains("li", "Schemas").toggleTreeNode();
       cy.findByText("Pet").should("exist");
     });
   });

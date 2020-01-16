@@ -1,17 +1,23 @@
 export const treeTestId = "document-tree";
 
-export function toggleTreeNode(element: JQuery<HTMLElement>) {
-  cy.wrap(element)
-    .within(() => {
+Cypress.Commands.add(
+  "toggleTreeNode",
+  { prevSubject: "element" },
+  (subject: JQuery<HTMLElement>) => {
+    cy.wrap(subject).within(() => {
       cy.findByLabelText(/caret-down/, { selector: "span" }).click();
-    })
-    .wrap(element);
-}
+    });
+    cy.wrap(subject);
+  }
+);
 
-export function clickTreeNode(element: JQuery<HTMLElement>) {
-  cy.wrap(element)
-    .within(() => {
+Cypress.Commands.add(
+  "clickTreeNode",
+  { prevSubject: "element" },
+  (subject: JQuery<HTMLElement>) => {
+    cy.wrap(subject).within(() => {
       cy.get(".ant-tree-title").click();
-    })
-    .wrap(element);
-}
+    });
+    cy.wrap(subject);
+  }
+);
