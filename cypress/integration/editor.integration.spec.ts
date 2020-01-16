@@ -3,7 +3,7 @@ import {
   newPetModel,
   petModel
 } from "../fixtures/models/petstore-expanded";
-import { toggleTreeNode, treeTestId } from "../support/tree";
+import { clickTreeNode, toggleTreeNode, treeTestId } from "../support/tree";
 import { uploadFile } from "../support/upload-file";
 
 const schemaEditorTestId = "schema-editor";
@@ -18,7 +18,7 @@ describe("Editor", () => {
   it("should generate JSON for NewPet model", () => {
     cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Schemas").then(el => toggleTreeNode(el));
-      cy.contains("li", "NewPet").click();
+      cy.contains("li", "NewPet").then(el => clickTreeNode(el));
     });
 
     cy.findAllByTestId(schemaEditorTestId).then(elem => {
@@ -42,7 +42,7 @@ describe("Editor", () => {
   it("should generate JSON for Error model", () => {
     cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Schemas").then(el => toggleTreeNode(el));
-      cy.contains("li", "Error").click();
+      cy.contains("li", "Error").then(el => clickTreeNode(el));
     });
 
     cy.findAllByTestId(schemaEditorTestId).then(elem => {
@@ -66,7 +66,7 @@ describe("Editor", () => {
   it("should generate JSON for Pet model", () => {
     cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Schemas").then(el => toggleTreeNode(el));
-      cy.contains("li", "Pet").click();
+      cy.contains("li", "Pet").then(el => clickTreeNode(el));
     });
 
     cy.findAllByTestId(schemaEditorTestId).then(elem => {
@@ -102,7 +102,7 @@ describe("Editor", () => {
         .contains("li", "responses")
         .then(el => toggleTreeNode(el))
         .contains("li", "200")
-        .click();
+        .then(el => clickTreeNode(el));
     });
 
     cy.findAllByTestId(schemaEditorTestId).then(elem => {
@@ -146,7 +146,7 @@ describe("Editor", () => {
         .contains("li", "responses")
         .then(el => toggleTreeNode(el))
         .contains("li", "default")
-        .click();
+        .then(el => clickTreeNode(el));
     });
 
     cy.findAllByTestId(schemaEditorTestId).then(elem => {
@@ -167,7 +167,7 @@ describe("Editor", () => {
         .contains("li", "responses")
         .then(el => toggleTreeNode(el))
         .contains("li", "default")
-        .click();
+        .then(el => clickTreeNode(el));
     });
 
     cy.findAllByTestId(schemaEditorTestId).then(elem => {

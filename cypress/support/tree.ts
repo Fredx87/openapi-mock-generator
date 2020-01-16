@@ -7,3 +7,11 @@ export function toggleTreeNode(element: JQuery<HTMLElement>) {
     })
     .wrap(element);
 }
+
+export function clickTreeNode(element: JQuery<HTMLElement>) {
+  cy.wrap(element)
+    .within(() => {
+      cy.get(".ant-tree-title").click();
+    })
+    .wrap(element);
+}
