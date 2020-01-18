@@ -3,7 +3,7 @@ import { AntTreeNodeSelectedEvent } from "antd/lib/tree";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../rootReducer";
-import { setSchemaValue } from "../editor/editor-slice";
+import { generateModel, setSchemaValue } from "../editor/editor-slice";
 import { GeneralTreeNode, LeafTreeNode } from "./tree-builder";
 
 const { TreeNode } = Tree;
@@ -26,6 +26,7 @@ export const DocumentTree: React.FC = () => {
   const onSelect = (_: unknown, e: AntTreeNodeSelectedEvent) => {
     const node = e.node.props as LeafTreeNode;
     dispatch(setSchemaValue(JSON.stringify(node.schema)));
+    dispatch(generateModel());
   };
 
   return (

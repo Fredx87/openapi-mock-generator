@@ -121,16 +121,16 @@ describe("Editor", () => {
 
       expect(value).to.be.an("array");
 
-      expect(value)
-        .to.have.deep.property("id")
+      expect(value[0])
+        .to.have.property("id")
         .to.be.a("number");
 
-      expect(value)
-        .to.have.deep.property("name")
+      expect(value[0])
+        .to.have.property("name")
         .to.be.a("string");
 
-      expect(value)
-        .to.have.deep.property("tag")
+      expect(value[0])
+        .to.have.property("tag")
         .to.be.a("string");
     });
   });
@@ -162,11 +162,9 @@ describe("Editor", () => {
         .toggleTreeNode()
         .contains("li", "/pets")
         .toggleTreeNode()
-        .contains("li", /get.*findPets/)
+        .contains("li", /post.*addPet/)
         .toggleTreeNode()
-        .contains("li", "responses")
-        .toggleTreeNode()
-        .contains("li", "default")
+        .contains("li", "requestBody")
         .clickTreeNode();
     });
 
