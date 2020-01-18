@@ -1,30 +1,22 @@
-import { toggleTreeNode } from "../support/tree";
+import { treeTestId } from "../support/tree";
+import { uploadFile } from "../support/upload-file";
 
 describe("OpenAPI Document Tree", () => {
   beforeEach(() => {
     cy.visit("/");
-    cy.fixture("pestore-expanded.yaml").then(fileContent => {
-      cy.contains(`[role="button"]`, /load openapi/i).within(() => {
-        cy.get("input").upload({
-          fileContent,
-          fileName: "pestore-expanded.yaml",
-          mimeType: "application/x-yaml",
-          encoding: "utf8"
-        });
-      });
-    });
+    uploadFile("pestore-expanded.yaml");
   });
 
   it("pestore-expanded.yaml - should build /pets - get tree correctly", () => {
-    cy.findByTestId("document-tree").within(() => {
+    cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Paths")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "/pets")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", /get.*findPets/)
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "responses")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .within(() => {
           cy.get("li").as("responsesNodes");
         });
@@ -40,16 +32,16 @@ describe("OpenAPI Document Tree", () => {
   });
 
   it("pestore-expanded.yaml - should build /pets - post tree correctly", () => {
-    cy.findByTestId("document-tree").within(() => {
+    cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Paths")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "/pets")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", /post.*addPet/)
         .as("apiNode")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "responses")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .within(() => {
           cy.get("li").as("responsesNodes");
         });
@@ -69,15 +61,15 @@ describe("OpenAPI Document Tree", () => {
   });
 
   it("pestore-expanded.yaml - should build /pets/{id} - get tree correctly", () => {
-    cy.findByTestId("document-tree").within(() => {
+    cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Paths")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "/pets/{id}")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", /get.*find pet by id/)
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "responses")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .within(() => {
           cy.get("li").as("responsesNodes");
         });
@@ -93,15 +85,15 @@ describe("OpenAPI Document Tree", () => {
   });
 
   it("pestore-expanded.yaml - should build /pets/{id} - delete tree correctly", () => {
-    cy.findByTestId("document-tree").within(() => {
+    cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Paths")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "/pets/{id}")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", /delete.*deletePet/)
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .contains("li", "responses")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .within(() => {
           cy.get("li").as("responsesNodes");
         });
@@ -114,9 +106,9 @@ describe("OpenAPI Document Tree", () => {
   });
 
   it("pestore-expanded.yaml - should build Schemas tree correctly", () => {
-    cy.findByTestId("document-tree").within(() => {
+    cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Schemas")
-        .then(el => toggleTreeNode(el))
+        .toggleTreeNode()
         .within(() => {
           cy.get("li").as("schemasNodes");
         });
