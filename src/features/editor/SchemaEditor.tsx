@@ -6,9 +6,9 @@ import styled from "styled-components";
 import { RootState } from "../../rootReducer";
 import { setSchemaValue } from "./editor-slice";
 
-const Editor = styled.textarea`
+const EditorContainer = styled.div`
   width: 100%;
-  min-height: 300px;
+  height: 300px;
 `;
 
 export const SchemaEditor: React.FC = () => {
@@ -27,13 +27,13 @@ export const SchemaEditor: React.FC = () => {
   };
 
   return (
-    <MonacoEditor
-      data-testid="schema-editor"
-      language="json"
-      height={300}
-      value={editorValue}
-      onChange={onChange}
-      options={options}
-    ></MonacoEditor>
+    <EditorContainer data-testid="schema-editor">
+      <MonacoEditor
+        language="json"
+        value={editorValue}
+        onChange={onChange}
+        options={options}
+      ></MonacoEditor>
+    </EditorContainer>
   );
 };

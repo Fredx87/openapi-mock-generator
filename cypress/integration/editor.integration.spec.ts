@@ -21,10 +21,12 @@ describe("Editor", () => {
       cy.contains("li", "NewPet").clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId).then(elem => {
-      const value = JSON.parse(elem.val() as string);
-      expect(value).deep.equal(newPetModel);
-    });
+    cy.findAllByTestId(schemaEditorTestId)
+      .monacoGetValue()
+      .then(v => {
+        const value = JSON.parse(v);
+        expect(value).deep.equal(newPetModel);
+      });
 
     cy.findAllByTestId(generatedEditorTestId).then(elem => {
       const value = JSON.parse(elem.val() as string);
@@ -45,10 +47,12 @@ describe("Editor", () => {
       cy.contains("li", "Error").clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId).then(elem => {
-      const value = JSON.parse(elem.val() as string);
-      expect(value).deep.equal(errorModel);
-    });
+    cy.findAllByTestId(schemaEditorTestId)
+      .monacoGetValue()
+      .then(v => {
+        const value = JSON.parse(v);
+        expect(value).deep.equal(errorModel);
+      });
 
     cy.findAllByTestId(generatedEditorTestId).then(elem => {
       const value = JSON.parse(elem.val() as string);
@@ -69,10 +73,12 @@ describe("Editor", () => {
       cy.contains("li", "Pet").clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId).then(elem => {
-      const value = JSON.parse(elem.val() as string);
-      expect(value).deep.equal(petModel);
-    });
+    cy.findAllByTestId(schemaEditorTestId)
+      .monacoGetValue()
+      .then(v => {
+        const value = JSON.parse(v);
+        expect(value).deep.equal(petModel);
+      });
 
     cy.findAllByTestId(generatedEditorTestId).then(elem => {
       const value = JSON.parse(elem.val() as string);
@@ -105,16 +111,18 @@ describe("Editor", () => {
         .clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId).then(elem => {
-      const value = JSON.parse(elem.val() as string);
+    cy.findAllByTestId(schemaEditorTestId)
+      .monacoGetValue()
+      .then(v => {
+        const value = JSON.parse(v);
 
-      expect(value).deep.equal({
-        type: "array",
-        items: {
-          $ref: "#/components/schemas/Pet"
-        }
+        expect(value).deep.equal({
+          type: "array",
+          items: {
+            $ref: "#/components/schemas/Pet"
+          }
+        });
       });
-    });
 
     cy.findAllByTestId(generatedEditorTestId).then(elem => {
       const value = JSON.parse(elem.val() as string);
@@ -149,11 +157,12 @@ describe("Editor", () => {
         .clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId).then(elem => {
-      const value = JSON.parse(elem.val() as string);
-
-      expect(value).deep.equal(errorModel);
-    });
+    cy.findAllByTestId(schemaEditorTestId)
+      .monacoGetValue()
+      .then(v => {
+        const value = JSON.parse(v);
+        expect(value).deep.equal(errorModel);
+      });
   });
 
   it("should load NewPet schema for /pets - post - requestBody", () => {
@@ -168,10 +177,12 @@ describe("Editor", () => {
         .clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId).then(elem => {
-      const value = JSON.parse(elem.val() as string);
+    cy.findAllByTestId(schemaEditorTestId)
+      .monacoGetValue()
+      .then(v => {
+        const value = JSON.parse(v);
 
-      expect(value).deep.equal(newPetModel);
-    });
+        expect(value).deep.equal(newPetModel);
+      });
   });
 });
