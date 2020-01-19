@@ -1,4 +1,6 @@
+import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
 import React from "react";
+import MonacoEditor from "react-monaco-editor";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { RootState } from "../../rootReducer";
@@ -15,15 +17,23 @@ export const SchemaEditor: React.FC = () => {
   );
   const dispatch = useDispatch();
 
-  const onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    dispatch(setSchemaValue(event.target.value));
+  const options: monacoEditor.editor.IEditorConstructionOptions = {
+    minimap: { enabled: false },
+    lineNumbers: "off"
+  };
+
+  const onChange = (value: string) => {
+    dispatch(setSchemaValue(value));
   };
 
   return (
-    <Editor
+    <MonacoEditor
       data-testid="schema-editor"
+      language="json"
+      height={300}
       value={editorValue}
       onChange={onChange}
-    ></Editor>
+      options={options}
+    ></MonacoEditor>
   );
 };
