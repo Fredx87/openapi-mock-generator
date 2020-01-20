@@ -161,7 +161,7 @@ describe("Editor", () => {
       .monacoGetValue()
       .then(v => {
         const value = JSON.parse(v);
-        expect(value).deep.equal(errorModel);
+        expect(value).deep.equal({ $ref: "#/components/schemas/Error" });
       });
   });
 
@@ -182,7 +182,7 @@ describe("Editor", () => {
       .then(v => {
         const value = JSON.parse(v);
 
-        expect(value).deep.equal(newPetModel);
+        expect(value).deep.equal({ $ref: "#/components/schemas/NewPet" });
       });
   });
 });

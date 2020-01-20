@@ -3,20 +3,20 @@ import { AntTreeNodeSelectedEvent } from "antd/lib/tree";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../rootReducer";
-import { generateModel, setSchemaValue } from "../editor/editor-slice";
-import { GeneralTreeNode, LeafTreeNode } from "./tree-builder";
+import { setCurrentRef } from "../editor/editor-slice";
+import { GeneralTreeNode } from "./tree-builder";
 
 const { TreeNode } = Tree;
 
 function renderNode(node: GeneralTreeNode): React.ReactNode {
   if (node.type === "Branch") {
     return (
-      <TreeNode selectable={false} {...node}>
+      <TreeNode selectable={false} key={node.ref} title={node.title}>
         {node.children.map(child => renderNode(child))}
       </TreeNode>
     );
   }
-  return <TreeNode {...node}></TreeNode>;
+  return <TreeNode key={node.ref} title={node.title}></TreeNode>;
 }
 
 export const DocumentTree: React.FC = () => {
@@ -24,9 +24,8 @@ export const DocumentTree: React.FC = () => {
   const dispatch = useDispatch();
 
   const onSelect = (_: unknown, e: AntTreeNodeSelectedEvent) => {
-    const node = e.node.props as LeafTreeNode;
-    dispatch(setSchemaValue(JSON.stringify(node.schema)));
-    dispatch(generateModel());
+    const node = e.node.props;
+    dispatch(setCurrentRef(node.eventKey));
   };
 
   return (

@@ -1,10 +1,11 @@
 import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MonacoEditor from "react-monaco-editor";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { RootState } from "../../rootReducer";
-import { setSchemaValue } from "./editor-slice";
+import { getObjectByRef } from "../../shared/utils";
+import { getDocument, setRefValue } from "../document/document-slice";
+import { getCurrentRef } from "./editor-slice";
 
 const EditorContainer = styled.div`
   width: 100%;
@@ -12,26 +13,51 @@ const EditorContainer = styled.div`
 `;
 
 export const SchemaEditor: React.FC = () => {
-  const editorValue = useSelector(
-    (state: RootState) => state.editor.schemaValue
-  );
+  const document = useSelector(getDocument);
+  const currentRef = useSelector(getCurrentRef);
   const dispatch = useDispatch();
+
+  const [value, setValue] = useState("");
+
+  const editorRef = useRef<monacoEditor.editor.IStandaloneCodeEditor>();
+
+  useEffect(() => {
+    if (document && currentRef) {
+      const refValue = JSON.stringify(getObjectByRef(currentRef, document));
+      setValue(refValue);
+      if (editorRef.current) {
+        editorRef.current.getAction("editor.action.formatDocument").run();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRef]);
 
   const options: monacoEditor.editor.IEditorConstructionOptions = {
     minimap: { enabled: false },
     lineNumbers: "off"
   };
 
-  const onChange = (value: string) => {
-    dispatch(setSchemaValue(value));
+  const onChange = (v: string) => {
+    if (currentRef) {
+      setValue(v);
+      dispatch(setRefValue({ ref: currentRef, value: v }));
+    }
+  };
+
+  const editorDidMount = (
+    editor: monacoEditor.editor.IStandaloneCodeEditor,
+    monaco: typeof monacoEditor
+  ) => {
+    editorRef.current = editor;
   };
 
   return (
     <EditorContainer data-testid="schema-editor">
       <MonacoEditor
         language="json"
-        value={editorValue}
+        value={value}
         onChange={onChange}
+        editorDidMount={editorDidMount}
         options={options}
       ></MonacoEditor>
     </EditorContainer>
