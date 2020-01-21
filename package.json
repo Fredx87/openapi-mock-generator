@@ -52,7 +52,8 @@
     "typescript": "^3.7.4"
   },
   "scripts": {
-    "start": "react-app-rewired -r @cypress/instrument-cra start",
+    "start": "react-app-rewired start",
+    "start:coverage": "react-app-rewired -r @cypress/instrument-cra start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
