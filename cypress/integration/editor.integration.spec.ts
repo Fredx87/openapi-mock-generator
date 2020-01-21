@@ -6,8 +6,8 @@ import {
 import { treeTestId } from "../support/tree";
 import { uploadFile } from "../support/upload-file";
 
-const schemaEditorTestId = "schema-editor";
-const generatedEditorTestId = "generated-editor";
+const schemaEditorLabel = "current schema editor";
+const generatedModelLabel = "generated model";
 
 describe("Editor", () => {
   beforeEach(() => {
@@ -21,14 +21,12 @@ describe("Editor", () => {
       cy.contains("li", "NewPet").clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId)
-      .monacoGetValue()
-      .then(v => {
-        const value = JSON.parse(v);
-        expect(value).deep.equal(newPetModel);
-      });
+    cy.findByLabelText(schemaEditorLabel).should(el => {
+      const value = JSON.parse(el.val() as string);
+      expect(value).deep.equal(newPetModel);
+    });
 
-    cy.findAllByTestId(generatedEditorTestId).then(elem => {
+    cy.findByLabelText(generatedModelLabel).should(elem => {
       const value = JSON.parse(elem.val() as string);
 
       expect(value)
@@ -47,14 +45,12 @@ describe("Editor", () => {
       cy.contains("li", "Error").clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId)
-      .monacoGetValue()
-      .then(v => {
-        const value = JSON.parse(v);
-        expect(value).deep.equal(errorModel);
-      });
+    cy.findByLabelText(schemaEditorLabel).should(el => {
+      const value = JSON.parse(el.val() as string);
+      expect(value).deep.equal(errorModel);
+    });
 
-    cy.findAllByTestId(generatedEditorTestId).then(elem => {
+    cy.findByLabelText(generatedModelLabel).should(elem => {
       const value = JSON.parse(elem.val() as string);
 
       expect(value)
@@ -73,14 +69,12 @@ describe("Editor", () => {
       cy.contains("li", "Pet").clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId)
-      .monacoGetValue()
-      .then(v => {
-        const value = JSON.parse(v);
-        expect(value).deep.equal(petModel);
-      });
+    cy.findByLabelText(schemaEditorLabel).should(el => {
+      const value = JSON.parse(el.val() as string);
+      expect(value).deep.equal(petModel);
+    });
 
-    cy.findAllByTestId(generatedEditorTestId).then(elem => {
+    cy.findByLabelText(generatedModelLabel).should(elem => {
       const value = JSON.parse(elem.val() as string);
 
       expect(value)
@@ -111,20 +105,18 @@ describe("Editor", () => {
         .clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId)
-      .monacoGetValue()
-      .then(v => {
-        const value = JSON.parse(v);
+    cy.findByLabelText(schemaEditorLabel).should(el => {
+      const value = JSON.parse(el.val() as string);
 
-        expect(value).deep.equal({
-          type: "array",
-          items: {
-            $ref: "#/components/schemas/Pet"
-          }
-        });
+      expect(value).deep.equal({
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/Pet"
+        }
       });
+    });
 
-    cy.findAllByTestId(generatedEditorTestId).then(elem => {
+    cy.findByLabelText(generatedModelLabel).should(elem => {
       const value = JSON.parse(elem.val() as string);
 
       expect(value).to.be.an("array");
@@ -157,12 +149,10 @@ describe("Editor", () => {
         .clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId)
-      .monacoGetValue()
-      .then(v => {
-        const value = JSON.parse(v);
-        expect(value).deep.equal({ $ref: "#/components/schemas/Error" });
-      });
+    cy.findByLabelText(schemaEditorLabel).should(el => {
+      const value = JSON.parse(el.val() as string);
+      expect(value).deep.equal({ $ref: "#/components/schemas/Error" });
+    });
   });
 
   it("should load NewPet schema for /pets - post - requestBody", () => {
@@ -177,12 +167,10 @@ describe("Editor", () => {
         .clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId)
-      .monacoGetValue()
-      .then(v => {
-        const value = JSON.parse(v);
+    cy.findByLabelText(schemaEditorLabel).should(el => {
+      const value = JSON.parse(el.val() as string);
 
-        expect(value).deep.equal({ $ref: "#/components/schemas/NewPet" });
-      });
+      expect(value).deep.equal({ $ref: "#/components/schemas/NewPet" });
+    });
   });
 });

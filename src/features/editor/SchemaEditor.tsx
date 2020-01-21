@@ -2,15 +2,10 @@ import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
 import React, { useEffect, useRef, useState } from "react";
 import MonacoEditor from "react-monaco-editor";
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
 import { getObjectByRef } from "../../shared/utils";
 import { getDocument, setRefValue } from "../document/document-slice";
 import { getCurrentRef } from "./editor-slice";
-
-const EditorContainer = styled.div`
-  width: 100%;
-  height: 300px;
-`;
+import { monacoDefaultOptions } from "./monaco-options";
 
 export const SchemaEditor: React.FC = () => {
   const document = useSelector(getDocument);
@@ -33,8 +28,8 @@ export const SchemaEditor: React.FC = () => {
   }, [currentRef]);
 
   const options: monacoEditor.editor.IEditorConstructionOptions = {
-    minimap: { enabled: false },
-    lineNumbers: "off"
+    ...monacoDefaultOptions,
+    ariaLabel: "current schema editor"
   };
 
   const onChange = (v: string) => {
@@ -52,14 +47,13 @@ export const SchemaEditor: React.FC = () => {
   };
 
   return (
-    <EditorContainer data-testid="schema-editor">
-      <MonacoEditor
-        language="json"
-        value={value}
-        onChange={onChange}
-        editorDidMount={editorDidMount}
-        options={options}
-      ></MonacoEditor>
-    </EditorContainer>
+    <MonacoEditor
+      height={300}
+      language="json"
+      value={value}
+      onChange={onChange}
+      editorDidMount={editorDidMount}
+      options={options}
+    ></MonacoEditor>
   );
 };
