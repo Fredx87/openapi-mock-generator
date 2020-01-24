@@ -22,7 +22,7 @@
     "@types/testing-library__cypress": "^5.0.1",
     "antd": "^3.26.6",
     "customize-cra": "^0.9.1",
-    "cypress": "^3.8.2",
+    "cypress": "^3.8.3",
     "cypress-file-upload": "^3.5.3",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",
@@ -58,8 +58,8 @@
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "lint": "eslint . --ext .ts,.tsx,.js --fix",
-    "cypress:open": "cypress open --env coverage=false",
-    "cypress:run": "cypress run"
+    "cy:open": "cypress open --env coverage=false",
+    "cy:run": "cypress run"
   },
   "eslintConfig": {
     "extends": "react-app"
