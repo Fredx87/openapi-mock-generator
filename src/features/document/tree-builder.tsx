@@ -8,12 +8,11 @@ import {
 
 interface BaseTreeNode {
   title: string;
-  key: string;
+  ref: string;
 }
 
 export interface LeafTreeNode extends BaseTreeNode {
   type: "Leaf";
-  schema: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject;
 }
 
 export interface BranchTreeNode extends BaseTreeNode {
@@ -23,8 +22,11 @@ export interface BranchTreeNode extends BaseTreeNode {
 
 export type GeneralTreeNode = LeafTreeNode | BranchTreeNode;
 
+const escapeRef = (ref: string): string =>
+  ref.replace(/~/g, "~0").replace(/\//g, "~1");
+
 const buildRequestBodyNode = (
-  parentKey: string,
+  parentRef: string,
   requestBody: OpenAPIV3.ReferenceObject | OpenAPIV3.RequestBodyObject,
   document: OpenAPIV3.Document
 ): LeafTreeNode | undefined => {
@@ -36,15 +38,14 @@ const buildRequestBodyNode = (
       return {
         type: "Leaf",
         title: "requestBody",
-        key: `${parentKey}-requestBody`,
-        schema: resolvedSchema
+        ref: `${parentRef}/requestBody/content/application~1json/schema`
       };
     }
   }
 };
 
 const buildResponseNodes = (
-  parentKey: string,
+  parentRef: string,
   responses: OpenAPIV3.ResponsesObject,
   document: OpenAPIV3.Document
 ): LeafTreeNode[] => {
@@ -59,8 +60,7 @@ const buildResponseNodes = (
         const node: LeafTreeNode = {
           type: "Leaf",
           title: code,
-          key: `${parentKey}-${code}`,
-          schema: resolvedSchema
+          ref: `${parentRef}/${code}/content/application~1json/schema`
         };
         res.push(node);
       }
@@ -70,21 +70,21 @@ const buildResponseNodes = (
 };
 
 const buildOperationTree = (
-  parentKey: string,
+  parentRef: string,
   method: OperationMethod,
   operation: OpenAPIV3.OperationObject,
   document: OpenAPIV3.Document
 ): BranchTreeNode => {
-  const key = `${parentKey}-${method}`;
+  const ref = `${parentRef}/${method}`;
 
   const children: GeneralTreeNode[] = [];
 
   const { responses, requestBody, operationId } = operation;
 
   if (responses) {
-    const responsesKey = `${key}-responses`;
+    const responsesRef = `${ref}/responses`;
     const responsesNodes = buildResponseNodes(
-      responsesKey,
+      responsesRef,
       responses,
       document
     );
@@ -92,14 +92,14 @@ const buildOperationTree = (
       children.push({
         type: "Branch",
         title: "responses",
-        key: responsesKey,
+        ref: responsesRef,
         children: responsesNodes
       });
     }
   }
 
   if (requestBody) {
-    const requestBodyNode = buildRequestBodyNode(key, requestBody, document);
+    const requestBodyNode = buildRequestBodyNode(ref, requestBody, document);
     if (requestBodyNode) {
       children.push(requestBodyNode);
     }
@@ -110,13 +110,13 @@ const buildOperationTree = (
   return {
     type: "Branch",
     title,
-    key,
+    ref,
     children
   };
 };
 
 const buildPathTree = (
-  parentKey: string,
+  parentRef: string,
   pathObj: OpenAPIV3.PathItemObject,
   document: OpenAPIV3.Document
 ): BranchTreeNode[] => {
@@ -124,7 +124,7 @@ const buildPathTree = (
   for (const method of operationMethods) {
     const operation = pathObj[method];
     if (operation) {
-      res.push(buildOperationTree(parentKey, method, operation, document));
+      res.push(buildOperationTree(parentRef, method, operation, document));
     }
   }
   return res;
@@ -136,12 +136,12 @@ const buildPathsTree = (
 ): BranchTreeNode[] =>
   Object.entries(paths).map(
     ([path, pathObj]): BranchTreeNode => {
-      const key = `path-${path}`;
+      const ref = `#/paths/${escapeRef(path)}`;
       return {
         type: "Branch",
         title: path,
-        key,
-        children: buildPathTree(key, pathObj, document)
+        ref,
+        children: buildPathTree(ref, pathObj, document)
       };
     }
   );
@@ -149,12 +149,11 @@ const buildPathsTree = (
 const buildSchemasTree = (
   schemas: Record<string, OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject>
 ): LeafTreeNode[] =>
-  Object.entries(schemas).map(
-    ([name, schema]): LeafTreeNode => ({
+  Object.keys(schemas).map(
+    (name): LeafTreeNode => ({
       type: "Leaf",
       title: name,
-      key: `schema-${name}`,
-      schema
+      ref: `#/components/schemas/${name}`
     })
   );
 
@@ -169,7 +168,7 @@ export function buildDocumentTree(
     res.push({
       type: "Branch",
       title: "Paths",
-      key: "paths",
+      ref: "#/paths",
       children: buildPathsTree(paths, document)
     });
 
@@ -177,7 +176,7 @@ export function buildDocumentTree(
       res.push({
         type: "Branch",
         title: "Schemas",
-        key: "schemas",
+        ref: "#/components/schemas",
         children: buildSchemasTree(components.schemas)
       });
     }

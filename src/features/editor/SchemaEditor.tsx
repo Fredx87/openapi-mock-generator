@@ -1,29 +1,59 @@
-import React from "react";
+import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
+import React, { useEffect, useRef, useState } from "react";
+import MonacoEditor from "react-monaco-editor";
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
-import { RootState } from "../../rootReducer";
-import { setSchemaValue } from "./editor-slice";
-
-const Editor = styled.textarea`
-  width: 100%;
-  min-height: 300px;
-`;
+import { getObjectByRef } from "../../shared/utils";
+import { getDocument, setRefValue } from "../document/document-slice";
+import { getCurrentRef } from "./editor-slice";
+import { monacoDefaultOptions } from "./monaco-options";
 
 export const SchemaEditor: React.FC = () => {
-  const editorValue = useSelector(
-    (state: RootState) => state.editor.schemaValue
-  );
+  const document = useSelector(getDocument);
+  const currentRef = useSelector(getCurrentRef);
   const dispatch = useDispatch();
 
-  const onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    dispatch(setSchemaValue(event.target.value));
+  const [value, setValue] = useState("");
+
+  const editorRef = useRef<monacoEditor.editor.IStandaloneCodeEditor>();
+
+  useEffect(() => {
+    if (document && currentRef) {
+      const refValue = JSON.stringify(getObjectByRef(currentRef, document));
+      setValue(refValue);
+      if (editorRef.current) {
+        editorRef.current.getAction("editor.action.formatDocument").run();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRef]);
+
+  const options: monacoEditor.editor.IEditorConstructionOptions = {
+    ...monacoDefaultOptions,
+    ariaLabel: "current schema editor"
+  };
+
+  const onChange = (v: string) => {
+    if (currentRef) {
+      setValue(v);
+      dispatch(setRefValue({ ref: currentRef, value: v }));
+    }
+  };
+
+  const editorDidMount = (
+    editor: monacoEditor.editor.IStandaloneCodeEditor,
+    monaco: typeof monacoEditor
+  ) => {
+    editorRef.current = editor;
   };
 
   return (
-    <Editor
-      data-testid="schema-editor"
-      value={editorValue}
+    <MonacoEditor
+      height={300}
+      language="json"
+      value={value}
       onChange={onChange}
-    ></Editor>
+      editorDidMount={editorDidMount}
+      options={options}
+    ></MonacoEditor>
   );
 };

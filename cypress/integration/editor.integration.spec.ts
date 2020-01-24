@@ -6,8 +6,8 @@ import {
 import { treeTestId } from "../support/tree";
 import { uploadFile } from "../support/upload-file";
 
-const schemaEditorTestId = "schema-editor";
-const generatedEditorTestId = "generated-editor";
+const schemaEditorLabel = "current schema editor";
+const generatedModelLabel = "generated model";
 
 describe("Editor", () => {
   beforeEach(() => {
@@ -21,12 +21,12 @@ describe("Editor", () => {
       cy.contains("li", "NewPet").clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId).then(elem => {
-      const value = JSON.parse(elem.val() as string);
+    cy.findByLabelText(schemaEditorLabel).should(el => {
+      const value = JSON.parse(el.val() as string);
       expect(value).deep.equal(newPetModel);
     });
 
-    cy.findAllByTestId(generatedEditorTestId).then(elem => {
+    cy.findByLabelText(generatedModelLabel).should(elem => {
       const value = JSON.parse(elem.val() as string);
 
       expect(value)
@@ -45,12 +45,12 @@ describe("Editor", () => {
       cy.contains("li", "Error").clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId).then(elem => {
-      const value = JSON.parse(elem.val() as string);
+    cy.findByLabelText(schemaEditorLabel).should(el => {
+      const value = JSON.parse(el.val() as string);
       expect(value).deep.equal(errorModel);
     });
 
-    cy.findAllByTestId(generatedEditorTestId).then(elem => {
+    cy.findByLabelText(generatedModelLabel).should(elem => {
       const value = JSON.parse(elem.val() as string);
 
       expect(value)
@@ -69,12 +69,12 @@ describe("Editor", () => {
       cy.contains("li", "Pet").clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId).then(elem => {
-      const value = JSON.parse(elem.val() as string);
+    cy.findByLabelText(schemaEditorLabel).should(el => {
+      const value = JSON.parse(el.val() as string);
       expect(value).deep.equal(petModel);
     });
 
-    cy.findAllByTestId(generatedEditorTestId).then(elem => {
+    cy.findByLabelText(generatedModelLabel).should(elem => {
       const value = JSON.parse(elem.val() as string);
 
       expect(value)
@@ -105,8 +105,8 @@ describe("Editor", () => {
         .clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId).then(elem => {
-      const value = JSON.parse(elem.val() as string);
+    cy.findByLabelText(schemaEditorLabel).should(el => {
+      const value = JSON.parse(el.val() as string);
 
       expect(value).deep.equal({
         type: "array",
@@ -116,7 +116,7 @@ describe("Editor", () => {
       });
     });
 
-    cy.findAllByTestId(generatedEditorTestId).then(elem => {
+    cy.findByLabelText(generatedModelLabel).should(elem => {
       const value = JSON.parse(elem.val() as string);
 
       expect(value).to.be.an("array");
@@ -149,10 +149,9 @@ describe("Editor", () => {
         .clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId).then(elem => {
-      const value = JSON.parse(elem.val() as string);
-
-      expect(value).deep.equal(errorModel);
+    cy.findByLabelText(schemaEditorLabel).should(el => {
+      const value = JSON.parse(el.val() as string);
+      expect(value).deep.equal({ $ref: "#/components/schemas/Error" });
     });
   });
 
@@ -168,10 +167,10 @@ describe("Editor", () => {
         .clickTreeNode();
     });
 
-    cy.findAllByTestId(schemaEditorTestId).then(elem => {
-      const value = JSON.parse(elem.val() as string);
+    cy.findByLabelText(schemaEditorLabel).should(el => {
+      const value = JSON.parse(el.val() as string);
 
-      expect(value).deep.equal(newPetModel);
+      expect(value).deep.equal({ $ref: "#/components/schemas/NewPet" });
     });
   });
 });
