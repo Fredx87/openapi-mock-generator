@@ -173,4 +173,28 @@ describe("Editor", () => {
       expect(value).deep.equal({ $ref: "#/components/schemas/NewPet" });
     });
   });
+
+  it("should format current schema and generated model with 2 spaces", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Schemas").toggleTreeNode();
+      cy.contains("li", "NewPet").clickTreeNode();
+    });
+
+    cy.findByLabelText(schemaEditorLabel).should(elem => {
+      const rows = (elem.val() as string).split("\n");
+      expect(rows).to.have.length(14);
+      expect(rows[0]).to.be.equal(`{`);
+      expect(rows[1]).to.be.equal(`  "type": "object",`);
+      expect(rows[2]).to.be.equal(`  "required": [`);
+      expect(rows[3]).to.be.equal(`    "name"`);
+      expect(rows[4]).to.be.equal(`  ],`);
+    });
+
+    cy.findByLabelText(generatedModelLabel).should(elem => {
+      const rows = (elem.val() as string).split("\n");
+      expect(rows).to.have.length(4);
+      expect(rows[0]).to.be.equal("{");
+      expect(rows[1].substring(0, 9)).to.be.equal(`  "name":`);
+    });
+  });
 });

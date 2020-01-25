@@ -18,16 +18,17 @@ export const SchemaEditor: React.FC = () => {
 
   useEffect(() => {
     if (document && currentRef) {
-      const refValue = JSON.stringify(getObjectByRef(currentRef, document));
+      const refValue = JSON.stringify(
+        getObjectByRef(currentRef, document),
+        null,
+        2
+      );
       setValue(refValue);
-      if (editorRef.current) {
-        editorRef.current.getAction("editor.action.formatDocument").run();
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRef]);
 
-  const options: monacoEditor.editor.IEditorConstructionOptions = {
+  const options: monacoEditor.editor.IStandaloneEditorConstructionOptions = {
     ...monacoDefaultOptions,
     ariaLabel: "current schema editor"
   };

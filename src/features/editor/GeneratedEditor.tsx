@@ -44,7 +44,7 @@ export const GeneratedEditor: React.FC = () => {
           jsf.option("alwaysFakeOptionals", true);
           try {
             const generated = jsf.generate(parsedSchema);
-            setValue(JSON.stringify(generated));
+            setValue(JSON.stringify(generated, null, 2));
           } catch {}
         })
         .catch(err => {
@@ -53,7 +53,7 @@ export const GeneratedEditor: React.FC = () => {
     }
   }, [document, currentSchemaValue]);
 
-  const options: monacoEditor.editor.IEditorConstructionOptions = {
+  const options: monacoEditor.editor.IStandaloneEditorConstructionOptions = {
     ...monacoDefaultOptions,
     ariaLabel: "generated model",
     readOnly: true
