@@ -6,6 +6,7 @@ import { getObjectByRef } from "../../shared/utils";
 import { getDocument, setRefValue } from "../document/document-slice";
 import { getCurrentRef } from "./editor-slice";
 import { monacoDefaultOptions } from "./monaco-options";
+import { jsonDiagnosticOptions } from "./schemas";
 
 export const SchemaEditor: React.FC = () => {
   const document = useSelector(getDocument);
@@ -40,6 +41,12 @@ export const SchemaEditor: React.FC = () => {
     }
   };
 
+  const editorWillMount = (monaco: typeof monacoEditor) => {
+    monaco.languages.json.jsonDefaults.setDiagnosticsOptions(
+      jsonDiagnosticOptions
+    );
+  };
+
   const editorDidMount = (
     editor: monacoEditor.editor.IStandaloneCodeEditor,
     monaco: typeof monacoEditor
@@ -53,6 +60,7 @@ export const SchemaEditor: React.FC = () => {
       language="json"
       value={value}
       onChange={onChange}
+      editorWillMount={editorWillMount}
       editorDidMount={editorDidMount}
       options={options}
     ></MonacoEditor>
