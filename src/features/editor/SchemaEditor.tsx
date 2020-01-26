@@ -6,6 +6,7 @@ import { getObjectByRef } from "../../shared/utils";
 import { getDocument, setRefValue } from "../document/document-slice";
 import { getCurrentRef } from "./editor-slice";
 import { monacoDefaultOptions } from "./monaco-options";
+import { jsonDiagnosticOptions } from "./schemas";
 
 export const SchemaEditor: React.FC = () => {
   const document = useSelector(getDocument);
@@ -18,16 +19,17 @@ export const SchemaEditor: React.FC = () => {
 
   useEffect(() => {
     if (document && currentRef) {
-      const refValue = JSON.stringify(getObjectByRef(currentRef, document));
+      const refValue = JSON.stringify(
+        getObjectByRef(currentRef, document),
+        null,
+        2
+      );
       setValue(refValue);
-      if (editorRef.current) {
-        editorRef.current.getAction("editor.action.formatDocument").run();
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRef]);
 
-  const options: monacoEditor.editor.IEditorConstructionOptions = {
+  const options: monacoEditor.editor.IStandaloneEditorConstructionOptions = {
     ...monacoDefaultOptions,
     ariaLabel: "current schema editor"
   };
@@ -37,6 +39,12 @@ export const SchemaEditor: React.FC = () => {
       setValue(v);
       dispatch(setRefValue({ ref: currentRef, value: v }));
     }
+  };
+
+  const editorWillMount = (monaco: typeof monacoEditor) => {
+    monaco.languages.json.jsonDefaults.setDiagnosticsOptions(
+      jsonDiagnosticOptions
+    );
   };
 
   const editorDidMount = (
@@ -52,6 +60,7 @@ export const SchemaEditor: React.FC = () => {
       language="json"
       value={value}
       onChange={onChange}
+      editorWillMount={editorWillMount}
       editorDidMount={editorDidMount}
       options={options}
     ></MonacoEditor>
