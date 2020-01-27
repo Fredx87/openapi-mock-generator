@@ -1,6 +1,6 @@
 import {
-  generatedModelLabel,
-  schemaEditorLabel,
+  generatedEditorTestId,
+  schemaEditorTestId,
   suggestionSelector
 } from "../support/selectors";
 import { treeTestId } from "../support/tree";
@@ -26,10 +26,13 @@ describe("Editor", () => {
         .clickTreeNode();
     });
 
-    cy.findByLabelText(schemaEditorLabel).should(el => {
-      const value = JSON.parse(el.val() as string);
-      expect(value).deep.equal({ $ref: "#/components/schemas/Error" });
-    });
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoValue()
+      .should(value => {
+        expect(JSON.parse(value)).deep.equal({
+          $ref: "#/components/schemas/Error"
+        });
+      });
   });
 
   it("should load NewPet schema for /pets - post - requestBody", () => {
@@ -44,11 +47,13 @@ describe("Editor", () => {
         .clickTreeNode();
     });
 
-    cy.findByLabelText(schemaEditorLabel).should(el => {
-      const value = JSON.parse(el.val() as string);
-
-      expect(value).deep.equal({ $ref: "#/components/schemas/NewPet" });
-    });
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoValue()
+      .should(value => {
+        expect(JSON.parse(value)).deep.equal({
+          $ref: "#/components/schemas/NewPet"
+        });
+      });
   });
 
   it("should format current schema and generated model with 2 spaces", () => {
@@ -57,29 +62,37 @@ describe("Editor", () => {
       cy.contains("li", "NewPet").clickTreeNode();
     });
 
-    cy.findByLabelText(schemaEditorLabel).should(elem => {
-      const rows = (elem.val() as string).split("\n");
-      expect(rows).to.have.length(14);
-      expect(rows[0]).to.be.equal(`{`);
-      expect(rows[1]).to.be.equal(`  "type": "object",`);
-      expect(rows[2]).to.be.equal(`  "required": [`);
-      expect(rows[3]).to.be.equal(`    "name"`);
-      expect(rows[4]).to.be.equal(`  ],`);
-    });
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoValue()
+      .should(value => {
+        const rows = value.split("\n");
+        expect(rows).to.have.length(14);
+        expect(rows[0]).to.be.equal(`{`);
+        expect(rows[1]).to.be.equal(`  "type": "object",`);
+        expect(rows[2]).to.be.equal(`  "required": [`);
+        expect(rows[3]).to.be.equal(`    "name"`);
+        expect(rows[4]).to.be.equal(`  ],`);
+      });
 
-    cy.findByLabelText(generatedModelLabel).should(elem => {
-      const rows = (elem.val() as string).split("\n");
-      expect(rows).to.have.length(4);
-      expect(rows[0]).to.be.equal("{");
-      expect(rows[1].substring(0, 9)).to.be.equal(`  "name":`);
-    });
+    cy.findByTestId(generatedEditorTestId)
+      .getMonacoValue()
+      .should(value => {
+        const rows = value.split("\n");
+        expect(rows).to.have.length(4);
+        expect(rows[0]).to.be.equal("{");
+        expect(rows[1].substring(0, 9)).to.be.equal(`  "name":`);
+      });
   });
 
   it("should show autocomplete box with OpenAPI Schema suggestions when CTRL + space pressed", () => {
-    cy.findByLabelText(schemaEditorLabel)
-      .focus()
-      .type("{{}{enter}")
-      .type("{ctrl} ");
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoEditor()
+      .within(() =>
+        cy
+          .get("textarea")
+          .type("{{}{enter}")
+          .type("{ctrl} ")
+      );
 
     cy.get(suggestionSelector).within(() => {
       cy.contains("type").should("exist");
@@ -89,19 +102,26 @@ describe("Editor", () => {
   });
 
   it("should show autocomplete values for type property", () => {
-    cy.findByLabelText(schemaEditorLabel)
-      .as("editor")
-      .focus()
-      .type(`{{}{enter}"t`)
-      .type("{ctrl} ")
-      .get(suggestionSelector)
-      .as("suggestions")
-      .within(() => {
-        cy.contains("type").click();
-      })
-      .get("@editor")
-      .type(`"`)
-      .type("{ctrl} ");
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoEditor()
+      .type("{ctrl}a")
+      .within(() =>
+        cy
+          .get("textarea")
+          .as("textarea")
+          .type("{{}")
+          .type("{enter}")
+          .type("t")
+          .type("{ctrl} ")
+          .get(suggestionSelector)
+          .as("suggestions")
+          .within(() => {
+            cy.contains("type").click();
+          })
+          .get("@textarea")
+          .type(`"`)
+          .type("{ctrl} ")
+      );
 
     cy.get("@suggestions").within(() => {
       cy.contains("object").should("exist");

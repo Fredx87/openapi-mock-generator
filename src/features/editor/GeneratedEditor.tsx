@@ -24,7 +24,7 @@ export const GeneratedEditor: React.FC = () => {
   const document = useSelector(getDocument);
   const currentSchemaValue = useSelector(getCurrentSchemaValue);
 
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(" ");
 
   useEffect(() => {
     if (document && currentSchemaValue) {
@@ -59,12 +59,21 @@ export const GeneratedEditor: React.FC = () => {
     readOnly: true
   };
 
+  const editorDidMount = (
+    editor: monacoEditor.editor.IStandaloneCodeEditor
+  ) => {
+    editor.focus();
+  };
+
   return (
-    <MonacoEditor
-      height={300}
-      language="json"
-      value={value}
-      options={options}
-    ></MonacoEditor>
+    <div data-testid="generated-editor">
+      <MonacoEditor
+        height={300}
+        language="json"
+        value={value}
+        options={options}
+        editorDidMount={editorDidMount}
+      ></MonacoEditor>
+    </div>
   );
 };
