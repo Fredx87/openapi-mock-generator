@@ -1,4 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
+import faker from "faker";
 import jsf from "json-schema-faker";
 import $RefParser from "json-schema-ref-parser";
 import cloneDeep from "lodash-es/cloneDeep";
@@ -10,6 +11,8 @@ import { getObjectByRef } from "../../shared/utils";
 import { getDocument } from "../document/document-slice";
 import { getCurrentRef } from "./editor-slice";
 import { monacoDefaultOptions } from "./monaco-options";
+
+jsf.extend("faker", () => faker);
 
 const getCurrentSchemaValue = createSelector(
   [getDocument, getCurrentRef],

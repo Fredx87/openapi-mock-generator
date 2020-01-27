@@ -146,4 +146,55 @@ describe("Generation", () => {
           .to.be.a("string");
       });
   });
+
+  it("should generate fake data with faker.js strings", () => {
+    // @TODO: create a new schema instead of selecting Pet, when this is fixed: https://github.com/Fredx87/openapi-fake-generator/issues/23
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Schemas").toggleTreeNode();
+      cy.contains("li", "Pet").clickTreeNode();
+    });
+
+    const model = {
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+          "x-faker": "random.uuid"
+        },
+        name: {
+          type: "string",
+          "x-faker": "name.findName"
+        },
+        email: {
+          type: "string",
+          "x-faker": "internet.email"
+        }
+      },
+      required: ["id", "name", "email"]
+    };
+
+    cy.findByTestId(schemaEditorTestId).setMonacoValue(
+      JSON.stringify(model, null, 2)
+    );
+
+    cy.findByTestId(generatedEditorTestId)
+      .getMonacoValue()
+      .should(value => {
+        const parsed = JSON.parse(value);
+
+        expect(parsed)
+          .to.have.property("id")
+          .to.match(
+            /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+          );
+
+        expect(parsed)
+          .to.have.property("name")
+          .to.be.a("string");
+
+        expect(parsed)
+          .to.have.property("email")
+          .to.match(/\S+@\S+\.\S+/);
+      });
+  });
 });
