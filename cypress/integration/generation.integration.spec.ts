@@ -116,9 +116,18 @@ describe("Generation", () => {
     });
 
     cy.findByTestId(schemaEditorTestId)
+      .getMonacoEditor()
+      .within(() => {
+        cy.get("textarea")
+          .focus()
+          .type(`{rightarrow}{enter}"maxItems": 1,`);
+      });
+
+    cy.findByTestId(schemaEditorTestId)
       .getMonacoValue()
       .should(value => {
         expect(JSON.parse(value)).deep.equal({
+          maxItems: 1,
           type: "array",
           items: {
             $ref: "#/components/schemas/Pet"
