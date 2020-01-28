@@ -1,4 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
+import faker from "faker";
 import jsf from "json-schema-faker";
 import $RefParser from "json-schema-ref-parser";
 import cloneDeep from "lodash-es/cloneDeep";
@@ -10,6 +11,8 @@ import { getObjectByRef } from "../../shared/utils";
 import { getDocument } from "../document/document-slice";
 import { getCurrentRef } from "./editor-slice";
 import { monacoDefaultOptions } from "./monaco-options";
+
+jsf.extend("faker", () => faker);
 
 const getCurrentSchemaValue = createSelector(
   [getDocument, getCurrentRef],
@@ -24,7 +27,7 @@ export const GeneratedEditor: React.FC = () => {
   const document = useSelector(getDocument);
   const currentSchemaValue = useSelector(getCurrentSchemaValue);
 
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(" ");
 
   useEffect(() => {
     if (document && currentSchemaValue) {
@@ -59,12 +62,21 @@ export const GeneratedEditor: React.FC = () => {
     readOnly: true
   };
 
+  const editorDidMount = (
+    editor: monacoEditor.editor.IStandaloneCodeEditor
+  ) => {
+    editor.focus();
+  };
+
   return (
-    <MonacoEditor
-      height={300}
-      language="json"
-      value={value}
-      options={options}
-    ></MonacoEditor>
+    <div data-testid="generated-editor">
+      <MonacoEditor
+        height={300}
+        language="json"
+        value={value}
+        options={options}
+        editorDidMount={editorDidMount}
+      ></MonacoEditor>
+    </div>
   );
 };

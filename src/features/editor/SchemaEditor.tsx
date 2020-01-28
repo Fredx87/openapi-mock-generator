@@ -13,7 +13,7 @@ export const SchemaEditor: React.FC = () => {
   const currentRef = useSelector(getCurrentRef);
   const dispatch = useDispatch();
 
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(" ");
 
   const editorRef = useRef<monacoEditor.editor.IStandaloneCodeEditor>();
 
@@ -48,21 +48,23 @@ export const SchemaEditor: React.FC = () => {
   };
 
   const editorDidMount = (
-    editor: monacoEditor.editor.IStandaloneCodeEditor,
-    monaco: typeof monacoEditor
+    editor: monacoEditor.editor.IStandaloneCodeEditor
   ) => {
     editorRef.current = editor;
+    editor.focus();
   };
 
   return (
-    <MonacoEditor
-      height={300}
-      language="json"
-      value={value}
-      onChange={onChange}
-      editorWillMount={editorWillMount}
-      editorDidMount={editorDidMount}
-      options={options}
-    ></MonacoEditor>
+    <div data-testid="schema-editor">
+      <MonacoEditor
+        height={300}
+        language="json"
+        value={value}
+        onChange={onChange}
+        editorWillMount={editorWillMount}
+        editorDidMount={editorDidMount}
+        options={options}
+      ></MonacoEditor>
+    </div>
   );
 };
