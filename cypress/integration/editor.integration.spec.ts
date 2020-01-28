@@ -129,4 +129,59 @@ describe("Editor", () => {
       cy.contains("string").should("exist");
     });
   });
+
+  it("should show autocomplete values for x-faker string", () => {
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoEditor()
+      .type("{ctrl}a")
+      .within(() =>
+        cy
+          .get("textarea")
+          .as("textarea")
+          .type(`{{}{enter}"x-fa`)
+          .type("{ctrl} ")
+          .get(suggestionSelector)
+          .as("suggestions")
+          .within(() => {
+            cy.contains("x-faker").click();
+          })
+          .get("@textarea")
+          .type(`: "nam`)
+          .type("{ctrl} ")
+      );
+
+    cy.get("@suggestions").within(() => {
+      cy.contains("name.firstName").should("exist");
+      cy.contains("name.lastName").should("exist");
+      cy.contains("internet.userName").should("exist");
+      cy.contains("system.fileName").should("exist");
+    });
+  });
+
+  it("should show autocomplete values for x-faker object", () => {
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoEditor()
+      .type("{ctrl}a")
+      .within(() =>
+        cy
+          .get("textarea")
+          .as("textarea")
+          .type(`{{}{enter}"x-fa`)
+          .type("{ctrl} ")
+          .get(suggestionSelector)
+          .as("suggestions")
+          .within(() => {
+            cy.contains("x-faker").click();
+          })
+          .get("@textarea")
+          .type(`: {{}{enter}`)
+          .type("{ctrl} ")
+      );
+
+    cy.get("@suggestions").within(() => {
+      cy.contains("address.city").should("exist");
+      cy.contains("address.country").should("exist");
+      cy.contains("address.latitude").should("exist");
+    });
+  });
 });

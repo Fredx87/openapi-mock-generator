@@ -1,4 +1,14 @@
 import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
+import { fakerMethods } from "./faker-methods";
+
+const fakerObjProperties = fakerMethods.reduce((acc, current) => {
+  return {
+    ...acc,
+    [current]: {
+      type: "array"
+    }
+  };
+}, {});
 
 export const jsonDiagnosticOptions: monacoEditor.languages.json.DiagnosticsOptions = {
   validate: true,
@@ -10,6 +20,9 @@ export const jsonDiagnosticOptions: monacoEditor.languages.json.DiagnosticsOptio
       schema: {
         type: "object",
         properties: {
+          "x-faker": {
+            $ref: "https://github.com/Marak/faker.js/Schema"
+          },
           title: {
             type: "string"
           },
@@ -311,6 +324,26 @@ export const jsonDiagnosticOptions: monacoEditor.languages.json.DiagnosticsOptio
           "^x-": {}
         },
         additionalProperties: false
+      }
+    },
+    {
+      uri: "https://github.com/Marak/faker.js/Schema",
+      schema: {
+        oneOf: [
+          {
+            type: "string",
+            enum: fakerMethods
+          },
+          {
+            type: "object",
+            properties: {
+              fake: {
+                type: "string"
+              },
+              ...fakerObjProperties
+            }
+          }
+        ]
       }
     }
   ]
