@@ -14,3 +14,4 @@ jobs:
           build: npm run build
           start: npm start:coverage
           wait-on: "http://localhost:3000"
+          wait-on-timeout: 180
