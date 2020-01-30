@@ -8,12 +8,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Node
-        uses: actions/setup-node@v1
+      - name: Cypress run
+        uses: cypress-io/github-action@v1
         with:
-          node-version: 12
-      - run: npm ci
-      - run: npm run build
-      - run: npm run cy:ci
-        env:
-          CI: true
+          build: npm run build
+          start: npm start:coverage
+          wait-on: "http://localhost:3000"
