@@ -91,7 +91,7 @@
       "eslint --fix",
       "git add"
     ],
-    "*.{md,json,yml,yaml}": [
+    "*.{md,json}": [
       "prettier --format",
       "git add"
     ]
