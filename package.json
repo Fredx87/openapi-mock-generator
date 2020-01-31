@@ -66,7 +66,9 @@
     "lint": "eslint . --ext .ts,.tsx,.js --fix",
     "cy:open": "cypress open --env coverage=false",
     "cy:run": "cypress run",
-    "cy:ci": "start-server-and-test start:coverage http://localhost:3000 cy:run"
+    "cy:ci": "start-server-and-test start:coverage http://localhost:3000 cy:run",
+    "gen:chance": "ts-node --project ./scripts/tsconfig.json ./scripts/generate-chance-methods.ts",
+    "gen:faker": "ts-node --project ./scripts/tsconfig.json ./scripts/generate-faker-methods.ts"
   },
   "eslintConfig": {
     "extends": "react-app"

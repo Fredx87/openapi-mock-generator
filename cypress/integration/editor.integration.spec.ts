@@ -184,4 +184,59 @@ describe("Editor", () => {
       cy.contains("address.latitude").should("exist");
     });
   });
+
+  it("should show autocomplete values for x-chance string", () => {
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoEditor()
+      .type("{ctrl}a")
+      .within(() =>
+        cy
+          .get("textarea")
+          .as("textarea")
+          .type(`{{}{enter}"x-ch`)
+          .type("{ctrl} ")
+          .get(suggestionSelector)
+          .as("suggestions")
+          .within(() => {
+            cy.contains("x-chance").click();
+          })
+          .get("@textarea")
+          .type(`: "lo`)
+          .type("{ctrl} ")
+      );
+
+    cy.get("@suggestions").within(() => {
+      cy.contains("locale").should("exist");
+      cy.contains("locales").should("exist");
+      cy.contains("loremPicsum").should("exist");
+      cy.contains("longitude").should("exist");
+    });
+  });
+
+  it("should show autocomplete values for x-chance object", () => {
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoEditor()
+      .type("{ctrl}a")
+      .within(() =>
+        cy
+          .get("textarea")
+          .as("textarea")
+          .type(`{{}{enter}"x-ch`)
+          .type("{ctrl} ")
+          .get(suggestionSelector)
+          .as("suggestions")
+          .within(() => {
+            cy.contains("x-chance").click();
+          })
+          .get("@textarea")
+          .type(`: {{}{enter}`)
+          .type("{ctrl} ")
+      );
+
+    cy.get("@suggestions").within(() => {
+      cy.contains("address").should("exist");
+      cy.contains("age").should("exist");
+      cy.contains("altitude").should("exist");
+    });
+  });
 });
