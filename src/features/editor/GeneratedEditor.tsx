@@ -1,4 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
+import { Chance } from "chance";
 import faker from "faker";
 import jsf from "json-schema-faker";
 import $RefParser from "json-schema-ref-parser";
@@ -13,6 +14,7 @@ import { getCurrentRef } from "./editor-slice";
 import { monacoDefaultOptions } from "./monaco-options";
 
 jsf.extend("faker", () => faker);
+jsf.extend("chance", () => new Chance());
 
 const getCurrentSchemaValue = createSelector(
   [getDocument, getCurrentRef],

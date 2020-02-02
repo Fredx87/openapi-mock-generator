@@ -1,4 +1,4 @@
-export const fakerMethods = [
+export default [
   "random.number",
   "random.arrayElement",
   "random.objectElement",

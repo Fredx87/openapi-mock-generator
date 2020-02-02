@@ -1,11 +1,21 @@
 import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
-import { fakerMethods } from "./faker-methods";
+import chanceMethods from "./chance-methods";
+import fakerMethods from "./faker-methods";
 
 const fakerObjProperties = fakerMethods.reduce((acc, current) => {
   return {
     ...acc,
     [current]: {
       type: "array"
+    }
+  };
+}, {});
+
+const chanceObjProperties = chanceMethods.reduce((acc, current) => {
+  return {
+    ...acc,
+    [current]: {
+      oneOf: [{ type: "array" }, { type: "object" }]
     }
   };
 }, {});
@@ -22,6 +32,9 @@ export const jsonDiagnosticOptions: monacoEditor.languages.json.DiagnosticsOptio
         properties: {
           "x-faker": {
             $ref: "https://github.com/Marak/faker.js/Schema"
+          },
+          "x-chance": {
+            $ref: "https://chancejs.com/Schema"
           },
           title: {
             type: "string"
@@ -342,6 +355,21 @@ export const jsonDiagnosticOptions: monacoEditor.languages.json.DiagnosticsOptio
               },
               ...fakerObjProperties
             }
+          }
+        ]
+      }
+    },
+    {
+      uri: "https://chancejs.com/Schema",
+      schema: {
+        oneOf: [
+          {
+            type: "string",
+            enum: chanceMethods
+          },
+          {
+            type: "object",
+            properties: chanceObjProperties
           }
         ]
       }
