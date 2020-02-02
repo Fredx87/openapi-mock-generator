@@ -1,4 +1,6 @@
-import { Col, Layout, Row } from "antd";
+import Col from "antd/es/col";
+import Layout from "antd/es/layout";
+import Row from "antd/es/row";
 import React from "react";
 import "./App.css";
 import { MyHeader } from "./components/MyHeader";

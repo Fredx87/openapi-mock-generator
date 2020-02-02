@@ -1,4 +1,4 @@
-import { Tree } from "antd";
+import Tree from "antd/es/tree";
 import { AntTreeNodeSelectedEvent } from "antd/lib/tree";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";

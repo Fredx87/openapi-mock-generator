@@ -1,4 +1,6 @@
-import { Button, Icon, Upload } from "antd";
+import Button from "antd/es/button";
+import Icon from "antd/es/icon";
+import Upload from "antd/es/upload";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { parseOpenApiFile } from "./document-slice";
