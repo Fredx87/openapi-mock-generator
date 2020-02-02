@@ -20,9 +20,7 @@ describe("Editor", () => {
         .toggleTreeNode()
         .contains("li", /get.*findPets/)
         .toggleTreeNode()
-        .contains("li", "responses")
-        .toggleTreeNode()
-        .contains("li", "default")
+        .contains("li", "response - default")
         .clickTreeNode();
     });
 

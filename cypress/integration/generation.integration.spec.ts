@@ -109,9 +109,7 @@ describe("Generation", () => {
         .toggleTreeNode()
         .contains("li", /get.*findPets/)
         .toggleTreeNode()
-        .contains("li", "responses")
-        .toggleTreeNode()
-        .contains("li", "200")
+        .contains("li", "response - 200")
         .clickTreeNode();
     });
 
