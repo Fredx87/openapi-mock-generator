@@ -12,6 +12,6 @@ jobs:
         uses: cypress-io/github-action@v1
         with:
           build: npm run build
-          start: npm start:coverage
+          start: npm run start:coverage
           wait-on: "http://localhost:3000"
           wait-on-timeout: 180
