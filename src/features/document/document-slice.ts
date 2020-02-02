@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { message } from "antd";
+import message from "antd/es/message";
 import * as E from "fp-ts/es6/Either";
 import * as O from "fp-ts/es6/Option";
 import { pipe } from "fp-ts/es6/pipeable";

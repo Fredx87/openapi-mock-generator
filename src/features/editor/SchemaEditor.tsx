@@ -1,11 +1,11 @@
 import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
 import React, { useEffect, useRef, useState } from "react";
-import MonacoEditor from "react-monaco-editor";
 import { useDispatch, useSelector } from "react-redux";
 import { getObjectByRef } from "../../shared/utils";
 import { getDocument, setRefValue } from "../document/document-slice";
 import { getCurrentRef } from "./editor-slice";
 import { monacoDefaultOptions } from "./monaco-options";
+import { MyMonacoEditor } from "./MyMonacoEditor";
 import { jsonDiagnosticOptions } from "./schemas";
 
 export const SchemaEditor: React.FC = () => {
@@ -56,7 +56,7 @@ export const SchemaEditor: React.FC = () => {
 
   return (
     <div data-testid="schema-editor">
-      <MonacoEditor
+      <MyMonacoEditor
         height={300}
         language="json"
         value={value}
@@ -64,7 +64,7 @@ export const SchemaEditor: React.FC = () => {
         editorWillMount={editorWillMount}
         editorDidMount={editorDidMount}
         options={options}
-      ></MonacoEditor>
+      ></MyMonacoEditor>
     </div>
   );
 };
