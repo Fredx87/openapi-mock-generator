@@ -8,6 +8,7 @@ import { EditorContainer } from "./EditorContainer";
 import { monacoDefaultOptions } from "./monaco-options";
 import { MyMonacoEditor } from "./MyMonacoEditor";
 import { jsonDiagnosticOptions } from "./schemas";
+import { useEditorResize } from "./use-editor-resize";
 
 export const SchemaEditor: React.FC = () => {
   const document = useSelector(getDocument);
@@ -29,6 +30,8 @@ export const SchemaEditor: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRef]);
+
+  const containerRef = useEditorResize(editorRef);
 
   const options: monacoEditor.editor.IStandaloneEditorConstructionOptions = {
     ...monacoDefaultOptions,
@@ -56,7 +59,7 @@ export const SchemaEditor: React.FC = () => {
   };
 
   return (
-    <EditorContainer data-testid="schema-editor">
+    <EditorContainer data-testid="schema-editor" ref={containerRef}>
       <MyMonacoEditor
         language="json"
         value={value}
