@@ -109,15 +109,18 @@ describe("OpenAPI Document Tree", () => {
         });
 
       cy.get("@schemasNodes").should("have.length", 3);
+
       cy.get("@schemasNodes")
         .eq(0)
-        .should("contain.text", "Pet");
+        .should("contain.text", "Error");
+
       cy.get("@schemasNodes")
         .eq(1)
         .should("contain.text", "NewPet");
+
       cy.get("@schemasNodes")
         .eq(2)
-        .should("contain.text", "Error");
+        .should("contain.text", "Pet");
     });
   });
 });
