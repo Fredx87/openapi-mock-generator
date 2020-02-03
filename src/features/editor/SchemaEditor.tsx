@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getObjectByRef } from "../../shared/utils";
 import { getDocument, setRefValue } from "../document/document-slice";
 import { getCurrentRef } from "./editor-slice";
+import { EditorContainer } from "./EditorContainer";
 import { monacoDefaultOptions } from "./monaco-options";
 import { MyMonacoEditor } from "./MyMonacoEditor";
 import { jsonDiagnosticOptions } from "./schemas";
@@ -55,9 +56,8 @@ export const SchemaEditor: React.FC = () => {
   };
 
   return (
-    <div data-testid="schema-editor">
+    <EditorContainer data-testid="schema-editor">
       <MyMonacoEditor
-        height={300}
         language="json"
         value={value}
         onChange={onChange}
@@ -65,6 +65,6 @@ export const SchemaEditor: React.FC = () => {
         editorDidMount={editorDidMount}
         options={options}
       ></MyMonacoEditor>
-    </div>
+    </EditorContainer>
   );
 };
