@@ -5,5 +5,8 @@
     "prettier/react",
     "prettier/@typescript-eslint"
   ],
-  "plugins": ["prettier"]
+  "plugins": ["prettier", "no-only-tests"],
+  "rules": {
+    "no-only-tests/no-only-tests": "error"
+  }
 }
