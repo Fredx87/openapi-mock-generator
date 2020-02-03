@@ -142,13 +142,15 @@ const buildPathsTree = (
 const buildSchemasTree = (
   schemas: Record<string, OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject>
 ): LeafTreeNode[] =>
-  Object.keys(schemas).map(
-    (name): LeafTreeNode => ({
-      type: "Leaf",
-      title: name,
-      ref: `#/components/schemas/${name}`
-    })
-  );
+  Object.keys(schemas)
+    .sort()
+    .map(
+      (name): LeafTreeNode => ({
+        type: "Leaf",
+        title: name,
+        ref: `#/components/schemas/${name}`
+      })
+    );
 
 export function buildDocumentTree(
   document?: OpenAPIV3.Document
