@@ -5,7 +5,7 @@ import jsf from "json-schema-faker";
 import $RefParser from "json-schema-ref-parser";
 import cloneDeep from "lodash-es/cloneDeep";
 import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { getObjectByRef } from "../../shared/utils";
 import { getDocument } from "../document/document-slice";
@@ -13,6 +13,7 @@ import { getCurrentRef } from "./editor-slice";
 import { EditorContainer } from "./EditorContainer";
 import { monacoDefaultOptions } from "./monaco-options";
 import { MyMonacoEditor } from "./MyMonacoEditor";
+import { useEditorResize } from "./use-editor-resize";
 
 jsf.extend("faker", () => faker);
 jsf.extend("chance", () => new Chance());
@@ -31,6 +32,8 @@ export const GeneratedEditor: React.FC = () => {
   const currentSchemaValue = useSelector(getCurrentSchemaValue);
 
   const [value, setValue] = useState(" ");
+
+  const editorRef = useRef<monacoEditor.editor.IStandaloneCodeEditor>();
 
   useEffect(() => {
     if (document && currentSchemaValue) {
@@ -59,6 +62,8 @@ export const GeneratedEditor: React.FC = () => {
     }
   }, [document, currentSchemaValue]);
 
+  const containerRef = useEditorResize(editorRef);
+
   const options: monacoEditor.editor.IStandaloneEditorConstructionOptions = {
     ...monacoDefaultOptions,
     ariaLabel: "generated model",
@@ -68,11 +73,12 @@ export const GeneratedEditor: React.FC = () => {
   const editorDidMount = (
     editor: monacoEditor.editor.IStandaloneCodeEditor
   ) => {
+    editorRef.current = editor;
     editor.focus();
   };
 
   return (
-    <EditorContainer data-testid="generated-editor">
+    <EditorContainer data-testid="generated-editor" ref={containerRef}>
       <MyMonacoEditor
         language="json"
         value={value}

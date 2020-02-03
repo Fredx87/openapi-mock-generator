@@ -6,10 +6,33 @@ import {
 import { treeTestId } from "../support/tree";
 import { uploadFile } from "../support/upload-file";
 
+function equalSize(testId: string) {
+  cy.findByTestId(testId).then(container => {
+    const containerWidth = container.width();
+    const containerHeight = container.height();
+    cy.wrap(container)
+      .getMonacoEditor()
+      .should(editor => {
+        expect(editor.width()).be.equal(containerWidth);
+        expect(editor.height()).be.equal(containerHeight);
+      });
+  });
+}
+
 describe("Editor", () => {
   beforeEach(() => {
     cy.visit("/");
     uploadFile("pestore-expanded.yaml");
+  });
+
+  it("should resize editor when window resize", () => {
+    equalSize(schemaEditorTestId);
+    equalSize(generatedEditorTestId);
+
+    cy.viewport("macbook-15");
+
+    equalSize(schemaEditorTestId);
+    equalSize(generatedEditorTestId);
   });
 
   it("should load Error schema for /pets - get - default response", () => {
