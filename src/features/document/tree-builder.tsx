@@ -59,7 +59,7 @@ const buildResponseNodes = (
       if (isOpenApiComplexType(resolvedSchema)) {
         const node: LeafTreeNode = {
           type: "Leaf",
-          title: code,
+          title: `response - ${code}`,
           ref: `${parentRef}/${code}/content/application~1json/schema`
         };
         res.push(node);
@@ -81,6 +81,13 @@ const buildOperationTree = (
 
   const { responses, requestBody, operationId } = operation;
 
+  if (requestBody) {
+    const requestBodyNode = buildRequestBodyNode(ref, requestBody, document);
+    if (requestBodyNode) {
+      children.push(requestBodyNode);
+    }
+  }
+
   if (responses) {
     const responsesRef = `${ref}/responses`;
     const responsesNodes = buildResponseNodes(
@@ -88,21 +95,7 @@ const buildOperationTree = (
       responses,
       document
     );
-    if (responsesNodes.length > 0) {
-      children.push({
-        type: "Branch",
-        title: "responses",
-        ref: responsesRef,
-        children: responsesNodes
-      });
-    }
-  }
-
-  if (requestBody) {
-    const requestBodyNode = buildRequestBodyNode(ref, requestBody, document);
-    if (requestBodyNode) {
-      children.push(requestBodyNode);
-    }
+    children.push(...responsesNodes);
   }
 
   const title = operationId ? `${method} - ${operationId}` : method;
@@ -149,13 +142,15 @@ const buildPathsTree = (
 const buildSchemasTree = (
   schemas: Record<string, OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject>
 ): LeafTreeNode[] =>
-  Object.keys(schemas).map(
-    (name): LeafTreeNode => ({
-      type: "Leaf",
-      title: name,
-      ref: `#/components/schemas/${name}`
-    })
-  );
+  Object.keys(schemas)
+    .sort()
+    .map(
+      (name): LeafTreeNode => ({
+        type: "Leaf",
+        title: name,
+        ref: `#/components/schemas/${name}`
+      })
+    );
 
 export function buildDocumentTree(
   document?: OpenAPIV3.Document

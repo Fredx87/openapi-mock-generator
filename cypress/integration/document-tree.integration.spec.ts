@@ -15,19 +15,19 @@ describe("OpenAPI Document Tree", () => {
         .toggleTreeNode()
         .contains("li", /get.*findPets/)
         .toggleTreeNode()
-        .contains("li", "responses")
-        .toggleTreeNode()
         .within(() => {
-          cy.get("li").as("responsesNodes");
+          cy.get("li").as("apiChildren");
         });
 
-      cy.get("@responsesNodes").should("have.length", 2);
-      cy.get("@responsesNodes")
+      cy.get("@apiChildren").should("have.length", 2);
+
+      cy.get("@apiChildren")
         .eq(0)
-        .should("contain.text", "200");
-      cy.get("@responsesNodes")
+        .should("contain.text", "response - 200");
+
+      cy.get("@apiChildren")
         .eq(1)
-        .should("contain.text", "default");
+        .should("contain.text", "response - default");
     });
   });
 
@@ -38,25 +38,24 @@ describe("OpenAPI Document Tree", () => {
         .contains("li", "/pets")
         .toggleTreeNode()
         .contains("li", /post.*addPet/)
-        .as("apiNode")
-        .toggleTreeNode()
-        .contains("li", "responses")
         .toggleTreeNode()
         .within(() => {
-          cy.get("li").as("responsesNodes");
+          cy.get("li").as("apiChildren");
         });
 
-      cy.get("@apiNode")
-        .contains("li", "requestBody")
-        .should("exist");
+      cy.get("@apiChildren").should("have.length", 3);
 
-      cy.get("@responsesNodes").should("have.length", 2);
-      cy.get("@responsesNodes")
+      cy.get("@apiChildren")
         .eq(0)
-        .should("contain.text", "200");
-      cy.get("@responsesNodes")
+        .should("contain.text", "requestBody");
+
+      cy.get("@apiChildren")
         .eq(1)
-        .should("contain.text", "default");
+        .should("contain.text", "response - 200");
+
+      cy.get("@apiChildren")
+        .eq(2)
+        .should("contain.text", "response - default");
     });
   });
 
@@ -68,19 +67,17 @@ describe("OpenAPI Document Tree", () => {
         .toggleTreeNode()
         .contains("li", /get.*find pet by id/)
         .toggleTreeNode()
-        .contains("li", "responses")
-        .toggleTreeNode()
         .within(() => {
-          cy.get("li").as("responsesNodes");
+          cy.get("li").as("apiChildren");
         });
 
-      cy.get("@responsesNodes").should("have.length", 2);
-      cy.get("@responsesNodes")
+      cy.get("@apiChildren").should("have.length", 2);
+      cy.get("@apiChildren")
         .eq(0)
-        .should("contain.text", "200");
-      cy.get("@responsesNodes")
+        .should("contain.text", "response - 200");
+      cy.get("@apiChildren")
         .eq(1)
-        .should("contain.text", "default");
+        .should("contain.text", "response - default");
     });
   });
 
@@ -92,16 +89,14 @@ describe("OpenAPI Document Tree", () => {
         .toggleTreeNode()
         .contains("li", /delete.*deletePet/)
         .toggleTreeNode()
-        .contains("li", "responses")
-        .toggleTreeNode()
         .within(() => {
-          cy.get("li").as("responsesNodes");
+          cy.get("li").as("apiChildren");
         });
 
-      cy.get("@responsesNodes").should("have.length", 1);
-      cy.get("@responsesNodes")
+      cy.get("@apiChildren").should("have.length", 1);
+      cy.get("@apiChildren")
         .eq(0)
-        .should("contain.text", "default");
+        .should("contain.text", "response - default");
     });
   });
 
@@ -114,15 +109,18 @@ describe("OpenAPI Document Tree", () => {
         });
 
       cy.get("@schemasNodes").should("have.length", 3);
+
       cy.get("@schemasNodes")
         .eq(0)
-        .should("contain.text", "Pet");
+        .should("contain.text", "Error");
+
       cy.get("@schemasNodes")
         .eq(1)
         .should("contain.text", "NewPet");
+
       cy.get("@schemasNodes")
         .eq(2)
-        .should("contain.text", "Error");
+        .should("contain.text", "Pet");
     });
   });
 });

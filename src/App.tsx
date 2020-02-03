@@ -2,6 +2,7 @@ import Col from "antd/es/col";
 import Layout from "antd/es/layout";
 import Row from "antd/es/row";
 import React from "react";
+import styled from "styled-components";
 import "./App.css";
 import { MyHeader } from "./components/MyHeader";
 import { DocumentTree } from "./features/document/DocumentTree";
@@ -9,28 +10,45 @@ import { GeneratedEditor } from "./features/editor/GeneratedEditor";
 import { SchemaEditor } from "./features/editor/SchemaEditor";
 
 const { Header, Sider, Content } = Layout;
+
+const StyledLayout = styled(Layout)`
+  height: 100vh;
+`;
+
+const StyledRow = styled(Row)`
+  height: 100%;
+`;
+
+const StyledCol = styled(Col)`
+  height: 100%;
+`;
+
+const StyledSider = styled(Sider)`
+  overflow: auto;
+`;
+
 const App: React.FC = () => {
   return (
-    <Layout>
+    <StyledLayout>
       <Header>
         <MyHeader></MyHeader>
       </Header>
       <Layout>
-        <Sider theme="light">
+        <StyledSider theme="light" width={300}>
           <DocumentTree></DocumentTree>
-        </Sider>
+        </StyledSider>
         <Content>
-          <Row>
-            <Col span={12}>
+          <StyledRow>
+            <StyledCol span={12}>
               <SchemaEditor></SchemaEditor>
-            </Col>
-            <Col span={12}>
+            </StyledCol>
+            <StyledCol span={12}>
               <GeneratedEditor></GeneratedEditor>
-            </Col>
-          </Row>
+            </StyledCol>
+          </StyledRow>
         </Content>
       </Layout>
-    </Layout>
+    </StyledLayout>
   );
 };
 

@@ -73,7 +73,7 @@ describe("Generation", () => {
   it("should generate JSON for Pet model", () => {
     cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Schemas").toggleTreeNode();
-      cy.contains("li", "Pet").clickTreeNode();
+      cy.contains("li", /^Pet$/).clickTreeNode();
     });
 
     cy.findByTestId(schemaEditorTestId)
@@ -109,9 +109,7 @@ describe("Generation", () => {
         .toggleTreeNode()
         .contains("li", /get.*findPets/)
         .toggleTreeNode()
-        .contains("li", "responses")
-        .toggleTreeNode()
-        .contains("li", "200")
+        .contains("li", "response - 200")
         .clickTreeNode();
     });
 

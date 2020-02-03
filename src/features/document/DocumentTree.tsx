@@ -1,3 +1,4 @@
+import Icon from "antd/es/icon";
 import Tree from "antd/es/tree";
 import { AntTreeNodeSelectedEvent } from "antd/lib/tree";
 import React from "react";
@@ -6,7 +7,7 @@ import { RootState } from "../../rootReducer";
 import { setCurrentRef } from "../editor/editor-slice";
 import { GeneralTreeNode } from "./tree-builder";
 
-const { TreeNode } = Tree;
+const { TreeNode, DirectoryTree } = Tree;
 
 function renderNode(node: GeneralTreeNode): React.ReactNode {
   if (node.type === "Branch") {
@@ -16,7 +17,13 @@ function renderNode(node: GeneralTreeNode): React.ReactNode {
       </TreeNode>
     );
   }
-  return <TreeNode key={node.ref} title={node.title}></TreeNode>;
+  return (
+    <TreeNode
+      icon={<Icon type="file-text" theme="twoTone"></Icon>}
+      key={node.ref}
+      title={node.title}
+    ></TreeNode>
+  );
 }
 
 export const DocumentTree: React.FC = () => {
@@ -30,9 +37,9 @@ export const DocumentTree: React.FC = () => {
 
   return (
     <div data-testid="document-tree">
-      <Tree onSelect={onSelect}>
+      <DirectoryTree onSelect={onSelect}>
         {treeData.map(child => renderNode(child))}
-      </Tree>
+      </DirectoryTree>
     </div>
   );
 };

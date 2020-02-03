@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { getObjectByRef } from "../../shared/utils";
 import { getDocument } from "../document/document-slice";
 import { getCurrentRef } from "./editor-slice";
+import { EditorContainer } from "./EditorContainer";
 import { monacoDefaultOptions } from "./monaco-options";
 import { MyMonacoEditor } from "./MyMonacoEditor";
 
@@ -71,14 +72,13 @@ export const GeneratedEditor: React.FC = () => {
   };
 
   return (
-    <div data-testid="generated-editor">
+    <EditorContainer data-testid="generated-editor">
       <MyMonacoEditor
-        height={300}
         language="json"
         value={value}
         options={options}
         editorDidMount={editorDidMount}
       ></MyMonacoEditor>
-    </div>
+    </EditorContainer>
   );
 };
