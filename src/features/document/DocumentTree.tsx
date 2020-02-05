@@ -28,7 +28,10 @@ function renderNode(node: GeneralTreeNode): React.ReactNode {
 
 export const DocumentTree: React.FC = () => {
   const treeData = useSelector((state: RootState) => state.document.tree);
+  const currentRef = useSelector((state: RootState) => state.editor.currentRef);
   const dispatch = useDispatch();
+
+  const selectedKeys: string[] = currentRef ? [currentRef] : [];
 
   const onSelect = (_: unknown, e: AntTreeNodeSelectedEvent) => {
     const node = e.node.props;
@@ -37,7 +40,7 @@ export const DocumentTree: React.FC = () => {
 
   return (
     <div data-testid="document-tree">
-      <DirectoryTree onSelect={onSelect}>
+      <DirectoryTree onSelect={onSelect} selectedKeys={selectedKeys}>
         {treeData.map(child => renderNode(child))}
       </DirectoryTree>
     </div>

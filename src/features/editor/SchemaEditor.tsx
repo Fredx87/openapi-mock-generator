@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getObjectByRef } from "../../shared/utils";
 import { getDocument, setRefValue } from "../document/document-slice";
-import { getCurrentRef } from "./editor-slice";
+import { getCurrentRef, setCurrentRef } from "./editor-slice";
 import { EditorContainer } from "./EditorContainer";
 import { monacoDefaultOptions } from "./monaco-options";
 import { MyMonacoEditor } from "./MyMonacoEditor";
@@ -56,6 +56,38 @@ export const SchemaEditor: React.FC = () => {
   ) => {
     editorRef.current = editor;
     editor.focus();
+
+    const commandId = editor.addCommand(0, (ctx, ref: string) => {
+      dispatch(setCurrentRef(ref));
+    });
+
+    monacoEditor.languages.registerCodeLensProvider("json", {
+      provideCodeLenses: (model): monacoEditor.languages.CodeLensList => {
+        const matches = model.findMatches(
+          `"\\$ref":\\s*"(#.*)"`,
+          false,
+          true,
+          false,
+          null,
+          true
+        );
+        const lenses = matches.map(m => {
+          const res: monacoEditor.languages.CodeLens = {
+            range: m.range,
+            command: {
+              title: "Go to reference",
+              id: commandId!,
+              arguments: [m.matches?.[1]]
+            }
+          };
+          return res;
+        });
+        return { lenses, dispose: () => {} };
+      },
+      resolveCodeLens: (model, codeLens) => {
+        return codeLens;
+      }
+    });
   };
 
   return (

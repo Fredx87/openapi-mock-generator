@@ -1,4 +1,6 @@
+import { newPetModel } from "../fixtures/models/petstore-expanded";
 import {
+  antTreeNodeSelectedClass,
   generatedEditorTestId,
   schemaEditorTestId,
   suggestionSelector
@@ -259,5 +261,28 @@ describe("Editor", () => {
       cy.contains("age").should("exist");
       cy.contains("altitude").should("exist");
     });
+  });
+
+  it("should show 'Go to reference' link and should show linked model after click", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Schemas").toggleTreeNode();
+      cy.contains("li", /^Pet$/).clickTreeNode();
+    });
+
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoEditor()
+      .within(() => {
+        cy.findByText(/go to reference/i).click();
+      });
+
+    cy.findByTestId(treeTestId).within(() => {
+      cy.findByTitle("NewPet").should("have.class", antTreeNodeSelectedClass);
+    });
+
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoValue()
+      .should(value => {
+        expect(JSON.parse(value)).deep.equal(newPetModel);
+      });
   });
 });
