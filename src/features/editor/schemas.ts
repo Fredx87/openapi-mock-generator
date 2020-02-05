@@ -25,8 +25,24 @@ export const jsonDiagnosticOptions: monacoEditor.languages.json.DiagnosticsOptio
   schemas: [
     {
       uri:
-        "https://spec.openapis.org/oas/3.0/schema/2019-04-02/definitions/Schema",
+        "https://spec.openapis.org/oas/3.0/schema/2019-04-02/definitions/SchemaOrReference",
       fileMatch: ["*"],
+      schema: {
+        oneOf: [
+          {
+            $ref:
+              "https://spec.openapis.org/oas/3.0/schema/2019-04-02/definitions/Schema"
+          },
+          {
+            $ref:
+              "https://spec.openapis.org/oas/3.0/schema/2019-04-02/definitions/Reference"
+          }
+        ]
+      }
+    },
+    {
+      uri:
+        "https://spec.openapis.org/oas/3.0/schema/2019-04-02/definitions/Schema",
       schema: {
         type: "object",
         properties: {
