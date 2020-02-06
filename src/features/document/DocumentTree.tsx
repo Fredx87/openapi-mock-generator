@@ -23,12 +23,21 @@ const TreeContainer = styled.div`
   overflow: auto;
 `;
 
+const StyledMark = styled.mark`
+  padding: 0;
+  background-color: #ffe58f;
+`;
+
 function renderNode(
   node: GeneralTreeNode,
   searchTerm: string
 ): React.ReactNode {
   const title = searchTerm ? (
-    <MarkText content={node.title} mark={searchTerm}></MarkText>
+    <MarkText
+      content={node.title}
+      mark={searchTerm}
+      markComponent={StyledMark}
+    ></MarkText>
   ) : (
     node.title
   );
