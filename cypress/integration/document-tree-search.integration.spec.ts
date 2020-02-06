@@ -12,15 +12,18 @@ describe("OpenAPI Document Tree / Search", () => {
 
     cy.findByTestId(treeTestId).within(() => {
       cy.get("mark").should("have.length", 12);
-      cy.contains("/pets").should("have.html", "/p<mark>et</mark>s");
-      cy.contains("get - findPets").should(
-        "have.html",
-        "g<mark>et</mark> - findP<mark>et</mark>s"
-      );
-      cy.contains("post - addPet").should(
-        "have.html",
-        "post - addP<mark>et</mark>"
-      );
+
+      cy.contains("/pets")
+        .children("mark")
+        .should("have.length", 1);
+
+      cy.contains("get - findPets")
+        .children("mark")
+        .should("have.length", 2);
+
+      cy.contains("post - addPet")
+        .children("mark")
+        .should("have.length", 1);
     });
 
     cy.findByPlaceholderText("Search...").clear();
