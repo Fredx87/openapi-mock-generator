@@ -47,4 +47,26 @@ describe("MarkText", () => {
       </span>
     `);
   });
+
+  it("should return multiple marks when multiple matches are found (case insensitive)", () => {
+    const { container } = render(
+      <MarkText
+        content="Watch this! This is my awesome content!"
+        mark="this"
+      ></MarkText>
+    );
+    expect(container.firstChild).toMatchInlineSnapshot(`
+      <span>
+        Watch 
+        <mark>
+          this
+        </mark>
+        ! 
+        <mark>
+          This
+        </mark>
+         is my awesome content!
+      </span>
+    `);
+  });
 });

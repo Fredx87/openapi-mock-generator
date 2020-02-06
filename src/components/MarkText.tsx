@@ -6,11 +6,15 @@ interface MarkTextProps {
 }
 
 export const MarkText: React.FC<MarkTextProps> = props => {
-  const chops = props.content.split(new RegExp(`(${props.mark})`));
+  const chops = props.content.split(new RegExp(`(${props.mark})`, "gi"));
   return (
     <span>
       {chops.map((chop, index) =>
-        chop === props.mark ? <mark key={index}>{chop}</mark> : chop
+        chop.toLocaleLowerCase() === props.mark.toLocaleLowerCase() ? (
+          <mark key={index}>{chop}</mark>
+        ) : (
+          chop
+        )
       )}
     </span>
   );
