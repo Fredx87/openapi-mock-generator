@@ -24,7 +24,7 @@ const StyledCol = styled(Col)`
 `;
 
 const StyledSider = styled(Sider)`
-  overflow: "auto";
+  overflow: auto;
 `;
 
 const App: React.FC = () => {
