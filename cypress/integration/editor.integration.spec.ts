@@ -108,6 +108,10 @@ describe("Editor", () => {
   });
 
   it("should show autocomplete box with OpenAPI Schema suggestions when CTRL + space pressed", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Playground").clickTreeNode();
+    });
+
     cy.findByTestId(schemaEditorTestId)
       .getMonacoEditor()
       .within(() =>
@@ -125,6 +129,10 @@ describe("Editor", () => {
   });
 
   it("should show autocomplete values for type property", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Playground").clickTreeNode();
+    });
+
     cy.findByTestId(schemaEditorTestId)
       .getMonacoEditor()
       .type("{ctrl}a")
@@ -154,6 +162,10 @@ describe("Editor", () => {
   });
 
   it("should show autocomplete values for x-faker string", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Playground").clickTreeNode();
+    });
+
     cy.findByTestId(schemaEditorTestId)
       .getMonacoEditor()
       .type("{ctrl}a")
@@ -182,6 +194,10 @@ describe("Editor", () => {
   });
 
   it("should show autocomplete values for x-faker object", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Playground").clickTreeNode();
+    });
+
     cy.findByTestId(schemaEditorTestId)
       .getMonacoEditor()
       .type("{ctrl}a")
@@ -209,6 +225,10 @@ describe("Editor", () => {
   });
 
   it("should show autocomplete values for x-chance string", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Playground").clickTreeNode();
+    });
+
     cy.findByTestId(schemaEditorTestId)
       .getMonacoEditor()
       .type("{ctrl}a")
@@ -237,6 +257,10 @@ describe("Editor", () => {
   });
 
   it("should show autocomplete values for x-chance object", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Playground").clickTreeNode();
+    });
+
     cy.findByTestId(schemaEditorTestId)
       .getMonacoEditor()
       .type("{ctrl}a")

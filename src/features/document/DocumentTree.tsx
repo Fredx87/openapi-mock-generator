@@ -74,7 +74,7 @@ function getNodeMatchingKeys(
   return res;
 }
 
-function getAllMatchingKeys(searchTerm: string, treeData: BranchTreeNode[]) {
+function getAllMatchingKeys(searchTerm: string, treeData: GeneralTreeNode[]) {
   const rootNode: BranchTreeNode = {
     type: "Branch",
     title: "",
