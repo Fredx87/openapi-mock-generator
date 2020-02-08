@@ -129,4 +129,19 @@ describe("OpenAPI Document Tree", () => {
       cy.contains("li", "Playground").should("exist");
     });
   });
+
+  it("should open and close nodes", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Schemas")
+        .as("schemasNode")
+        .toggleTreeNode();
+
+      cy.get("li").should("have.length", 6);
+      cy.contains("li", "Pet").click();
+
+      cy.get("@schemasNode").toggleTreeNode();
+
+      cy.get("li").should("have.length", 3);
+    });
+  });
 });

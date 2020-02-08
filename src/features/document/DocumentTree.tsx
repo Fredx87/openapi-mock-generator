@@ -98,6 +98,7 @@ export const DocumentTree: React.FC = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+  const [autoExpandParent, setAutoExpandParent] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -118,6 +119,12 @@ export const DocumentTree: React.FC = () => {
     setSearchTerm(value);
     const newExpandedKeys = value ? getAllMatchingKeys(value, treeData) : [];
     setExpandedKeys(newExpandedKeys);
+    setAutoExpandParent(true);
+  };
+
+  const onExpand = (keys: string[]) => {
+    setExpandedKeys(keys);
+    setAutoExpandParent(false);
   };
 
   return (
@@ -130,9 +137,9 @@ export const DocumentTree: React.FC = () => {
         <DirectoryTree
           onSelect={onSelect}
           selectedKeys={selectedKeys}
-          autoExpandParent
+          autoExpandParent={autoExpandParent}
           expandedKeys={expandedKeys}
-          onExpand={setExpandedKeys}
+          onExpand={onExpand}
         >
           {treeData.map(child => renderNode(child, searchTerm))}
         </DirectoryTree>
