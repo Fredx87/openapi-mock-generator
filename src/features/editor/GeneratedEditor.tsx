@@ -1,4 +1,3 @@
-import { createSelector } from "@reduxjs/toolkit";
 import { Chance } from "chance";
 import faker from "faker";
 import jsf from "json-schema-faker";
@@ -7,9 +6,9 @@ import cloneDeep from "lodash-es/cloneDeep";
 import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { useCurrentRef } from "../../shared/use-current-ref";
 import { getObjectByRef } from "../../shared/utils";
 import { getDocument } from "../document/document-slice";
-import { getCurrentRef } from "./editor-slice";
 import { EditorContainer } from "./EditorContainer";
 import { monacoDefaultOptions } from "./monaco-options";
 import { MyMonacoEditor } from "./MyMonacoEditor";
@@ -18,18 +17,15 @@ import { useEditorResize } from "./use-editor-resize";
 jsf.extend("faker", () => faker);
 jsf.extend("chance", () => new Chance());
 
-const getCurrentSchemaValue = createSelector(
-  [getDocument, getCurrentRef],
-  (document, currentRef) => {
+export const GeneratedEditor: React.FC = () => {
+  const currentRef = useCurrentRef();
+
+  const document = useSelector(getDocument);
+  const currentSchemaValue = useSelector(_ => {
     if (document && currentRef) {
       return JSON.stringify(getObjectByRef(currentRef, document));
     }
-  }
-);
-
-export const GeneratedEditor: React.FC = () => {
-  const document = useSelector(getDocument);
-  const currentSchemaValue = useSelector(getCurrentSchemaValue);
+  });
 
   const [value, setValue] = useState(" ");
 

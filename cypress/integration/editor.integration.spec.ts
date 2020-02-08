@@ -1,4 +1,4 @@
-import { newPetModel } from "../fixtures/models/petstore-expanded";
+import { newPetModel, petModel } from "../fixtures/models/petstore-expanded";
 import {
   antTreeNodeSelectedClass,
   generatedEditorTestId,
@@ -287,7 +287,7 @@ describe("Editor", () => {
     });
   });
 
-  it("should show 'Go to reference' link and should show linked model after click", () => {
+  it("click 'Go to reference' should show linked model and back button should show previous model", () => {
     cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Schemas").toggleTreeNode();
       cy.contains("li", /^Pet$/).clickTreeNode();
@@ -307,6 +307,18 @@ describe("Editor", () => {
       .getMonacoValue()
       .should(value => {
         expect(JSON.parse(value)).deep.equal(newPetModel);
+      });
+
+    cy.go("back");
+
+    cy.findByTestId(treeTestId).within(() => {
+      cy.findByTitle("Pet").should("have.class", antTreeNodeSelectedClass);
+    });
+
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoValue()
+      .should(value => {
+        expect(JSON.parse(value)).deep.equal(petModel);
       });
   });
 });
