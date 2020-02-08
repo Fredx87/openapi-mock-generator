@@ -2,11 +2,11 @@ import Icon from "antd/es/icon";
 import Tree from "antd/es/tree";
 import { AntTreeNodeSelectedEvent } from "antd/lib/tree";
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { MarkText } from "../../components/MarkText";
 import { RootState } from "../../rootReducer";
-import { setCurrentRef } from "../editor/editor-slice";
 import { DocumentTreeSearch } from "./DocumentTreeSearch";
 import { BranchTreeNode, GeneralTreeNode } from "./tree-builder";
 
@@ -86,8 +86,15 @@ function getAllMatchingKeys(searchTerm: string, treeData: GeneralTreeNode[]) {
 
 export const DocumentTree: React.FC = () => {
   const treeData = useSelector((state: RootState) => state.document.tree);
-  const currentRef = useSelector((state: RootState) => state.editor.currentRef);
-  const dispatch = useDispatch();
+
+  const history = useHistory();
+  const location = useLocation();
+
+  const [selectedKey, setSelectedKey] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    setSelectedKey(decodeURIComponent(location.pathname.substring(1)));
+  }, [location]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
@@ -99,10 +106,12 @@ export const DocumentTree: React.FC = () => {
     }
   }, [searchTerm]);
 
-  const selectedKeys: string[] = currentRef ? [currentRef] : [];
+  const selectedKeys: string[] = selectedKey ? [selectedKey] : [];
   const onSelect = (_: unknown, e: AntTreeNodeSelectedEvent) => {
     const node = e.node.props;
-    dispatch(setCurrentRef(node.eventKey));
+    if (node.eventKey) {
+      history.push(`/${encodeURIComponent(node.eventKey!)}`);
+    }
   };
 
   const onSearchChange = (value: string) => {

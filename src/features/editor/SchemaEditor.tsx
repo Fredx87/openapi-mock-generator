@@ -1,9 +1,10 @@
 import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { useCurrentRef } from "../../shared/use-current-ref";
 import { getObjectByRef } from "../../shared/utils";
 import { getDocument, setRefValue } from "../document/document-slice";
-import { getCurrentRef, setCurrentRef } from "./editor-slice";
 import { EditorContainer } from "./EditorContainer";
 import { monacoDefaultOptions } from "./monaco-options";
 import { MyMonacoEditor } from "./MyMonacoEditor";
@@ -12,8 +13,10 @@ import { useEditorResize } from "./use-editor-resize";
 
 export const SchemaEditor: React.FC = () => {
   const document = useSelector(getDocument);
-  const currentRef = useSelector(getCurrentRef);
   const dispatch = useDispatch();
+
+  const currentRef = useCurrentRef();
+  const history = useHistory();
 
   const [value, setValue] = useState(" ");
 
@@ -57,8 +60,8 @@ export const SchemaEditor: React.FC = () => {
     editorRef.current = editor;
     editor.focus();
 
-    const commandId = editor.addCommand(0, (ctx, ref: string) => {
-      dispatch(setCurrentRef(ref));
+    const commandId = editor.addCommand(0, (_, ref: string) => {
+      history.push(`/${encodeURIComponent(ref)}`);
     });
 
     monacoEditor.languages.registerCodeLensProvider("json", {
@@ -84,7 +87,7 @@ export const SchemaEditor: React.FC = () => {
         });
         return { lenses, dispose: () => {} };
       },
-      resolveCodeLens: (model, codeLens) => {
+      resolveCodeLens: (_, codeLens) => {
         return codeLens;
       }
     });
