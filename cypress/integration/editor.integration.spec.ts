@@ -28,6 +28,10 @@ describe("Editor", () => {
   });
 
   it("should resize editor when window resize", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Playground").clickTreeNode();
+    });
+
     equalSize(schemaEditorTestId);
     equalSize(generatedEditorTestId);
 
