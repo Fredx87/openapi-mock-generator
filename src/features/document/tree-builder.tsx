@@ -5,6 +5,7 @@ import {
   OperationMethod,
   operationMethods
 } from "../../shared/utils";
+import { MyDocument } from "./document-slice";
 
 interface BaseTreeNode {
   title: string;
@@ -152,10 +153,8 @@ const buildSchemasTree = (
       })
     );
 
-export function buildDocumentTree(
-  document?: OpenAPIV3.Document
-): BranchTreeNode[] {
-  const res: BranchTreeNode[] = [];
+export function buildDocumentTree(document?: MyDocument): GeneralTreeNode[] {
+  const res: GeneralTreeNode[] = [];
 
   if (document) {
     const { paths, components } = document;
@@ -176,6 +175,13 @@ export function buildDocumentTree(
       });
     }
   }
+
+  const playgroundItem: LeafTreeNode = {
+    type: "Leaf",
+    title: "Playground",
+    ref: "#/playground"
+  };
+  res.push(playgroundItem);
 
   return res;
 }

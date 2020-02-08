@@ -155,10 +155,8 @@ describe("Generation", () => {
   });
 
   it("should generate fake data with faker.js strings", () => {
-    // @TODO: create a new schema instead of selecting Pet, when this is fixed: https://github.com/Fredx87/openapi-fake-generator/issues/23
     cy.findByTestId(treeTestId).within(() => {
-      cy.contains("li", "Schemas").toggleTreeNode();
-      cy.contains("li", "Pet").clickTreeNode();
+      cy.contains("li", "Playground").clickTreeNode();
     });
 
     const model = {
@@ -206,10 +204,8 @@ describe("Generation", () => {
   });
 
   it("should generate fake data with Chance strings and objects", () => {
-    // @TODO: create a new schema instead of selecting Pet, when this is fixed: https://github.com/Fredx87/openapi-fake-generator/issues/23
     cy.findByTestId(treeTestId).within(() => {
-      cy.contains("li", "Schemas").toggleTreeNode();
-      cy.contains("li", "Pet").clickTreeNode();
+      cy.contains("li", "Playground").clickTreeNode();
     });
 
     const model = {

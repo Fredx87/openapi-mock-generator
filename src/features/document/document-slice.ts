@@ -9,17 +9,21 @@ import { RootState } from "../../rootReducer";
 import { convertRefToPath, safeJsonParse } from "../../shared/utils";
 import { AppThunk } from "../../store";
 import { openApiParser } from "./openapi-parser";
-import { BranchTreeNode, buildDocumentTree } from "./tree-builder";
+import { buildDocumentTree, GeneralTreeNode } from "./tree-builder";
+
+export interface MyDocument extends OpenAPIV3.Document {
+  playground: unknown;
+}
 
 interface EmptyDocumentState {
   status: "empty";
-  tree: BranchTreeNode[];
+  tree: GeneralTreeNode[];
 }
 
 interface LoadedDocumentState {
   status: "loaded";
-  content: OpenAPIV3.Document;
-  tree: BranchTreeNode[];
+  content: MyDocument;
+  tree: GeneralTreeNode[];
 }
 
 type DocumentState = EmptyDocumentState | LoadedDocumentState;
@@ -43,11 +47,18 @@ const slice = createSlice({
     setDocument: (
       _,
       action: PayloadAction<OpenAPIV3.Document>
-    ): LoadedDocumentState => ({
-      status: "loaded",
-      content: action.payload,
-      tree: buildDocumentTree(action.payload)
-    }),
+    ): LoadedDocumentState => {
+      const content: MyDocument = {
+        ...action.payload,
+        playground: {}
+      };
+
+      return {
+        status: "loaded",
+        content,
+        tree: buildDocumentTree(content)
+      };
+    },
     setRefValue(state, action: PayloadAction<SetRefValuePayload>) {
       if (state.status === "loaded") {
         const { ref, value } = action.payload;

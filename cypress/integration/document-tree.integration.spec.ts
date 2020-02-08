@@ -123,4 +123,10 @@ describe("OpenAPI Document Tree", () => {
         .should("contain.text", "Pet");
     });
   });
+
+  it("should have Playground item in the tree", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Playground").should("exist");
+    });
+  });
 });
