@@ -2,7 +2,7 @@ import {
   CREATE_PROJECT_MSG,
   EMPTY_MSG,
   NEW_PROJECT_NAME_PLACEHOLDER
-} from "features/project/ProjectsList";
+} from "src/features/project/ProjectsList";
 
 describe("Projects Management", () => {
   beforeEach(() => {

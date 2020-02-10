@@ -1,8 +1,8 @@
 import Layout from "antd/es/layout";
-import { Project } from "features/project/Project";
-import { ProjectsList } from "features/project/ProjectsList";
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { Project } from "src/features/project/Project";
+import { ProjectsList } from "src/features/project/ProjectsList";
 import styled from "styled-components";
 import "./App.css";
 import { MyHeader } from "./components/MyHeader";
