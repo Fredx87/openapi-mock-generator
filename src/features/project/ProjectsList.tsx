@@ -32,6 +32,13 @@ function toEditableProject(project: DbProject): EditableProject {
   return { ...project, isEditing: false, key: project.id || -1 };
 }
 
+function toDbProject(project: EditableProject): DbProject {
+  const res = { ...project };
+  delete res["key"];
+  delete res["isEditing"];
+  return res;
+}
+
 export const ProjectsList: React.FC = () => {
   const [editingDisabled, setEditingDisabled] = useState(false);
   const [data, setData] = useState<RemoteData<string, EditableProject[]>>(
@@ -74,7 +81,7 @@ export const ProjectsList: React.FC = () => {
 
   const onProjectNameChanged = (index: number, value: string) => {
     if (value && isSuccess(data) && data.value[index]) {
-      const project = data.value[index];
+      const project = toDbProject(data.value[index]);
       project.name = value;
       upsertProject(project)().then(res =>
         pipe(
