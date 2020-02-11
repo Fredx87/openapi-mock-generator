@@ -1,8 +1,8 @@
-import { DB_NAME } from "src/features/project/database";
 import {
   CREATE_PROJECT_MSG,
+  DB_NAME,
   NEW_PROJECT_NAME_PLACEHOLDER
-} from "src/features/project/ProjectsList";
+} from "src/features/project/db-constants";
 import { EMPTY_MSG } from "src/features/project/ProjectsListTable";
 
 const click = ($el: any) => $el.click();

@@ -12,9 +12,16 @@ import Layout from "antd/es/layout";
 import Skeleton from "antd/es/skeleton";
 import * as E from "fp-ts/es6/Either";
 import { pipe } from "fp-ts/es6/pipeable";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { DbProject, getAllProjects, upsertProject } from "./database";
+import {
+  createProject,
+  DbContext,
+  DbProject,
+  getAllProjects,
+  putProject
+} from "./database";
+import { CREATE_PROJECT_MSG } from "./db-constants";
 import { EditableProject, ProjectsListTable } from "./ProjectsListTable";
 
 const { Content } = Layout;
@@ -22,21 +29,19 @@ const { Content } = Layout;
 const StyledContent = styled(Content)`
   padding: 50px 20px;
   max-width: 1200px;
-  text-align: center;
 `;
-
-export const CREATE_PROJECT_MSG = "Create New Project";
-export const NEW_PROJECT_NAME_PLACEHOLDER = "New Project Name";
 
 function toEditableProject(project: DbProject): EditableProject {
   return { ...project, isEditing: false, key: project.id || -1 };
 }
 
 function toDbProject(project: EditableProject): DbProject {
-  const res = { ...project };
-  delete res["key"];
-  delete res["isEditing"];
-  return res;
+  return {
+    id: project.id,
+    name: project.name,
+    createdAt: project.createdAt,
+    modifiedAt: project.modifiedAt
+  };
 }
 
 export const ProjectsList: React.FC = () => {
@@ -44,24 +49,28 @@ export const ProjectsList: React.FC = () => {
   const [data, setData] = useState<RemoteData<string, EditableProject[]>>(
     initial
   );
+  const db = useContext(DbContext);
 
   useEffect(() => {
     getProjectsFromDb();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getProjectsFromDb = () => {
-    getAllProjects()().then(res =>
+  function getProjectsFromDb() {
+    getAllProjects(db!)().then(res =>
       pipe(
         res,
         E.fold(
           e => {
             setData(failure(e));
           },
-          projects => setData(success(projects.map(toEditableProject)))
+          projects => {
+            setData(success(projects.map(toEditableProject)));
+          }
         )
       )
     );
-  };
+  }
 
   const onProjectCreate = () => {
     const newProject: EditableProject = {
@@ -83,7 +92,13 @@ export const ProjectsList: React.FC = () => {
     if (value && isSuccess(data) && data.value[index]) {
       const project = toDbProject(data.value[index]);
       project.name = value;
-      upsertProject(project)().then(res =>
+
+      const operation =
+        project.id === undefined
+          ? createProject(project, db!)
+          : putProject(project, project.id, db!);
+
+      operation().then(res =>
         pipe(
           res,
           E.fold(

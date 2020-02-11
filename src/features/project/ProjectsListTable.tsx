@@ -3,7 +3,7 @@ import Input from "antd/es/input";
 import Table, { ColumnProps } from "antd/es/table";
 import React from "react";
 import { DbProject } from "./database";
-import { NEW_PROJECT_NAME_PLACEHOLDER } from "./ProjectsList";
+import { NEW_PROJECT_NAME_PLACEHOLDER } from "./db-constants";
 
 export const EMPTY_MSG = "No project found. Please create a new project.";
 
