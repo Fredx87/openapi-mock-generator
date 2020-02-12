@@ -14,11 +14,11 @@ import Skeleton from "antd/es/skeleton";
 import * as E from "fp-ts/es6/Either";
 import { pipe } from "fp-ts/es6/pipeable";
 import { produce } from "immer";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDatabase } from "src/shared/use-database";
 import styled from "styled-components";
 import {
   createProject,
-  DbContext,
   DbProject,
   deleteProject,
   getAllProjects,
@@ -52,7 +52,7 @@ export const ProjectsList: React.FC = () => {
   const [data, setData] = useState<RemoteData<string, EditableProject[]>>(
     initial
   );
-  const db = useContext(DbContext);
+  const db = useDatabase();
 
   useEffect(() => {
     getProjectsFromDb();
@@ -60,7 +60,7 @@ export const ProjectsList: React.FC = () => {
   }, []);
 
   function getProjectsFromDb() {
-    getAllProjects(db!)().then(res =>
+    getAllProjects(db)().then(res =>
       pipe(
         res,
         E.fold(
@@ -108,8 +108,8 @@ export const ProjectsList: React.FC = () => {
 
       const operation =
         project.id === undefined
-          ? createProject(project, db!)
-          : putProject(project, db!);
+          ? createProject(project, db)
+          : putProject(project, db);
 
       operation().then(res =>
         pipe(
@@ -133,7 +133,7 @@ export const ProjectsList: React.FC = () => {
   const onDeleteProject = (index: number) => {
     if (isSuccess(data) && data.value[index]) {
       const project = data.value[index];
-      deleteProject(project, db!)().then(res =>
+      deleteProject(project, db)().then(res =>
         pipe(
           res,
           E.fold(
