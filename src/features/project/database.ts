@@ -1,11 +1,11 @@
 import { pipe } from "fp-ts/es6/pipeable";
 import * as TE from "fp-ts/es6/TaskEither";
 import { DBSchema, IDBPDatabase, openDB } from "idb";
-import React from "react";
-import { rootReducer, RootState } from "src/rootReducer";
+import { createContext } from "react";
+import { RootState } from "src/rootReducer";
 import { DB_NAME, PROJECT_STATE_STORE, PROJECT_STORE } from "./db-constants";
 
-export const DbContext = React.createContext<IDBPDatabase<MyDb> | undefined>(
+export const DbContext = createContext<IDBPDatabase<MyDb> | undefined>(
   undefined
 );
 
@@ -27,16 +27,20 @@ export interface MyDb extends DBSchema {
   };
 }
 
-export function openDatabase(): Promise<IDBPDatabase<MyDb>> {
-  return openDB<MyDb>(DB_NAME, 1, {
+export async function openDatabase(): Promise<IDBPDatabase<MyDb>> {
+  const db = await openDB<MyDb>(DB_NAME, 1, {
     upgrade(db) {
       db.createObjectStore(PROJECT_STORE, {
         keyPath: "id",
         autoIncrement: true
       });
       db.createObjectStore(PROJECT_STATE_STORE);
+    },
+    blocking() {
+      db.close();
     }
   });
+  return db;
 }
 
 export function getAllProjects(
@@ -50,11 +54,10 @@ export function getAllProjects(
 
 export function putProject(
   project: DbProject,
-  key: number | undefined,
   db: IDBPDatabase<MyDb>
 ): TE.TaskEither<string, number> {
   return TE.tryCatch(
-    () => db.put(PROJECT_STORE, project, key),
+    () => db.put(PROJECT_STORE, project),
     e => `Cannot put project in database: ${String(e)}`
   );
 }
@@ -77,9 +80,9 @@ export function createProject(
   const toCreate = { ...project };
   delete toCreate["id"];
   return pipe(
-    putProject(toCreate, undefined, db),
+    putProject(toCreate, db),
     TE.chain(key =>
-      putProjectState(rootReducer(undefined, { type: "@@INIT@@" }), key, db)
+      putProjectState({ document: { status: "empty", tree: [] } }, key, db)
     )
   );
 }

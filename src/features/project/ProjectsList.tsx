@@ -12,6 +12,7 @@ import Layout from "antd/es/layout";
 import Skeleton from "antd/es/skeleton";
 import * as E from "fp-ts/es6/Either";
 import { pipe } from "fp-ts/es6/pipeable";
+import { produce } from "immer";
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
@@ -88,6 +89,16 @@ export const ProjectsList: React.FC = () => {
     );
   };
 
+  const onStartEdit = (index: number) => {
+    if (isSuccess(data) && data.value[index]) {
+      const newData = produce(data.value, draft => {
+        draft[index].isEditing = true;
+      });
+      setEditingDisabled(true);
+      setData(success(newData));
+    }
+  };
+
   const onProjectNameChanged = (index: number, value: string) => {
     if (value && isSuccess(data) && data.value[index]) {
       const project = toDbProject(data.value[index]);
@@ -96,7 +107,7 @@ export const ProjectsList: React.FC = () => {
       const operation =
         project.id === undefined
           ? createProject(project, db!)
-          : putProject(project, project.id, db!);
+          : putProject(project, db!);
 
       operation().then(res =>
         pipe(
@@ -139,6 +150,7 @@ export const ProjectsList: React.FC = () => {
             <ProjectsListTable
               projects={projects}
               onProjectNameChanged={onProjectNameChanged}
+              onStartEdit={onStartEdit}
             ></ProjectsListTable>
           )
         )

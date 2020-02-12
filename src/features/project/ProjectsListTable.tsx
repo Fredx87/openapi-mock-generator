@@ -1,3 +1,4 @@
+import Button from "antd/es/button";
 import Empty from "antd/es/empty";
 import Input from "antd/es/input";
 import Table, { ColumnProps } from "antd/es/table";
@@ -15,6 +16,7 @@ export interface EditableProject extends DbProject {
 interface ProjectsListTableProps {
   projects: EditableProject[];
   onProjectNameChanged: (index: number, name: string) => void;
+  onStartEdit: (index: number) => void;
 }
 
 function renderDate(date: Date): string {
@@ -33,6 +35,7 @@ export const ProjectsListTable: React.FC<ProjectsListTableProps> = props => {
             <Input
               autoFocus
               placeholder={NEW_PROJECT_NAME_PLACEHOLDER}
+              defaultValue={record.name}
               onPressEnter={e => {
                 props.onProjectNameChanged(index, e.currentTarget.value);
               }}
@@ -57,6 +60,22 @@ export const ProjectsListTable: React.FC<ProjectsListTableProps> = props => {
       dataIndex: "modifiedAt",
       key: "modifiedAt",
       render: renderDate
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, __, index) => {
+        return (
+          <Button
+            type="link"
+            onClick={() => {
+              props.onStartEdit(index);
+            }}
+          >
+            Edit
+          </Button>
+        );
+      }
     }
   ];
 
