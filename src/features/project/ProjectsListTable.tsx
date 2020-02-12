@@ -7,9 +7,16 @@ import Table, { ColumnProps } from "antd/es/table";
 import React from "react";
 import styled from "styled-components";
 import { DbProject } from "./database";
-import { NEW_PROJECT_NAME_PLACEHOLDER } from "./db-constants";
+import {
+  CREATE_PROJECT_MSG,
+  NEW_PROJECT_NAME_PLACEHOLDER
+} from "./db-constants";
 
 export const EMPTY_MSG = "No project found. Please create a new project.";
+
+const HeaderContainer = styled.div`
+  margin: 20px 0;
+`;
 
 const StyledButton = styled(Button)`
   padding: 0 !important;
@@ -23,6 +30,7 @@ export interface EditableProject extends DbProject {
 interface ProjectsListTableProps {
   editingDisabled: boolean;
   projects: EditableProject[];
+  onProjectCreate: () => void;
   onProjectNameChanged: (index: number, name: string) => void;
   onStartEdit: (index: number) => void;
   onDeleteProject: (index: number) => void;
@@ -104,11 +112,22 @@ export const ProjectsListTable: React.FC<ProjectsListTableProps> = props => {
   ];
 
   return (
-    <Table<EditableProject>
-      dataSource={props.projects}
-      columns={columns}
-      locale={{ emptyText: <Empty description={EMPTY_MSG} /> }}
-      pagination={false}
-    ></Table>
+    <>
+      <HeaderContainer>
+        <Button
+          type="primary"
+          onClick={props.onProjectCreate}
+          disabled={props.editingDisabled}
+        >
+          {CREATE_PROJECT_MSG}
+        </Button>
+      </HeaderContainer>
+      <Table<EditableProject>
+        dataSource={props.projects}
+        columns={columns}
+        locale={{ emptyText: <Empty description={EMPTY_MSG} /> }}
+        pagination={false}
+      ></Table>
+    </>
   );
 };

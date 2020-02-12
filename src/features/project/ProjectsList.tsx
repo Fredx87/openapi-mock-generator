@@ -7,7 +7,6 @@ import {
   success
 } from "@devexperts/remote-data-ts";
 import Alert from "antd/es/alert";
-import Button from "antd/es/button";
 import Layout from "antd/es/layout";
 import message from "antd/es/message";
 import Skeleton from "antd/es/skeleton";
@@ -24,7 +23,6 @@ import {
   getAllProjects,
   putProject
 } from "./database";
-import { CREATE_PROJECT_MSG } from "./db-constants";
 import { EditableProject, ProjectsListTable } from "./ProjectsListTable";
 
 const { Content } = Layout;
@@ -37,10 +35,6 @@ const StyledContainer = styled.div`
   padding: 20px 50px;
   max-width: 1200px;
   margin: auto;
-`;
-
-const ButtonContainer = styled.div`
-  margin: 20px 0;
 `;
 
 function toEditableProject(project: DbProject): EditableProject {
@@ -137,7 +131,6 @@ export const ProjectsList: React.FC = () => {
     } else {
       getProjectsFromDb();
     }
-    setEditingDisabled(false);
   };
 
   const onDeleteProject = (index: number) => {
@@ -162,15 +155,6 @@ export const ProjectsList: React.FC = () => {
   return (
     <StyledContent>
       <StyledContainer>
-        <ButtonContainer>
-          <Button
-            type="primary"
-            onClick={onProjectCreate}
-            disabled={editingDisabled}
-          >
-            {CREATE_PROJECT_MSG}
-          </Button>
-        </ButtonContainer>
         {pipe(
           data,
           fold(
@@ -188,6 +172,7 @@ export const ProjectsList: React.FC = () => {
               <ProjectsListTable
                 editingDisabled={editingDisabled}
                 projects={projects}
+                onProjectCreate={onProjectCreate}
                 onProjectNameChanged={onProjectNameChanged}
                 onStartEdit={onStartEdit}
                 onDeleteProject={onDeleteProject}
