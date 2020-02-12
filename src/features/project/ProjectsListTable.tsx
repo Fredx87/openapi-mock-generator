@@ -5,10 +5,15 @@ import Input from "antd/es/input";
 import PopConfirm from "antd/es/popconfirm";
 import Table, { ColumnProps } from "antd/es/table";
 import React from "react";
+import styled from "styled-components";
 import { DbProject } from "./database";
 import { NEW_PROJECT_NAME_PLACEHOLDER } from "./db-constants";
 
 export const EMPTY_MSG = "No project found. Please create a new project.";
+
+const StyledButton = styled(Button)`
+  padding: 0 !important;
+`;
 
 export interface EditableProject extends DbProject {
   isEditing: boolean;
@@ -33,6 +38,7 @@ export const ProjectsListTable: React.FC<ProjectsListTableProps> = props => {
       title: "Project name",
       dataIndex: "name",
       key: "name",
+      width: "50%",
       render: (_, record, index) => {
         if (record.isEditing) {
           return (
@@ -71,7 +77,7 @@ export const ProjectsListTable: React.FC<ProjectsListTableProps> = props => {
       render: (_, __, index) => {
         return (
           <>
-            <Button
+            <StyledButton
               type="link"
               disabled={props.editingDisabled}
               onClick={() => {
@@ -79,7 +85,7 @@ export const ProjectsListTable: React.FC<ProjectsListTableProps> = props => {
               }}
             >
               Edit
-            </Button>
+            </StyledButton>
             <Divider type="vertical" />
             <PopConfirm
               title="Are you sure?"
@@ -87,9 +93,9 @@ export const ProjectsListTable: React.FC<ProjectsListTableProps> = props => {
                 props.onDeleteProject(index);
               }}
             >
-              <Button type="link" disabled={props.editingDisabled}>
+              <StyledButton type="link" disabled={props.editingDisabled}>
                 Delete
-              </Button>
+              </StyledButton>
             </PopConfirm>
           </>
         );
@@ -102,6 +108,7 @@ export const ProjectsListTable: React.FC<ProjectsListTableProps> = props => {
       dataSource={props.projects}
       columns={columns}
       locale={{ emptyText: <Empty description={EMPTY_MSG} /> }}
+      pagination={false}
     ></Table>
   );
 };

@@ -30,8 +30,17 @@ import { EditableProject, ProjectsListTable } from "./ProjectsListTable";
 const { Content } = Layout;
 
 const StyledContent = styled(Content)`
-  padding: 50px 20px;
+  background: #fff;
+`;
+
+const StyledContainer = styled.div`
+  padding: 20px 50px;
   max-width: 1200px;
+  margin: auto;
+`;
+
+const ButtonContainer = styled.div`
+  margin: 20px 0;
 `;
 
 function toEditableProject(project: DbProject): EditableProject {
@@ -69,6 +78,7 @@ export const ProjectsList: React.FC = () => {
           },
           projects => {
             setData(success(projects.map(toEditableProject)));
+            setEditingDisabled(false);
           }
         )
       )
@@ -151,33 +161,41 @@ export const ProjectsList: React.FC = () => {
 
   return (
     <StyledContent>
-      <Button
-        type="primary"
-        size="large"
-        onClick={onProjectCreate}
-        disabled={editingDisabled}
-      >
-        {CREATE_PROJECT_MSG}
-      </Button>
-      {pipe(
-        data,
-        fold(
-          () => <Skeleton />,
-          () => <Skeleton />,
-          error => (
-            <Alert message="Error" description={error} type="error" showIcon />
-          ),
-          projects => (
-            <ProjectsListTable
-              editingDisabled={editingDisabled}
-              projects={projects}
-              onProjectNameChanged={onProjectNameChanged}
-              onStartEdit={onStartEdit}
-              onDeleteProject={onDeleteProject}
-            ></ProjectsListTable>
+      <StyledContainer>
+        <ButtonContainer>
+          <Button
+            type="primary"
+            onClick={onProjectCreate}
+            disabled={editingDisabled}
+          >
+            {CREATE_PROJECT_MSG}
+          </Button>
+        </ButtonContainer>
+        {pipe(
+          data,
+          fold(
+            () => <Skeleton />,
+            () => <Skeleton />,
+            error => (
+              <Alert
+                message="Error"
+                description={error}
+                type="error"
+                showIcon
+              />
+            ),
+            projects => (
+              <ProjectsListTable
+                editingDisabled={editingDisabled}
+                projects={projects}
+                onProjectNameChanged={onProjectNameChanged}
+                onStartEdit={onStartEdit}
+                onDeleteProject={onDeleteProject}
+              ></ProjectsListTable>
+            )
           )
-        )
-      )}
+        )}
+      </StyledContainer>
     </StyledContent>
   );
 };
