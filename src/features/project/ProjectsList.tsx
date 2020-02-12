@@ -148,6 +148,7 @@ export const ProjectsList: React.FC = () => {
           ),
           projects => (
             <ProjectsListTable
+              editingDisabled={editingDisabled}
               projects={projects}
               onProjectNameChanged={onProjectNameChanged}
               onStartEdit={onStartEdit}

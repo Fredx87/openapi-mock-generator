@@ -103,7 +103,7 @@ describe("Projects Management", () => {
         .should("exist")
         .wait(100);
 
-      cy.findByText(CREATE_PROJECT_MSG).click({ force: true });
+      cy.contains(CREATE_PROJECT_MSG).click();
 
       cy.findByText(EMPTY_MSG).should("not.exist");
 
@@ -113,7 +113,7 @@ describe("Projects Management", () => {
 
       cy.findByText("First Project").should("exist");
 
-      cy.findByText(CREATE_PROJECT_MSG).click({ force: true });
+      cy.contains(CREATE_PROJECT_MSG).click();
       cy.findByPlaceholderText(NEW_PROJECT_NAME_PLACEHOLDER).type(
         "Second Project{enter}"
       );
@@ -137,7 +137,7 @@ describe("Projects Management", () => {
       cy.contains("tr", "First Project").should("exist");
 
       cy.contains("tr", "Second Project").within(() => {
-        cy.findAllByText("Edit").click({ force: true });
+        cy.contains("Edit").click();
       });
 
       cy.findByPlaceholderText(NEW_PROJECT_NAME_PLACEHOLDER)
@@ -156,7 +156,7 @@ describe("Projects Management", () => {
       cy.contains("tr", "First Project").should("exist");
 
       cy.contains("tr", "Second Project").within(() => {
-        cy.findAllByText("Edit").click({ force: true });
+        cy.contains("Edit").click();
       });
 
       cy.findByPlaceholderText(NEW_PROJECT_NAME_PLACEHOLDER)
@@ -174,7 +174,7 @@ describe("Projects Management", () => {
       cy.contains("tr", "First Project").should("exist");
 
       cy.contains("tr", "Second Project").within(() => {
-        cy.findAllByText("Edit").click({ force: true });
+        cy.contains("Edit").click();
       });
 
       cy.findByPlaceholderText(NEW_PROJECT_NAME_PLACEHOLDER)
@@ -186,6 +186,16 @@ describe("Projects Management", () => {
       cy.reload();
 
       cy.findByText("Second Project").should("exist");
+    });
+
+    it("should not allow two simultaneus editing", () => {
+      cy.contains("tr", "First Project").within(() => {
+        cy.contains("Edit").click();
+      });
+
+      cy.contains("tr", "Second Project").within(() => {
+        cy.contains("Edit").should("be.disabled");
+      });
     });
   });
 });

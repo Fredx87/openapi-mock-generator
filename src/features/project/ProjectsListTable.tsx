@@ -14,6 +14,7 @@ export interface EditableProject extends DbProject {
 }
 
 interface ProjectsListTableProps {
+  editingDisabled: boolean;
   projects: EditableProject[];
   onProjectNameChanged: (index: number, name: string) => void;
   onStartEdit: (index: number) => void;
@@ -68,6 +69,7 @@ export const ProjectsListTable: React.FC<ProjectsListTableProps> = props => {
         return (
           <Button
             type="link"
+            disabled={props.editingDisabled}
             onClick={() => {
               props.onStartEdit(index);
             }}
