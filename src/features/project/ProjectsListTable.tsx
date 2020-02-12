@@ -1,6 +1,8 @@
 import Button from "antd/es/button";
+import Divider from "antd/es/divider";
 import Empty from "antd/es/empty";
 import Input from "antd/es/input";
+import PopConfirm from "antd/es/popconfirm";
 import Table, { ColumnProps } from "antd/es/table";
 import React from "react";
 import { DbProject } from "./database";
@@ -18,6 +20,7 @@ interface ProjectsListTableProps {
   projects: EditableProject[];
   onProjectNameChanged: (index: number, name: string) => void;
   onStartEdit: (index: number) => void;
+  onDeleteProject: (index: number) => void;
 }
 
 function renderDate(date: Date): string {
@@ -67,15 +70,28 @@ export const ProjectsListTable: React.FC<ProjectsListTableProps> = props => {
       key: "actions",
       render: (_, __, index) => {
         return (
-          <Button
-            type="link"
-            disabled={props.editingDisabled}
-            onClick={() => {
-              props.onStartEdit(index);
-            }}
-          >
-            Edit
-          </Button>
+          <>
+            <Button
+              type="link"
+              disabled={props.editingDisabled}
+              onClick={() => {
+                props.onStartEdit(index);
+              }}
+            >
+              Edit
+            </Button>
+            <Divider type="vertical" />
+            <PopConfirm
+              title="Are you sure?"
+              onConfirm={() => {
+                props.onDeleteProject(index);
+              }}
+            >
+              <Button type="link" disabled={props.editingDisabled}>
+                Delete
+              </Button>
+            </PopConfirm>
+          </>
         );
       }
     }

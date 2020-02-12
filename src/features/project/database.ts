@@ -86,3 +86,27 @@ export function createProject(
     )
   );
 }
+
+export function deleteProject(
+  project: DbProject,
+  db: IDBPDatabase<MyDb>
+): TE.TaskEither<string, void> {
+  const { id } = project;
+
+  if (id === undefined) {
+    return TE.left(`Cannot delete a project without id`);
+  }
+
+  return pipe(
+    TE.tryCatch(
+      () => db.delete(PROJECT_STORE, id),
+      e => `Cannot delete project: ${String(e)}`
+    ),
+    TE.chain(() =>
+      TE.tryCatch(
+        () => db.delete(PROJECT_STATE_STORE, id),
+        e => `Cannot delete project state: ${String(e)}`
+      )
+    )
+  );
+}

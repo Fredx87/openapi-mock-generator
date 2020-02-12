@@ -9,6 +9,7 @@ import {
 import Alert from "antd/es/alert";
 import Button from "antd/es/button";
 import Layout from "antd/es/layout";
+import message from "antd/es/message";
 import Skeleton from "antd/es/skeleton";
 import * as E from "fp-ts/es6/Either";
 import { pipe } from "fp-ts/es6/pipeable";
@@ -19,6 +20,7 @@ import {
   createProject,
   DbContext,
   DbProject,
+  deleteProject,
   getAllProjects,
   putProject
 } from "./database";
@@ -114,7 +116,7 @@ export const ProjectsList: React.FC = () => {
           res,
           E.fold(
             e => {
-              setData(failure(e));
+              message.error(e);
             },
             () => {
               getProjectsFromDb();
@@ -126,6 +128,25 @@ export const ProjectsList: React.FC = () => {
       getProjectsFromDb();
     }
     setEditingDisabled(false);
+  };
+
+  const onDeleteProject = (index: number) => {
+    if (isSuccess(data) && data.value[index]) {
+      const project = data.value[index];
+      deleteProject(project, db!)().then(res =>
+        pipe(
+          res,
+          E.fold(
+            e => {
+              message.error(e);
+            },
+            () => {
+              getProjectsFromDb();
+            }
+          )
+        )
+      );
+    }
   };
 
   return (
@@ -152,6 +173,7 @@ export const ProjectsList: React.FC = () => {
               projects={projects}
               onProjectNameChanged={onProjectNameChanged}
               onStartEdit={onStartEdit}
+              onDeleteProject={onDeleteProject}
             ></ProjectsListTable>
           )
         )

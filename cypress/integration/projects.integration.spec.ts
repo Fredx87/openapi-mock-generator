@@ -197,5 +197,25 @@ describe("Projects Management", () => {
         cy.contains("Edit").should("be.disabled");
       });
     });
+
+    it("should delete project on confirm", () => {
+      cy.contains("tr", "First Project").should("exist");
+
+      cy.contains("tr", "Second Project").within(() => {
+        cy.contains("Delete").click();
+      });
+
+      cy.findByRole("tooltip").within(() => {
+        cy.contains("OK").click();
+      });
+
+      cy.findByText("First Project").should("exist");
+      cy.findByText("Second Project").should("not.exist");
+
+      cy.reload();
+
+      cy.findByText("First Project").should("exist");
+      cy.findByText("Second Project").should("not.exist");
+    });
   });
 });
