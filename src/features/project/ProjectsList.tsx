@@ -14,20 +14,15 @@ import * as E from "fp-ts/es6/Either";
 import { pipe } from "fp-ts/es6/pipeable";
 import { produce } from "immer";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { useDatabase } from "src/shared/use-database";
-import { SetStoreAction } from "src/store";
 import styled from "styled-components";
 import {
   createProject,
   DbProject,
   deleteProject,
   getAllProjects,
-  getProjectState,
   putProject
 } from "./database";
-import { saveLastProjectId } from "./persist";
 import { EditableProject, ProjectsListTable } from "./ProjectsListTable";
 
 const { Content } = Layout;
@@ -61,8 +56,6 @@ export const ProjectsList: React.FC = () => {
     initial
   );
   const db = useDatabase();
-  const dispatch = useDispatch();
-  const history = useHistory();
 
   useEffect(() => {
     getProjectsFromDb();
@@ -159,37 +152,6 @@ export const ProjectsList: React.FC = () => {
     }
   };
 
-  const onProjectOpen = (index: number) => {
-    if (isSuccess(data) && data.value[index]) {
-      const { id } = data.value[index];
-
-      if (id === undefined) {
-        message.error("Cannot open a project without an id");
-        return;
-      }
-
-      getProjectState(id, db)().then(res => {
-        pipe(
-          res,
-          E.fold(
-            e => {
-              message.error(e);
-            },
-            state => {
-              saveLastProjectId(id);
-              const setStoreAction: SetStoreAction = {
-                type: "db/set store",
-                payload: state
-              };
-              dispatch(setStoreAction);
-              history.push(`/${id}`);
-            }
-          )
-        );
-      });
-    }
-  };
-
   return (
     <StyledContent>
       <StyledContainer>
@@ -214,7 +176,6 @@ export const ProjectsList: React.FC = () => {
                 onProjectNameChanged={onProjectNameChanged}
                 onStartEdit={onStartEdit}
                 onDeleteProject={onDeleteProject}
-                onProjectOpen={onProjectOpen}
               ></ProjectsListTable>
             )
           )

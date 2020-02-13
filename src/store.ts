@@ -25,11 +25,10 @@ const wrappedReducer: Reducer<RootState, AnyAction> = (state, action) => {
   return rootReducer(state, action);
 };
 
-export function initStore(db: IDBPDatabase<MyDb>, preloadedState: RootState) {
+export function initStore(db: IDBPDatabase<MyDb>) {
   return configureStore({
     reducer: wrappedReducer,
-    middleware: [...getDefaultMiddleware(), persistStateMiddleware(db)],
-    preloadedState
+    middleware: [...getDefaultMiddleware(), persistStateMiddleware(db)]
   });
 }
 

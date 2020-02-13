@@ -1,11 +1,11 @@
 import Layout from "antd/es/layout";
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { Project } from "src/features/project/Project";
 import { ProjectsList } from "src/features/project/ProjectsList";
 import styled from "styled-components";
 import "./App.css";
 import { MyHeader } from "./components/MyHeader";
+import { ProjectContainer } from "./features/project/ProjectContainer";
 
 const { Header } = Layout;
 
@@ -24,8 +24,8 @@ const App: React.FC = () => {
           <Route exact path="/">
             <ProjectsList />
           </Route>
-          <Route path="/:projectName">
-            <Project />
+          <Route path="/:projectId">
+            <ProjectContainer />
           </Route>
         </Switch>
       </StyledLayout>

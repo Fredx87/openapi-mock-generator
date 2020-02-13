@@ -1,13 +1,31 @@
-import { Middleware } from "@reduxjs/toolkit";
+import { Dispatch, Middleware } from "@reduxjs/toolkit";
+import * as E from "fp-ts/es6/Either";
+import * as IOE from "fp-ts/es6/IOEither";
+import * as O from "fp-ts/es6/Option";
+import { pipe } from "fp-ts/es6/pipeable";
+import * as TE from "fp-ts/es6/TaskEither";
 import { IDBPDatabase } from "idb";
 import { RootState } from "src/rootReducer";
-import { initialDocument } from "../document/document-slice";
+import { SetStoreAction } from "src/store";
 import { getProjectState, MyDb, putProjectState } from "./database";
 
-const LAST_PROJECT_ID_KEY = "MockGenerator-LastProjectId";
+export function getProjectId(): IOE.IOEither<string, number> {
+  return pipe(
+    IOE.fromOption(() => `Saved Project Id not found`)(
+      O.fromNullable(window.location.pathname.split("/")?.[1])
+    ),
+    IOE.map(res => +res)
+  );
+}
 
-export function saveLastProjectId(id: number) {
-  localStorage.setItem(LAST_PROJECT_ID_KEY, id.toString());
+function saveState(
+  state: RootState,
+  db: IDBPDatabase<MyDb>
+): TE.TaskEither<string, number> {
+  return pipe(
+    TE.fromIOEither(getProjectId()),
+    TE.chain(id => putProjectState(state, id, db))
+  );
 }
 
 export function persistStateMiddleware(
@@ -15,21 +33,29 @@ export function persistStateMiddleware(
 ): Middleware<{}, RootState> {
   return store => next => action => {
     next(action);
-    const id = +localStorage.getItem(LAST_PROJECT_ID_KEY)!;
-    putProjectState(store.getState(), id, db)().then(res => console.log);
+    saveState(store.getState(), db)().then(res =>
+      pipe(
+        res,
+        E.fold(console.error, () => {})
+      )
+    );
   };
 }
 
-export function getStoredState(db: IDBPDatabase<MyDb>): Promise<RootState> {
-  const id = localStorage.getItem(LAST_PROJECT_ID_KEY);
-  if (id) {
-    return getProjectState(+id, db)().then(res => {
-      if (res._tag === "Right") {
-        return res.right;
-      } else {
-        throw new Error("error");
-      }
-    });
-  }
-  return Promise.resolve({ document: initialDocument() });
+export function loadPersistedProject(
+  id: number,
+  dispatch: Dispatch,
+  db: IDBPDatabase<MyDb>
+): TE.TaskEither<string, void> {
+  return pipe(
+    getProjectState(id, db),
+    TE.map(state => {
+      const setStoreAction: SetStoreAction = {
+        type: "db/set store",
+        payload: state
+      };
+      dispatch(setStoreAction);
+      return undefined;
+    })
+  );
 }

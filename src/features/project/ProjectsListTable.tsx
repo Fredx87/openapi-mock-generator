@@ -5,6 +5,7 @@ import Input from "antd/es/input";
 import PopConfirm from "antd/es/popconfirm";
 import Table, { ColumnProps } from "antd/es/table";
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { DbProject } from "./database";
 import {
@@ -34,7 +35,6 @@ interface ProjectsListTableProps {
   onProjectNameChanged: (index: number, name: string) => void;
   onStartEdit: (index: number) => void;
   onDeleteProject: (index: number) => void;
-  onProjectOpen: (index: number) => void;
 }
 
 function renderDate(date: Date): string {
@@ -64,17 +64,7 @@ export const ProjectsListTable: React.FC<ProjectsListTableProps> = props => {
             />
           );
         } else {
-          return (
-            <StyledButton
-              type="link"
-              disabled={props.editingDisabled}
-              onClick={() => {
-                props.onProjectOpen(index);
-              }}
-            >
-              {record.name}
-            </StyledButton>
-          );
+          return <Link to={`/${record.id}`}>{record.name}</Link>;
         }
       }
     },

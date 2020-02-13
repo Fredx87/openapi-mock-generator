@@ -223,13 +223,13 @@ describe("Projects Management", () => {
     });
 
     it("should open empty project when name clicked", () => {
-      cy.contains("button", "First Project").click();
+      cy.findByText("First Project").click();
 
       cy.findByText(EMPTY_PROJECT_MSG).should("exist");
     });
 
     it("should persist project data", () => {
-      cy.contains("button", "First Project").click();
+      cy.findByText("First Project").click();
 
       cy.findByText(EMPTY_PROJECT_MSG).should("exist");
 
