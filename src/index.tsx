@@ -5,13 +5,13 @@ import App from "./App";
 import { DbContext, openDatabase } from "./features/project/database";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
-import { store } from "./store";
+import { initStore } from "./store";
 
 openDatabase().then(
   db => {
     ReactDOM.render(
       <DbContext.Provider value={db}>
-        <Provider store={store}>
+        <Provider store={initStore()}>
           <App />
         </Provider>
       </DbContext.Provider>,

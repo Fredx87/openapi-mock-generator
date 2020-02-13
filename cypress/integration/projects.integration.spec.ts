@@ -2,8 +2,9 @@ import { emptyProjects } from "cypress/fixtures/db/emptyProjects";
 import {
   CREATE_PROJECT_MSG,
   DB_NAME,
+  EMPTY_PROJECT_MSG,
   NEW_PROJECT_NAME_PLACEHOLDER
-} from "src/features/project/db-constants";
+} from "src/features/project/project-constants";
 import { EMPTY_MSG } from "src/features/project/ProjectsListTable";
 
 const click = ($el: any) => $el.click();
@@ -124,6 +125,24 @@ describe("Projects Management", () => {
 
       cy.findByText("First Project").should("exist");
       cy.findByText("Second Project").should("exist");
+    });
+
+    it("should open empty project when name clicked", () => {
+      cy.findByText(EMPTY_MSG).should("exist");
+
+      cy.contains(CREATE_PROJECT_MSG)
+        .pipe(click)
+        .should("be.disabled");
+
+      cy.findByText(EMPTY_MSG).should("not.exist");
+
+      cy.findByPlaceholderText(NEW_PROJECT_NAME_PLACEHOLDER).type(
+        "New Project{enter}"
+      );
+
+      cy.contains("button", "New Project").click();
+
+      cy.findByText(EMPTY_PROJECT_MSG).should("exist");
     });
   });
 

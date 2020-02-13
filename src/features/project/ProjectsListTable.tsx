@@ -10,7 +10,7 @@ import { DbProject } from "./database";
 import {
   CREATE_PROJECT_MSG,
   NEW_PROJECT_NAME_PLACEHOLDER
-} from "./db-constants";
+} from "./project-constants";
 
 export const EMPTY_MSG = "No project found. Please create a new project.";
 
@@ -34,6 +34,7 @@ interface ProjectsListTableProps {
   onProjectNameChanged: (index: number, name: string) => void;
   onStartEdit: (index: number) => void;
   onDeleteProject: (index: number) => void;
+  onProjectOpen: (index: number) => void;
 }
 
 function renderDate(date: Date): string {
@@ -63,7 +64,17 @@ export const ProjectsListTable: React.FC<ProjectsListTableProps> = props => {
             />
           );
         } else {
-          return record.name;
+          return (
+            <StyledButton
+              type="link"
+              disabled={props.editingDisabled}
+              onClick={() => {
+                props.onProjectOpen(index);
+              }}
+            >
+              {record.name}
+            </StyledButton>
+          );
         }
       }
     },
