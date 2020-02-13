@@ -5,7 +5,9 @@
     "target": "es5",
     "lib": ["ES2015", "dom"],
     "types": ["cypress", "@types/testing-library__cypress"],
-    "jsx": "react"
+    "jsx": "react",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["**/*.ts"]
 }
