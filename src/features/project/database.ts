@@ -3,6 +3,7 @@ import * as TE from "fp-ts/es6/TaskEither";
 import { DBSchema, IDBPDatabase, openDB } from "idb";
 import { createContext } from "react";
 import { RootState } from "src/rootReducer";
+import { initialDocument } from "../document/document-slice";
 import {
   DB_NAME,
   PROJECT_STATE_STORE,
@@ -85,9 +86,7 @@ export function createProject(
   delete toCreate["id"];
   return pipe(
     putProject(toCreate, db),
-    TE.chain(key =>
-      putProjectState({ document: { status: "empty", tree: [] } }, key, db)
-    )
+    TE.chain(key => putProjectState({ document: initialDocument() }, key, db))
   );
 }
 

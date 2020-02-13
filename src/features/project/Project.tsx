@@ -25,7 +25,7 @@ export const Project: React.FC = () => {
   ) : (
     <Layout>
       <StyledSider theme="light" width={300}>
-        <DocumentTree></DocumentTree>
+        <DocumentTree tree={document.tree}></DocumentTree>
       </StyledSider>
       <Content>
         <Switch>

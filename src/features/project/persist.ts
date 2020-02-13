@@ -1,6 +1,7 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { IDBPDatabase } from "idb";
 import { RootState } from "src/rootReducer";
+import { initialDocument } from "../document/document-slice";
 import { getProjectState, MyDb, putProjectState } from "./database";
 
 const LAST_PROJECT_ID_KEY = "MockGenerator-LastProjectId";
@@ -30,5 +31,5 @@ export function getStoredState(db: IDBPDatabase<MyDb>): Promise<RootState> {
       }
     });
   }
-  return Promise.resolve({ document: { status: "empty", tree: [] } });
+  return Promise.resolve({ document: initialDocument() });
 }

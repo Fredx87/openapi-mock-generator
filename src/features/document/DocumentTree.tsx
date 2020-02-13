@@ -2,11 +2,9 @@ import Icon from "antd/es/icon";
 import Tree from "antd/es/tree";
 import { AntTreeNodeSelectedEvent } from "antd/lib/tree";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { MarkText } from "../../components/MarkText";
-import { RootState } from "../../rootReducer";
 import { DocumentTreeSearch } from "./DocumentTreeSearch";
 import { BranchTreeNode, GeneralTreeNode } from "./tree-builder";
 
@@ -84,9 +82,11 @@ function getAllMatchingKeys(searchTerm: string, treeData: GeneralTreeNode[]) {
   return getNodeMatchingKeys(searchTerm, rootNode);
 }
 
-export const DocumentTree: React.FC = () => {
-  const treeData = useSelector((state: RootState) => state.document.tree);
+export interface DocumentTreeProps {
+  tree: GeneralTreeNode[];
+}
 
+export const DocumentTree: React.FC<DocumentTreeProps> = props => {
   const history = useHistory();
   const location = useLocation();
 
@@ -117,7 +117,7 @@ export const DocumentTree: React.FC = () => {
 
   const onSearchChange = (value: string) => {
     setSearchTerm(value);
-    const newExpandedKeys = value ? getAllMatchingKeys(value, treeData) : [];
+    const newExpandedKeys = value ? getAllMatchingKeys(value, props.tree) : [];
     setExpandedKeys(newExpandedKeys);
     setAutoExpandParent(true);
   };
@@ -141,7 +141,7 @@ export const DocumentTree: React.FC = () => {
           expandedKeys={expandedKeys}
           onExpand={onExpand}
         >
-          {treeData.map(child => renderNode(child, searchTerm))}
+          {props.tree.map(child => renderNode(child, searchTerm))}
         </DirectoryTree>
       </TreeContainer>
     </Container>
