@@ -2,7 +2,7 @@ import Icon from "antd/es/icon";
 import Tree from "antd/es/tree";
 import { AntTreeNodeSelectedEvent } from "antd/lib/tree";
 import React, { useEffect, useRef, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import { MarkText } from "../../components/MarkText";
 import { DocumentTreeSearch } from "./DocumentTreeSearch";
@@ -89,11 +89,13 @@ export interface DocumentTreeProps {
 export const DocumentTree: React.FC<DocumentTreeProps> = props => {
   const history = useHistory();
   const location = useLocation();
+  const { url } = useRouteMatch();
 
   const [selectedKey, setSelectedKey] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    setSelectedKey(decodeURIComponent(location.pathname.substring(1)));
+    const paths = location.pathname.split("/");
+    setSelectedKey(decodeURIComponent(paths[paths.length - 1]));
   }, [location]);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -111,7 +113,7 @@ export const DocumentTree: React.FC<DocumentTreeProps> = props => {
   const onSelect = (_: unknown, e: AntTreeNodeSelectedEvent) => {
     const node = e.node.props;
     if (node.eventKey) {
-      history.push(`/${encodeURIComponent(node.eventKey!)}`);
+      history.push(`${url}/${encodeURIComponent(node.eventKey!)}`);
     }
   };
 

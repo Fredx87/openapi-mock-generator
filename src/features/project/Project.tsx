@@ -2,7 +2,7 @@ import Empty from "antd/es/empty";
 import Layout from "antd/es/layout";
 import React from "react";
 import { useSelector } from "react-redux";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { DocumentTree } from "src/features/document/DocumentTree";
 import { EditorsWrapper } from "src/features/editor/EditorsWrapper";
 import { RootState } from "src/rootReducer";
@@ -17,6 +17,7 @@ const StyledSider = styled(Sider)`
 
 export const Project: React.FC = () => {
   const document = useSelector((state: RootState) => state.document);
+  const { path } = useRouteMatch();
 
   return document.status === "empty" ? (
     <Content>
@@ -29,7 +30,7 @@ export const Project: React.FC = () => {
       </StyledSider>
       <Content>
         <Switch>
-          <Route path="/:referenceName">
+          <Route path={`${path}/:referenceName`}>
             <EditorsWrapper></EditorsWrapper>
           </Route>
         </Switch>
