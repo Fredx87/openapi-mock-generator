@@ -1,4 +1,7 @@
 import { emptyProjects } from "cypress/fixtures/db/emptyProjects";
+import { expectMessage } from "cypress/support/message-checker";
+import { treeTestId } from "cypress/support/tree";
+import { uploadFile } from "cypress/support/upload-file";
 import {
   CREATE_PROJECT_MSG,
   DB_NAME,
@@ -126,24 +129,6 @@ describe("Projects Management", () => {
       cy.findByText("First Project").should("exist");
       cy.findByText("Second Project").should("exist");
     });
-
-    it("should open empty project when name clicked", () => {
-      cy.findByText(EMPTY_MSG).should("exist");
-
-      cy.contains(CREATE_PROJECT_MSG)
-        .pipe(click)
-        .should("be.disabled");
-
-      cy.findByText(EMPTY_MSG).should("not.exist");
-
-      cy.findByPlaceholderText(NEW_PROJECT_NAME_PLACEHOLDER).type(
-        "New Project{enter}"
-      );
-
-      cy.contains("button", "New Project").click();
-
-      cy.findByText(EMPTY_PROJECT_MSG).should("exist");
-    });
   });
 
   describe("Editing", () => {
@@ -235,6 +220,36 @@ describe("Projects Management", () => {
 
       cy.findByText("First Project").should("exist");
       cy.findByText("Second Project").should("not.exist");
+    });
+
+    it("should open empty project when name clicked", () => {
+      cy.contains("button", "First Project").click();
+
+      cy.findByText(EMPTY_PROJECT_MSG).should("exist");
+    });
+
+    it("should persist project data", () => {
+      cy.contains("button", "First Project").click();
+
+      cy.findByText(EMPTY_PROJECT_MSG).should("exist");
+
+      uploadFile("pestore-expanded.yaml");
+
+      expectMessage("success", /loaded.*success/i);
+
+      cy.findByTestId(treeTestId).within(() => {
+        cy.contains("li", "Paths").toggleTreeNode();
+        cy.contains("li", "Schemas").toggleTreeNode();
+        cy.findByText("Pet").should("exist");
+      });
+
+      cy.reload();
+
+      cy.findByTestId(treeTestId).within(() => {
+        cy.contains("li", "Paths").toggleTreeNode();
+        cy.contains("li", "Schemas").toggleTreeNode();
+        cy.findByText("Pet").should("exist");
+      });
     });
   });
 });

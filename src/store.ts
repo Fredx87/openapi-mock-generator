@@ -1,5 +1,14 @@
-import { Action, AnyAction, configureStore, Reducer } from "@reduxjs/toolkit";
+import {
+  Action,
+  AnyAction,
+  configureStore,
+  getDefaultMiddleware,
+  Reducer
+} from "@reduxjs/toolkit";
+import { IDBPDatabase } from "idb";
 import { ThunkAction } from "redux-thunk";
+import { MyDb } from "./features/project/database";
+import { persistStateMiddleware } from "./features/project/persist";
 import { rootReducer, RootState } from "./rootReducer";
 
 const SET_STORE_ACTION_TYPE = "db/set store";
@@ -16,9 +25,11 @@ const wrappedReducer: Reducer<RootState, AnyAction> = (state, action) => {
   return rootReducer(state, action);
 };
 
-export function initStore() {
+export function initStore(db: IDBPDatabase<MyDb>, preloadedState: RootState) {
   return configureStore({
-    reducer: wrappedReducer
+    reducer: wrappedReducer,
+    middleware: [...getDefaultMiddleware(), persistStateMiddleware(db)],
+    preloadedState
   });
 }
 

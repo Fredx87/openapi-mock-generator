@@ -27,6 +27,7 @@ import {
   getProjectState,
   putProject
 } from "./database";
+import { saveLastProjectId } from "./persist";
 import { EditableProject, ProjectsListTable } from "./ProjectsListTable";
 
 const { Content } = Layout;
@@ -175,6 +176,7 @@ export const ProjectsList: React.FC = () => {
               message.error(e);
             },
             state => {
+              saveLastProjectId(id);
               const setStoreAction: SetStoreAction = {
                 type: "db/set store",
                 payload: state
