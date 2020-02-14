@@ -20,7 +20,7 @@ const HeaderContainer = styled.div`
 `;
 
 const StyledButton = styled(Button)`
-  padding: 0 !important;
+  padding: 0;
 `;
 
 export interface EditableProject extends DbProject {

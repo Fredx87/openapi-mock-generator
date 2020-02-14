@@ -6,11 +6,11 @@ import { GeneratedEditor } from "./GeneratedEditor";
 import { SchemaEditor } from "./SchemaEditor";
 
 const StyledRow = styled(Row)`
-  height: 100% !important;
+  height: 100%;
 `;
 
 const StyledCol = styled(Col)`
-  height: 100% !important;
+  height: 100%;
 `;
 
 export const EditorsWrapper: React.FC = () => (
