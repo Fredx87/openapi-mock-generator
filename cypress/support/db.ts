@@ -1,9 +1,11 @@
+import * as A from "fp-ts/es6/Array";
 import { pipe } from "fp-ts/es6/pipeable";
 import * as TE from "fp-ts/es6/TaskEither";
 import {
   createProject,
   DbProject,
-  openDatabase
+  openDatabase,
+  putProjectState
 } from "src/features/project/database";
 
 Cypress.Commands.add("createProjects", (projects: DbProject[]) => {
@@ -20,11 +22,28 @@ Cypress.Commands.add("createProjects", (projects: DbProject[]) => {
       e => String(e)
     ),
     TE.chain(db =>
-      pipe(
-        createProject(projects[0], db),
-        TE.chain(() => createProject(projects[1], db))
-      )
+      A.array.traverse(TE.taskEitherSeq)(projects, p => createProject(p, db))
     )
+  );
+
+  return cy.wrap(operation());
+});
+
+Cypress.Commands.add("setProjectState", (projectId: number, state: any) => {
+  Cypress.log({
+    name: "Set Project State",
+    consoleProps: () => ({
+      projectId,
+      state
+    })
+  });
+
+  const operation = pipe(
+    TE.tryCatch(
+      () => openDatabase(),
+      e => String(e)
+    ),
+    TE.chain(db => putProjectState(state, projectId, db))
   );
 
   return cy.wrap(operation());

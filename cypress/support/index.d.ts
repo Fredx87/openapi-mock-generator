@@ -8,5 +8,6 @@ declare namespace Cypress {
     getMonacoValue(): Chainable<string>;
     setMonacoValue(value: string): Chainable<JQuery<HTMLElement>>;
     createProjects(projects: any[]): Chainable<void>;
+    setProjectState(projectId: number, state: any): Chainable<void>;
   }
 }

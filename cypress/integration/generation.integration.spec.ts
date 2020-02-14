@@ -1,3 +1,6 @@
+import { emptyProjects } from "cypress/fixtures/db/emptyProjects";
+import { petStoreState } from "cypress/fixtures/db/petStore-state";
+import { DB_NAME } from "src/features/project/project-constants";
 import {
   errorModel,
   newPetModel,
@@ -8,12 +11,13 @@ import {
   schemaEditorTestId
 } from "../support/selectors";
 import { treeTestId } from "../support/tree";
-import { uploadFile } from "../support/upload-file";
 
 describe("Generation", () => {
   beforeEach(() => {
-    cy.visit("/");
-    uploadFile("pestore-expanded.yaml");
+    indexedDB.deleteDatabase(DB_NAME);
+    cy.createProjects(emptyProjects);
+    cy.setProjectState(1, petStoreState);
+    cy.visit("/1");
   });
 
   it("should generate JSON for NewPet model", () => {
