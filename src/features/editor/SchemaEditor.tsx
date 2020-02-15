@@ -16,7 +16,10 @@ export const SchemaEditor: React.FC = () => {
   const dispatch = useDispatch();
 
   const currentRef = useCurrentRef();
-  const { projectId } = useParams<{ projectId: string }>();
+  const { projectId, projectName } = useParams<{
+    projectId: string;
+    projectName: string;
+  }>();
   const history = useHistory();
 
   const [value, setValue] = useState(" ");
@@ -62,7 +65,7 @@ export const SchemaEditor: React.FC = () => {
     editor.focus();
 
     const commandId = editor.addCommand(0, (_, ref: string) => {
-      history.push(`/${projectId}/${encodeURIComponent(ref)}`);
+      history.push(`/${projectId}/${projectName}/${encodeURIComponent(ref)}`);
     });
 
     monacoEditor.languages.registerCodeLensProvider("json", {

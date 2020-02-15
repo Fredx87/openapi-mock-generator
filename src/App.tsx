@@ -24,7 +24,7 @@ const App: React.FC = () => {
           <Route exact path="/">
             <ProjectsList />
           </Route>
-          <Route path="/:projectId">
+          <Route path="/:projectId/:projectName">
             <ProjectContainer />
           </Route>
         </Switch>

@@ -17,7 +17,7 @@ describe("Generation", () => {
     indexedDB.deleteDatabase(DB_NAME);
     cy.createProjects(emptyProjects);
     cy.setProjectState(1, petStoreState);
-    cy.visit("/1");
+    cy.visit("/1/PetStore");
   });
 
   it("should generate JSON for NewPet model", () => {

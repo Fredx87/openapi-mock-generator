@@ -11,7 +11,7 @@ describe("OpenAPI file loading and parsing", () => {
   beforeEach(() => {
     indexedDB.deleteDatabase(DB_NAME);
     cy.createProjects(emptyProjects);
-    cy.visit("/1");
+    cy.visit("/1/PetStore");
   });
 
   it("should return error when uploading invalid file", () => {

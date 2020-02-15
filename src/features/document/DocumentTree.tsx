@@ -92,10 +92,12 @@ export const DocumentTree: React.FC<DocumentTreeProps> = props => {
   const location = useLocation();
   const { url } = useRouteMatch();
 
+  const [projectName, setProjectName] = useState<string>("");
   const [selectedKey, setSelectedKey] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const paths = location.pathname.split("/");
+    setProjectName(decodeURIComponent(paths[2]));
     setSelectedKey(decodeURIComponent(paths[paths.length - 1]));
   }, [location]);
 
@@ -132,7 +134,7 @@ export const DocumentTree: React.FC<DocumentTreeProps> = props => {
 
   return (
     <Container ref={containerRef}>
-      <ProjectHeader></ProjectHeader>
+      <ProjectHeader projectName={projectName}></ProjectHeader>
       <DocumentTreeSearch
         searchTerm={searchTerm}
         onChange={onSearchChange}

@@ -64,7 +64,7 @@ export const ProjectsListTable: React.FC<ProjectsListTableProps> = props => {
             />
           );
         } else {
-          return <Link to={`/${record.id}`}>{record.name}</Link>;
+          return <Link to={`/${record.id}/${record.name}`}>{record.name}</Link>;
         }
       }
     },

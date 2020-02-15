@@ -8,7 +8,7 @@ describe("OpenAPI Document Tree", () => {
     indexedDB.deleteDatabase(DB_NAME);
     cy.createProjects(emptyProjects);
     cy.setProjectState(1, petStoreState);
-    cy.visit("/1");
+    cy.visit("/1/PetStore");
   });
 
   it("pestore-expanded.yaml - should build /pets - get tree correctly", () => {

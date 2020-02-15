@@ -28,7 +28,7 @@ describe("Editor", () => {
     indexedDB.deleteDatabase(DB_NAME);
     cy.createProjects(emptyProjects);
     cy.setProjectState(1, petStoreState);
-    cy.visit("/1");
+    cy.visit("/1/PetStore");
   });
 
   it("should resize editor when window resize", () => {

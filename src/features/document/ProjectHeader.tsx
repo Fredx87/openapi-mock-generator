@@ -7,9 +7,18 @@ const Container = styled.div`
   text-align: center;
 `;
 
-export const ProjectHeader: React.FC = () => {
+const Title = styled.h2`
+  font-size: 20px;
+`;
+
+interface ProjectHeaderProps {
+  projectName: string;
+}
+
+export const ProjectHeader: React.FC<ProjectHeaderProps> = props => {
   return (
     <Container>
+      <Title>{props.projectName}</Title>
       <OpenApiLoader></OpenApiLoader>
     </Container>
   );
