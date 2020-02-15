@@ -1,14 +1,18 @@
 import Empty from "antd/es/empty";
 import Layout from "antd/es/layout";
+import Skeleton from "antd/es/skeleton";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { DocumentTree } from "src/features/document/DocumentTree";
-import { EditorsWrapper } from "src/features/editor/EditorsWrapper";
 import { RootState } from "src/rootReducer";
 import styled from "styled-components";
 import { EMPTY_PROJECT_MSG } from "./constants";
 import { OpenApiLoader } from "./OpenApiLoader";
+
+const EditorsWrapper = React.lazy(() =>
+  import("src/features/editor/EditorsWrapper")
+);
 
 const { Sider, Content } = Layout;
 
@@ -41,7 +45,9 @@ export const Project: React.FC = () => {
       <Content>
         <Switch>
           <Route path={`${path}/:referenceName`}>
-            <EditorsWrapper></EditorsWrapper>
+            <React.Suspense fallback={<Skeleton />}>
+              <EditorsWrapper></EditorsWrapper>
+            </React.Suspense>
           </Route>
         </Switch>
       </Content>

@@ -13,7 +13,7 @@ const StyledCol = styled(Col)`
   height: 100%;
 `;
 
-export const EditorsWrapper: React.FC = () => (
+const EditorsWrapper: React.FC = () => (
   <StyledRow>
     <StyledCol span={12}>
       <SchemaEditor></SchemaEditor>
@@ -23,3 +23,5 @@ export const EditorsWrapper: React.FC = () => (
     </StyledCol>
   </StyledRow>
 );
+
+export default EditorsWrapper;
