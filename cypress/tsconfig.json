@@ -1,10 +1,13 @@
 {
   "compilerOptions": {
     "strict": true,
-    "baseUrl": "../node_modules",
+    "baseUrl": "..",
     "target": "es5",
-    "lib": ["es5", "dom"],
-    "types": ["cypress", "@types/testing-library__cypress"]
+    "lib": ["ES2015", "dom"],
+    "types": ["cypress", "@types/testing-library__cypress"],
+    "jsx": "react",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["**/*.ts"]
 }

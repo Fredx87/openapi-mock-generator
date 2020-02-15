@@ -1,10 +1,14 @@
+import { emptyProjects } from "cypress/fixtures/db/emptyProjects";
+import { petStoreState } from "cypress/fixtures/db/petStore-state";
+import { DB_NAME } from "src/features/project/project-constants";
 import { treeTestId } from "../support/tree";
-import { uploadFile } from "../support/upload-file";
 
 describe("OpenAPI Document Tree / Search", () => {
   beforeEach(() => {
-    cy.visit("/");
-    uploadFile("pestore-expanded.yaml");
+    indexedDB.deleteDatabase(DB_NAME);
+    cy.createProjects(emptyProjects);
+    cy.setProjectState(1, petStoreState);
+    cy.visit("/1/PetStore");
   });
 
   it("should find matches", () => {

@@ -12,6 +12,7 @@
 // the project's config changing)
 
 const wp = require("@cypress/webpack-preprocessor");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = on => {
   const options = {
@@ -19,7 +20,12 @@ module.exports = on => {
       mode: "development",
       devtool: "eval-source-map",
       resolve: {
-        extensions: [".ts", ".tsx", ".js"]
+        extensions: [".ts", ".tsx", ".js"],
+        plugins: [
+          new TsconfigPathsPlugin({
+            configFile: `${__dirname}/../tsconfig.json`
+          })
+        ]
       },
       module: {
         rules: [

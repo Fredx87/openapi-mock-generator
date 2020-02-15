@@ -1,3 +1,6 @@
+import { emptyProjects } from "cypress/fixtures/db/emptyProjects";
+import { petStoreState } from "cypress/fixtures/db/petStore-state";
+import { DB_NAME } from "src/features/project/project-constants";
 import { newPetModel, petModel } from "../fixtures/models/petstore-expanded";
 import {
   antTreeNodeSelectedClass,
@@ -6,7 +9,6 @@ import {
   suggestionSelector
 } from "../support/selectors";
 import { treeTestId } from "../support/tree";
-import { uploadFile } from "../support/upload-file";
 
 function equalSize(testId: string) {
   cy.findByTestId(testId).then(container => {
@@ -23,8 +25,10 @@ function equalSize(testId: string) {
 
 describe("Editor", () => {
   beforeEach(() => {
-    cy.visit("/");
-    uploadFile("pestore-expanded.yaml");
+    indexedDB.deleteDatabase(DB_NAME);
+    cy.createProjects(emptyProjects);
+    cy.setProjectState(1, petStoreState);
+    cy.visit("/1/PetStore");
   });
 
   it("should resize editor when window resize", () => {

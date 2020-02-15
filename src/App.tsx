@@ -1,20 +1,16 @@
+import "antd/dist/antd.css";
 import Layout from "antd/es/layout";
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { ProjectsList } from "src/features/project/ProjectsList";
 import styled from "styled-components";
-import "./App.css";
 import { MyHeader } from "./components/MyHeader";
-import { DocumentTree } from "./features/document/DocumentTree";
-import { EditorsWrapper } from "./features/editor/EditorsWrapper";
+import { ProjectContainer } from "./features/project/ProjectContainer";
 
-const { Header, Sider, Content } = Layout;
+const { Header } = Layout;
 
 const StyledLayout = styled(Layout)`
   height: 100vh;
-`;
-
-const StyledSider = styled(Sider)`
-  overflow: auto;
 `;
 
 const App: React.FC = () => {
@@ -24,18 +20,14 @@ const App: React.FC = () => {
         <Header>
           <MyHeader></MyHeader>
         </Header>
-        <Layout>
-          <StyledSider theme="light" width={300}>
-            <DocumentTree></DocumentTree>
-          </StyledSider>
-          <Content>
-            <Switch>
-              <Route path="/:referenceName">
-                <EditorsWrapper></EditorsWrapper>
-              </Route>
-            </Switch>
-          </Content>
-        </Layout>
+        <Switch>
+          <Route exact path="/">
+            <ProjectsList />
+          </Route>
+          <Route path="/:projectId/:projectName">
+            <ProjectContainer />
+          </Route>
+        </Switch>
       </StyledLayout>
     </BrowserRouter>
   );

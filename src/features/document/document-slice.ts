@@ -17,7 +17,6 @@ export interface MyDocument extends OpenAPIV3.Document {
 
 interface EmptyDocumentState {
   status: "empty";
-  tree: GeneralTreeNode[];
 }
 
 interface LoadedDocumentState {
@@ -28,10 +27,9 @@ interface LoadedDocumentState {
 
 type DocumentState = EmptyDocumentState | LoadedDocumentState;
 
-function initialState(): DocumentState {
+export function initialDocument(): DocumentState {
   return {
-    status: "empty",
-    tree: []
+    status: "empty"
   };
 }
 
@@ -42,7 +40,7 @@ interface SetRefValuePayload {
 
 const slice = createSlice({
   name: "document",
-  initialState: initialState(),
+  initialState: initialDocument(),
   reducers: {
     setDocument: (
       _,

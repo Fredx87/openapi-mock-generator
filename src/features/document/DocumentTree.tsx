@@ -2,12 +2,11 @@ import Icon from "antd/es/icon";
 import Tree from "antd/es/tree";
 import { AntTreeNodeSelectedEvent } from "antd/lib/tree";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import { MarkText } from "../../components/MarkText";
-import { RootState } from "../../rootReducer";
 import { DocumentTreeSearch } from "./DocumentTreeSearch";
+import { ProjectHeader } from "./ProjectHeader";
 import { BranchTreeNode, GeneralTreeNode } from "./tree-builder";
 
 const { TreeNode, DirectoryTree } = Tree;
@@ -84,16 +83,22 @@ function getAllMatchingKeys(searchTerm: string, treeData: GeneralTreeNode[]) {
   return getNodeMatchingKeys(searchTerm, rootNode);
 }
 
-export const DocumentTree: React.FC = () => {
-  const treeData = useSelector((state: RootState) => state.document.tree);
+export interface DocumentTreeProps {
+  tree: GeneralTreeNode[];
+}
 
+export const DocumentTree: React.FC<DocumentTreeProps> = props => {
   const history = useHistory();
   const location = useLocation();
+  const { url } = useRouteMatch();
 
+  const [projectName, setProjectName] = useState<string>("");
   const [selectedKey, setSelectedKey] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    setSelectedKey(decodeURIComponent(location.pathname.substring(1)));
+    const paths = location.pathname.split("/");
+    setProjectName(decodeURIComponent(paths[2]));
+    setSelectedKey(decodeURIComponent(paths[paths.length - 1]));
   }, [location]);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -111,13 +116,13 @@ export const DocumentTree: React.FC = () => {
   const onSelect = (_: unknown, e: AntTreeNodeSelectedEvent) => {
     const node = e.node.props;
     if (node.eventKey) {
-      history.push(`/${encodeURIComponent(node.eventKey!)}`);
+      history.push(`${url}/${encodeURIComponent(node.eventKey!)}`);
     }
   };
 
   const onSearchChange = (value: string) => {
     setSearchTerm(value);
-    const newExpandedKeys = value ? getAllMatchingKeys(value, treeData) : [];
+    const newExpandedKeys = value ? getAllMatchingKeys(value, props.tree) : [];
     setExpandedKeys(newExpandedKeys);
     setAutoExpandParent(true);
   };
@@ -129,6 +134,7 @@ export const DocumentTree: React.FC = () => {
 
   return (
     <Container ref={containerRef}>
+      <ProjectHeader projectName={projectName}></ProjectHeader>
       <DocumentTreeSearch
         searchTerm={searchTerm}
         onChange={onSearchChange}
@@ -141,7 +147,7 @@ export const DocumentTree: React.FC = () => {
           expandedKeys={expandedKeys}
           onExpand={onExpand}
         >
-          {treeData.map(child => renderNode(child, searchTerm))}
+          {props.tree.map(child => renderNode(child, searchTerm))}
         </DirectoryTree>
       </TreeContainer>
     </Container>
