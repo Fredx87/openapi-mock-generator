@@ -2,7 +2,7 @@ export function uploadFile(fileName: string) {
   const mimeType = fileName.endsWith("json")
     ? "application/json"
     : "application/x-yaml";
-  cy.readFile(`cypress/fixtures/specs/${fileName}`).then(fileContent => {
+  cy.fixture(`specs/${fileName}`).then(fileContent => {
     const stringContent =
       typeof fileContent === "object"
         ? JSON.stringify(fileContent)
