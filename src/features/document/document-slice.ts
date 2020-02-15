@@ -6,7 +6,7 @@ import { pipe } from "fp-ts/es6/pipeable";
 import set from "lodash-es/set";
 import { OpenAPIV3 } from "openapi-types";
 import { RootState } from "../../rootReducer";
-import { convertRefToPath, safeJsonParse } from "../../shared/utils";
+import { convertRefToPath } from "../../shared/utils";
 import { AppThunk } from "../../store";
 import { openApiParser } from "./openapi-parser";
 import { buildDocumentTree, GeneralTreeNode } from "./tree-builder";
@@ -62,8 +62,8 @@ const slice = createSlice({
         const { ref, value } = action.payload;
 
         pipe(
-          safeJsonParse(value),
-          O.map(parsed =>
+          E.parseJSON(value, E.toError),
+          E.map(parsed =>
             pipe(
               convertRefToPath(ref),
               O.fold(
