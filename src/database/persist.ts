@@ -6,7 +6,10 @@ import { pipe } from "fp-ts/es6/pipeable";
 import * as TE from "fp-ts/es6/TaskEither";
 import { IDBPDatabase } from "idb";
 import { RootState } from "src/rootReducer";
-import { SetStoreAction } from "src/store";
+import {
+  SetPersistedDocumentAction,
+  SET_PERSISTED_DOCUMENT_ACTION_TYPE
+} from "src/store";
 import {
   getProjectState,
   MyDb,
@@ -60,8 +63,8 @@ export function loadPersistedProject(
   return pipe(
     getProjectState(id, db),
     TE.map(state => {
-      const setStoreAction: SetStoreAction = {
-        type: "db/set store",
+      const setStoreAction: SetPersistedDocumentAction = {
+        type: SET_PERSISTED_DOCUMENT_ACTION_TYPE,
         payload: state
       };
       dispatch(setStoreAction);
