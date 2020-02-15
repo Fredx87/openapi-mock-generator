@@ -11,10 +11,11 @@ describe("OpenAPI file loading and parsing", () => {
   beforeEach(() => {
     indexedDB.deleteDatabase(DB_NAME);
     cy.createProjects(emptyProjects);
-    cy.visit("/1/PetStore");
   });
 
   it("should return error when uploading invalid file", () => {
+    cy.visit("/1/PetStore");
+
     cy.findByText(EMPTY_PROJECT_MSG);
 
     uploadFile("openapi-invalid.json");
@@ -23,6 +24,8 @@ describe("OpenAPI file loading and parsing", () => {
   });
 
   it("should return success message and build document tree when uploading valid YAML file", () => {
+    cy.visit("/1/PetStore");
+
     cy.findByText(EMPTY_PROJECT_MSG);
 
     uploadFile("pestore-expanded.yaml");
@@ -37,6 +40,18 @@ describe("OpenAPI file loading and parsing", () => {
   });
 
   it("should return success message and build document tree when uploading valid OpenAPI 2.0 file", () => {
+    // TODO: convert to cypress native mock when this bug is fixed: https://github.com/cypress-io/cypress/issues/95
+    cy.fixture("specs/petstore-2.0-converted.json").then(mocked => {
+      cy.visit("/1/PetStore", {
+        onBeforeLoad(win) {
+          cy.stub(win, "fetch").resolves({
+            ok: true,
+            text: () => JSON.stringify(mocked)
+          });
+        }
+      });
+    });
+
     cy.findByText(EMPTY_PROJECT_MSG);
 
     uploadFile("petstore-2.0.json");
