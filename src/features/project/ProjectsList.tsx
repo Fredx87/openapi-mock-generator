@@ -71,7 +71,10 @@ export const ProjectsList: React.FC = () => {
             setData(failure(e));
           },
           projects => {
-            setData(success(projects.map(toEditableProject)));
+            const sorted = projects.sort(
+              (a, b) => b.modifiedAt.valueOf() - a.modifiedAt.valueOf()
+            );
+            setData(success(sorted.map(toEditableProject)));
             setEditingDisabled(false);
           }
         )
@@ -90,7 +93,7 @@ export const ProjectsList: React.FC = () => {
     setEditingDisabled(true);
     setData(data =>
       isSuccess(data)
-        ? success(data.value.concat(newProject))
+        ? success([newProject].concat(data.value))
         : success([newProject])
     );
   };

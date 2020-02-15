@@ -1,3 +1,5 @@
+import * as D from "fp-ts/es6/Date";
+import * as IOE from "fp-ts/es6/IOEither";
 import { pipe } from "fp-ts/es6/pipeable";
 import * as TE from "fp-ts/es6/TaskEither";
 import { DBSchema, IDBPDatabase, openDB } from "idb";
@@ -54,6 +56,23 @@ export function getAllProjects(
   return TE.tryCatch(
     () => db.getAll(PROJECT_STORE),
     e => `Cannot get all projects from database: ${String(e)}`
+  );
+}
+
+export function getProject(
+  id: number,
+  db: IDBPDatabase<MyDb>
+): TE.TaskEither<string, DbProject> {
+  return pipe(
+    TE.tryCatch(
+      () => db.get(PROJECT_STORE, id),
+      e => `Cannot get project from database: ${String(e)}`
+    ),
+    TE.chain(res =>
+      res
+        ? TE.right(res)
+        : TE.left(`Project with id "${id}" not found in the database`)
+    )
   );
 }
 
@@ -124,5 +143,22 @@ export function getProjectState(
       e => `Cannot retrieve saved project state: ${String(e)}`
     ),
     TE.chain(res => (res ? TE.right(res) : TE.left("Project state not found")))
+  );
+}
+
+export function updateProjectModifiedAt(
+  id: number,
+  db: IDBPDatabase<MyDb>
+): TE.TaskEither<string, void> {
+  return pipe(
+    getProject(id, db),
+    TE.chain(current =>
+      pipe(
+        TE.fromIOEither<string, Date>(IOE.rightIO(D.create)),
+        TE.map<Date, DbProject>(date => ({ ...current, modifiedAt: date })),
+        TE.chain(project => putProject(project, db)),
+        TE.map(() => undefined)
+      )
+    )
   );
 }

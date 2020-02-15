@@ -7,7 +7,12 @@ import * as TE from "fp-ts/es6/TaskEither";
 import { IDBPDatabase } from "idb";
 import { RootState } from "src/rootReducer";
 import { SetStoreAction } from "src/store";
-import { getProjectState, MyDb, putProjectState } from "./database";
+import {
+  getProjectState,
+  MyDb,
+  putProjectState,
+  updateProjectModifiedAt
+} from "./database";
 
 export function getProjectId(): IOE.IOEither<string, number> {
   return pipe(
@@ -21,10 +26,15 @@ export function getProjectId(): IOE.IOEither<string, number> {
 function saveState(
   state: RootState,
   db: IDBPDatabase<MyDb>
-): TE.TaskEither<string, number> {
+): TE.TaskEither<string, void> {
   return pipe(
     TE.fromIOEither(getProjectId()),
-    TE.chain(id => putProjectState(state, id, db))
+    TE.chain(id =>
+      pipe(
+        putProjectState(state, id, db),
+        TE.chain(() => updateProjectModifiedAt(id, db))
+      )
+    )
   );
 }
 
