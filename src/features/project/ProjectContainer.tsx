@@ -23,7 +23,8 @@ export const ProjectContainer: React.FC = () => {
         })
       )
     );
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectId]);
 
   return loaded ? <Project /> : <Skeleton />;
 };
