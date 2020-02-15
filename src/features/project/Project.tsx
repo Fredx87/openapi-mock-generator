@@ -7,8 +7,8 @@ import { DocumentTree } from "src/features/document/DocumentTree";
 import { EditorsWrapper } from "src/features/editor/EditorsWrapper";
 import { RootState } from "src/rootReducer";
 import styled from "styled-components";
-import { OpenApiLoader } from "../document/OpenApiLoader";
-import { EMPTY_PROJECT_MSG } from "./project-constants";
+import { EMPTY_PROJECT_MSG } from "./constants";
+import { OpenApiLoader } from "./OpenApiLoader";
 
 const { Sider, Content } = Layout;
 

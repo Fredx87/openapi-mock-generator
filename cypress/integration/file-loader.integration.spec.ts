@@ -1,8 +1,6 @@
 import { emptyProjects } from "cypress/fixtures/db/emptyProjects";
-import {
-  DB_NAME,
-  EMPTY_PROJECT_MSG
-} from "src/features/project/project-constants";
+import { DB_NAME } from "src/database/constants";
+import { EMPTY_PROJECT_MSG } from "src/features/project/constants";
 import { expectMessage } from "../support/message-checker";
 import { treeTestId } from "../support/tree";
 import { uploadFile } from "../support/upload-file";

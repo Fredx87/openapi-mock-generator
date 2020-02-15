@@ -7,8 +7,8 @@ import {
 } from "@reduxjs/toolkit";
 import { IDBPDatabase } from "idb";
 import { ThunkAction } from "redux-thunk";
-import { MyDb } from "./features/project/database";
-import { persistStateMiddleware } from "./features/project/persist";
+import { MyDb } from "./database/database";
+import { persistStateMiddleware } from "./database/persist";
 import { rootReducer, RootState } from "./rootReducer";
 
 const SET_STORE_ACTION_TYPE = "db/set store";

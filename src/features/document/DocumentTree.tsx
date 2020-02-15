@@ -5,8 +5,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import { MarkText } from "../../components/MarkText";
+import { ProjectHeader } from "../project/ProjectHeader";
 import { DocumentTreeSearch } from "./DocumentTreeSearch";
-import { ProjectHeader } from "./ProjectHeader";
 import { BranchTreeNode, GeneralTreeNode } from "./tree-builder";
 
 const { TreeNode, DirectoryTree } = Tree;

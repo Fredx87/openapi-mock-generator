@@ -3,13 +3,13 @@ import { expectMessage } from "cypress/support/message-checker";
 import { treeTestId } from "cypress/support/tree";
 import { uploadFile } from "cypress/support/upload-file";
 import { PAGE_TITLE } from "src/components/MyHeader";
+import { DB_NAME } from "src/database/constants";
+import { EMPTY_PROJECT_MSG } from "src/features/project/constants";
 import {
   CREATE_PROJECT_MSG,
-  DB_NAME,
-  EMPTY_PROJECT_MSG,
+  EMPTY_MSG,
   NEW_PROJECT_NAME_PLACEHOLDER
-} from "src/features/project/project-constants";
-import { EMPTY_MSG } from "src/features/project/ProjectsListTable";
+} from "src/features/projects-list/constants";
 
 const click = ($el: any) => $el.click();
 

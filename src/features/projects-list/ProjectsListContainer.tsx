@@ -14,15 +14,15 @@ import * as E from "fp-ts/es6/Either";
 import { pipe } from "fp-ts/es6/pipeable";
 import { produce } from "immer";
 import React, { useEffect, useState } from "react";
-import { useDatabase } from "src/shared/use-database";
-import styled from "styled-components";
 import {
   createProject,
   DbProject,
   deleteProject,
   getAllProjects,
   putProject
-} from "./database";
+} from "src/database/database";
+import { useDatabase } from "src/database/useDatabase";
+import styled from "styled-components";
 import { EditableProject, ProjectsListTable } from "./ProjectsListTable";
 
 const { Content } = Layout;
@@ -50,7 +50,7 @@ function toDbProject(project: EditableProject): DbProject {
   };
 }
 
-export const ProjectsList: React.FC = () => {
+export const ProjectsListContainer: React.FC = () => {
   const [editingDisabled, setEditingDisabled] = useState(false);
   const [data, setData] = useState<RemoteData<string, EditableProject[]>>(
     initial

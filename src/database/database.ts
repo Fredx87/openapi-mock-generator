@@ -5,12 +5,8 @@ import * as TE from "fp-ts/es6/TaskEither";
 import { DBSchema, IDBPDatabase, openDB } from "idb";
 import { createContext } from "react";
 import { RootState } from "src/rootReducer";
-import { initialDocument } from "../document/document-slice";
-import {
-  DB_NAME,
-  PROJECT_STATE_STORE,
-  PROJECT_STORE
-} from "./project-constants";
+import { initialDocument } from "../features/document/document-slice";
+import { DB_NAME, PROJECT_STATE_STORE, PROJECT_STORE } from "./constants";
 
 export const DbContext = createContext<IDBPDatabase<MyDb> | undefined>(
   undefined

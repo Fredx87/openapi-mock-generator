@@ -7,13 +7,12 @@ import Table, { ColumnProps } from "antd/es/table";
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { DbProject } from "./database";
+import { DbProject } from "../../database/database";
 import {
   CREATE_PROJECT_MSG,
+  EMPTY_MSG,
   NEW_PROJECT_NAME_PLACEHOLDER
-} from "./project-constants";
-
-export const EMPTY_MSG = "No project found. Please create a new project.";
+} from "./constants";
 
 const HeaderContainer = styled.div`
   margin: 20px 0;

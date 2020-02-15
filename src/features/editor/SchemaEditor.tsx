@@ -2,14 +2,14 @@ import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
-import { useCurrentRef } from "../../shared/use-current-ref";
 import { getObjectByRef } from "../../shared/utils";
 import { getDocument, setRefValue } from "../document/document-slice";
 import { EditorContainer } from "./EditorContainer";
 import { monacoDefaultOptions } from "./monaco-options";
 import { MyMonacoEditor } from "./MyMonacoEditor";
 import { jsonDiagnosticOptions } from "./schemas";
-import { useEditorResize } from "./use-editor-resize";
+import { useCurrentRef } from "./useCurrentRef";
+import { useEditorResize } from "./useEditorResize";
 
 export const SchemaEditor: React.FC = () => {
   const document = useSelector(getDocument);

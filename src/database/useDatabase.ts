@@ -1,6 +1,6 @@
 import { IDBPDatabase } from "idb";
 import { useContext } from "react";
-import { DbContext, MyDb } from "src/features/project/database";
+import { DbContext, MyDb } from "src/database/database";
 
 export function useDatabase(): IDBPDatabase<MyDb> {
   const db = useContext(DbContext);
