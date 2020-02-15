@@ -1,4 +1,5 @@
 import * as D from "fp-ts/es6/Date";
+import * as E from "fp-ts/es6/Either";
 import * as IOE from "fp-ts/es6/IOEither";
 import { pipe } from "fp-ts/es6/pipeable";
 import * as TE from "fp-ts/es6/TaskEither";
@@ -48,26 +49,22 @@ export async function openDatabase(): Promise<IDBPDatabase<MyDb>> {
 
 export function getAllProjects(
   db: IDBPDatabase<MyDb>
-): TE.TaskEither<string, DbProject[]> {
-  return TE.tryCatch(
-    () => db.getAll(PROJECT_STORE),
-    e => `Cannot get all projects from database: ${String(e)}`
-  );
+): TE.TaskEither<Error, DbProject[]> {
+  return TE.tryCatch(() => db.getAll(PROJECT_STORE), E.toError);
 }
 
 export function getProject(
   id: number,
   db: IDBPDatabase<MyDb>
-): TE.TaskEither<string, DbProject> {
+): TE.TaskEither<Error, DbProject> {
   return pipe(
-    TE.tryCatch(
-      () => db.get(PROJECT_STORE, id),
-      e => `Cannot get project from database: ${String(e)}`
-    ),
+    TE.tryCatch(() => db.get(PROJECT_STORE, id), E.toError),
     TE.chain(res =>
       res
         ? TE.right(res)
-        : TE.left(`Project with id "${id}" not found in the database`)
+        : TE.left(
+            new Error(`Project with id "${id}" not found in the database`)
+          )
     )
   );
 }
@@ -75,28 +72,22 @@ export function getProject(
 export function putProject(
   project: DbProject,
   db: IDBPDatabase<MyDb>
-): TE.TaskEither<string, number> {
-  return TE.tryCatch(
-    () => db.put(PROJECT_STORE, project),
-    e => `Cannot put project in database: ${String(e)}`
-  );
+): TE.TaskEither<Error, number> {
+  return TE.tryCatch(() => db.put(PROJECT_STORE, project), E.toError);
 }
 
 export function putProjectState(
   state: RootState,
   key: number,
   db: IDBPDatabase<MyDb>
-): TE.TaskEither<string, number> {
-  return TE.tryCatch(
-    () => db.put(PROJECT_STATE_STORE, state, key),
-    e => `Cannot put project state in database: ${String(e)}`
-  );
+): TE.TaskEither<Error, number> {
+  return TE.tryCatch(() => db.put(PROJECT_STATE_STORE, state, key), E.toError);
 }
 
 export function createProject(
   project: DbProject,
   db: IDBPDatabase<MyDb>
-): TE.TaskEither<string, number> {
+): TE.TaskEither<Error, number> {
   const toCreate = { ...project };
   delete toCreate["id"];
   return pipe(
@@ -108,23 +99,17 @@ export function createProject(
 export function deleteProject(
   project: DbProject,
   db: IDBPDatabase<MyDb>
-): TE.TaskEither<string, void> {
+): TE.TaskEither<Error, void> {
   const { id } = project;
 
   if (id === undefined) {
-    return TE.left(`Cannot delete a project without id`);
+    return TE.left(new Error(`Cannot delete a project without id`));
   }
 
   return pipe(
-    TE.tryCatch(
-      () => db.delete(PROJECT_STORE, id),
-      e => `Cannot delete project: ${String(e)}`
-    ),
+    TE.tryCatch(() => db.delete(PROJECT_STORE, id), E.toError),
     TE.chain(() =>
-      TE.tryCatch(
-        () => db.delete(PROJECT_STATE_STORE, id),
-        e => `Cannot delete project state: ${String(e)}`
-      )
+      TE.tryCatch(() => db.delete(PROJECT_STATE_STORE, id), E.toError)
     )
   );
 }
@@ -132,25 +117,24 @@ export function deleteProject(
 export function getProjectState(
   id: number,
   db: IDBPDatabase<MyDb>
-): TE.TaskEither<string, RootState> {
+): TE.TaskEither<Error, RootState> {
   return pipe(
-    TE.tryCatch(
-      () => db.get("projectState", id),
-      e => `Cannot retrieve saved project state: ${String(e)}`
-    ),
-    TE.chain(res => (res ? TE.right(res) : TE.left("Project state not found")))
+    TE.tryCatch(() => db.get("projectState", id), E.toError),
+    TE.chain(res =>
+      res ? TE.right(res) : TE.left(new Error("Project state not found"))
+    )
   );
 }
 
 export function updateProjectModifiedAt(
   id: number,
   db: IDBPDatabase<MyDb>
-): TE.TaskEither<string, void> {
+): TE.TaskEither<Error, void> {
   return pipe(
     getProject(id, db),
     TE.chain(current =>
       pipe(
-        TE.fromIOEither<string, Date>(IOE.rightIO(D.create)),
+        TE.fromIOEither<Error, Date>(IOE.rightIO(D.create)),
         TE.map<Date, DbProject>(date => ({ ...current, modifiedAt: date })),
         TE.chain(project => putProject(project, db)),
         TE.map(() => undefined)

@@ -68,7 +68,7 @@ export const ProjectsListContainer: React.FC = () => {
         res,
         E.fold(
           e => {
-            setData(failure(e));
+            setData(failure(String(e)));
           },
           projects => {
             const sorted = projects.sort(
