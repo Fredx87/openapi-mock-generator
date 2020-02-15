@@ -1,6 +1,7 @@
+import * as E from "fp-ts/es6/Either";
 import * as TE from "fp-ts/es6/TaskEither";
 
-export function readAsText(file: File): TE.TaskEither<string, string> {
+export function readAsText(file: File): TE.TaskEither<Error, string> {
   const reader = new Promise<string>(function(resolve, reject) {
     var reader = new FileReader();
     reader.onload = () => {
@@ -16,8 +17,5 @@ export function readAsText(file: File): TE.TaskEither<string, string> {
     };
     reader.readAsText(file);
   });
-  return TE.tryCatch(
-    () => reader,
-    e => String(e)
-  );
+  return TE.tryCatch(() => reader, E.toError);
 }

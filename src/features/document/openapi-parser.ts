@@ -1,31 +1,56 @@
+import { post } from "@contactlab/appy";
+import { withBody } from "@contactlab/appy/combinators/body";
+import { withDecoder } from "@contactlab/appy/combinators/decoder";
+import * as E from "fp-ts/es6/Either";
 import { pipe } from "fp-ts/es6/pipeable";
 import * as TE from "fp-ts/es6/TaskEither";
-import { OpenAPIV2, OpenAPIV3 } from "openapi-types";
+import { OpenAPI, OpenAPIV2, OpenAPIV3 } from "openapi-types";
+import { isOpenApiV2Document, isOpenApiV3Document } from "src/shared/utils";
 import SwaggerParser from "swagger-parser";
 import { readAsText } from "../../shared/file-reader";
-import { isOpenApiV3Document } from "../../shared/utils";
 
 // TODO: PR to swagger-parser for including YAML types
 const yamlParse = (SwaggerParser as any).YAML.parse as (
   text: string
-) => OpenAPIV3.Document | OpenAPIV2.Document;
+) => unknown;
+
+function safeYamlParse(content: string): E.Either<Error, unknown> {
+  return E.tryCatch(() => yamlParse(content), E.toError);
+}
+
+function convertOpenApi2to3(
+  doc: OpenAPIV2.Document
+): TE.TaskEither<Error, OpenAPIV3.Document> {
+  const jsonPost = withDecoder(res => E.right(res as OpenAPIV3.Document))(
+    withBody(doc)(post)
+  );
+
+  return pipe(
+    jsonPost("https://converter.swagger.io/api/convert"),
+    TE.mapLeft(E.toError),
+    TE.map(res => res.data)
+  );
+}
 
 export function openApiParser(
   file: File
-): TE.TaskEither<string, OpenAPIV3.Document> {
+): TE.TaskEither<Error, OpenAPIV3.Document> {
   return pipe(
     readAsText(file),
-    TE.map(content => yamlParse(content)),
+    TE.chain(content => TE.fromEither(safeYamlParse(content))),
     TE.chain(content =>
       TE.tryCatch(
-        () => SwaggerParser.bundle(content),
-        e => String(e)
+        // TODO: fix wrong type in SwaggerParser types
+        () => SwaggerParser.bundle(content as OpenAPI.Document),
+        E.toError
       )
     ),
     TE.chain(doc =>
       isOpenApiV3Document(doc)
         ? TE.right(doc)
-        : TE.left("Cannot parse swagger document")
+        : isOpenApiV2Document(doc)
+        ? convertOpenApi2to3(doc)
+        : TE.left(new Error("Cannot parse swagger document"))
     )
   );
 }
