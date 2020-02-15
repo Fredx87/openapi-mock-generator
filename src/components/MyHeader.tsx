@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { OpenApiLoader } from "../features/document/OpenApiLoader";
 
 export const PAGE_TITLE = "OpenApi Fake Generator";
 
@@ -23,6 +22,5 @@ export const MyHeader: React.FC = () => (
     <h1>
       <StyledLink to="/">{PAGE_TITLE}</StyledLink>
     </h1>
-    <OpenApiLoader></OpenApiLoader>
   </Container>
 );

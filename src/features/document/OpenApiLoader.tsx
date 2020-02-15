@@ -14,7 +14,7 @@ export const OpenApiLoader: React.FC = () => {
   }
   return (
     <Upload beforeUpload={beforeUpload} showUploadList={false}>
-      <Button>
+      <Button type="primary">
         <Icon type="upload" /> Load OpenApi file
       </Button>
     </Upload>
