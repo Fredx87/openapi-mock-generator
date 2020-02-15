@@ -17,7 +17,7 @@ describe("OpenAPI file loading and parsing", () => {
   it("should return error when uploading invalid file", () => {
     cy.findByText(EMPTY_PROJECT_MSG);
 
-    uploadFile("openapi-invalid.json", "application/json");
+    uploadFile("openapi-invalid.json");
 
     expectMessage("error", /invalid/i);
   });
@@ -33,6 +33,22 @@ describe("OpenAPI file loading and parsing", () => {
       cy.contains("li", "Paths").toggleTreeNode();
       cy.contains("li", "Schemas").toggleTreeNode();
       cy.findByText("Pet").should("exist");
+    });
+  });
+
+  it("should return success message and build document tree when uploading valid OpenAPI 2.0 file", () => {
+    cy.findByText(EMPTY_PROJECT_MSG);
+
+    uploadFile("petstore-2.0.json");
+
+    expectMessage("success", /loaded.*success/i);
+
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Paths").toggleTreeNode();
+      cy.contains("li", "Schemas").toggleTreeNode();
+      cy.findByText("Pet").should("exist");
+      cy.findByText("Pets").should("exist");
+      cy.findByText("Error").should("exist");
     });
   });
 });

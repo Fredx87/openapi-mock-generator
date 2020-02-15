@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@contactlab/appy": "^3.0.0-0",
     "@cypress/code-coverage": "^1.10.4",
     "@cypress/instrument-cra": "^1.0.0",
     "@cypress/webpack-preprocessor": "^4.1.1",
