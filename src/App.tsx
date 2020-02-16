@@ -2,7 +2,7 @@ import "antd/dist/antd.css";
 import Layout from "antd/es/layout";
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { ProjectsList } from "src/features/project/ProjectsList";
+import { ProjectsListContainer } from "src/features/projects-list/ProjectsListContainer";
 import styled from "styled-components";
 import { MyHeader } from "./components/MyHeader";
 import { ProjectContainer } from "./features/project/ProjectContainer";
@@ -22,7 +22,7 @@ const App: React.FC = () => {
         </Header>
         <Switch>
           <Route exact path="/">
-            <ProjectsList />
+            <ProjectsListContainer />
           </Route>
           <Route path="/:projectId/:projectName">
             <ProjectContainer />

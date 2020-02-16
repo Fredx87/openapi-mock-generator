@@ -6,7 +6,10 @@ import { pipe } from "fp-ts/es6/pipeable";
 import * as TE from "fp-ts/es6/TaskEither";
 import { IDBPDatabase } from "idb";
 import { RootState } from "src/rootReducer";
-import { SetStoreAction } from "src/store";
+import {
+  SetPersistedDocumentAction,
+  SET_PERSISTED_DOCUMENT_ACTION_TYPE
+} from "src/store";
 import {
   getProjectState,
   MyDb,
@@ -14,9 +17,9 @@ import {
   updateProjectModifiedAt
 } from "./database";
 
-export function getProjectId(): IOE.IOEither<string, number> {
+export function getProjectId(): IOE.IOEither<Error, number> {
   return pipe(
-    IOE.fromOption(() => `Saved Project Id not found`)(
+    IOE.fromOption(() => new Error(`Saved Project Id not found`))(
       O.fromNullable(window.location.pathname.split("/")?.[1])
     ),
     IOE.map(res => +res)
@@ -26,7 +29,7 @@ export function getProjectId(): IOE.IOEither<string, number> {
 function saveState(
   state: RootState,
   db: IDBPDatabase<MyDb>
-): TE.TaskEither<string, void> {
+): TE.TaskEither<Error, void> {
   return pipe(
     TE.fromIOEither(getProjectId()),
     TE.chain(id =>
@@ -56,12 +59,12 @@ export function loadPersistedProject(
   id: number,
   dispatch: Dispatch,
   db: IDBPDatabase<MyDb>
-): TE.TaskEither<string, void> {
+): TE.TaskEither<Error, void> {
   return pipe(
     getProjectState(id, db),
     TE.map(state => {
-      const setStoreAction: SetStoreAction = {
-        type: "db/set store",
+      const setStoreAction: SetPersistedDocumentAction = {
+        type: SET_PERSISTED_DOCUMENT_ACTION_TYPE,
         payload: state
       };
       dispatch(setStoreAction);

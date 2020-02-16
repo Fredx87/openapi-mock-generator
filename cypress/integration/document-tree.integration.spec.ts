@@ -1,6 +1,6 @@
 import { emptyProjects } from "cypress/fixtures/db/emptyProjects";
 import { petStoreState } from "cypress/fixtures/db/petStore-state";
-import { DB_NAME } from "src/features/project/project-constants";
+import { DB_NAME } from "src/database/constants";
 import { treeTestId } from "../support/tree";
 
 describe("OpenAPI Document Tree", () => {

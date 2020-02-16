@@ -6,7 +6,7 @@ import {
   DbProject,
   openDatabase,
   putProjectState
-} from "src/features/project/database";
+} from "src/database/database";
 
 Cypress.Commands.add("createProjects", (projects: DbProject[]) => {
   Cypress.log({

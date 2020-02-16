@@ -6,16 +6,9 @@ import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import { MarkText } from "../../components/MarkText";
 import { DocumentTreeSearch } from "./DocumentTreeSearch";
-import { ProjectHeader } from "./ProjectHeader";
 import { BranchTreeNode, GeneralTreeNode } from "./tree-builder";
 
 const { TreeNode, DirectoryTree } = Tree;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`;
 
 const TreeContainer = styled.div`
   flex: 1;
@@ -92,12 +85,10 @@ export const DocumentTree: React.FC<DocumentTreeProps> = props => {
   const location = useLocation();
   const { url } = useRouteMatch();
 
-  const [projectName, setProjectName] = useState<string>("");
   const [selectedKey, setSelectedKey] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const paths = location.pathname.split("/");
-    setProjectName(decodeURIComponent(paths[2]));
     setSelectedKey(decodeURIComponent(paths[paths.length - 1]));
   }, [location]);
 
@@ -133,13 +124,12 @@ export const DocumentTree: React.FC<DocumentTreeProps> = props => {
   };
 
   return (
-    <Container ref={containerRef}>
-      <ProjectHeader projectName={projectName}></ProjectHeader>
+    <>
       <DocumentTreeSearch
         searchTerm={searchTerm}
         onChange={onSearchChange}
       ></DocumentTreeSearch>
-      <TreeContainer data-testid="document-tree">
+      <TreeContainer data-testid="document-tree" ref={containerRef}>
         <DirectoryTree
           onSelect={onSelect}
           selectedKeys={selectedKeys}
@@ -150,6 +140,6 @@ export const DocumentTree: React.FC<DocumentTreeProps> = props => {
           {props.tree.map(child => renderNode(child, searchTerm))}
         </DirectoryTree>
       </TreeContainer>
-    </Container>
+    </>
   );
 };

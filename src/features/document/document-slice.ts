@@ -25,7 +25,7 @@ interface LoadedDocumentState {
   tree: GeneralTreeNode[];
 }
 
-type DocumentState = EmptyDocumentState | LoadedDocumentState;
+export type DocumentState = EmptyDocumentState | LoadedDocumentState;
 
 export function initialDocument(): DocumentState {
   return {

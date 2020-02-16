@@ -5,14 +5,14 @@ import $RefParser from "json-schema-ref-parser";
 import cloneDeep from "lodash-es/cloneDeep";
 import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
 import React, { useEffect, useRef, useState } from "react";
+import MonacoEditor from "react-monaco-editor";
 import { useSelector } from "react-redux";
-import { useCurrentRef } from "../../shared/use-current-ref";
 import { getObjectByRef } from "../../shared/utils";
 import { getDocument } from "../document/document-slice";
 import { EditorContainer } from "./EditorContainer";
 import { monacoDefaultOptions } from "./monaco-options";
-import { MyMonacoEditor } from "./MyMonacoEditor";
-import { useEditorResize } from "./use-editor-resize";
+import { useCurrentRef } from "./useCurrentRef";
+import { useEditorResize } from "./useEditorResize";
 
 jsf.extend("faker", () => faker);
 jsf.extend("chance", () => new Chance());
@@ -75,12 +75,12 @@ export const GeneratedEditor: React.FC = () => {
 
   return (
     <EditorContainer data-testid="generated-editor" ref={containerRef}>
-      <MyMonacoEditor
+      <MonacoEditor
         language="json"
         value={value}
         options={options}
         editorDidMount={editorDidMount}
-      ></MyMonacoEditor>
+      ></MonacoEditor>
     </EditorContainer>
   );
 };

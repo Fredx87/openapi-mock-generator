@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import App from "./App";
-import { DbContext, openDatabase } from "./features/project/database";
+import { DbContext, openDatabase } from "./database/database";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 import { initStore } from "./store";

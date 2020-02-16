@@ -3,7 +3,7 @@ import Icon from "antd/es/icon";
 import Upload from "antd/es/upload";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { parseOpenApiFile } from "./document-slice";
+import { parseOpenApiFile } from "../document/document-slice";
 
 export const OpenApiLoader: React.FC = () => {
   const dispatch = useDispatch();

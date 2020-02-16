@@ -1,4 +1,4 @@
-import { DbProject } from "src/features/project/database";
+import { DbProject } from "src/database/database";
 
 export const emptyProjects: DbProject[] = [
   {
