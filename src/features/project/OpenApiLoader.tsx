@@ -3,7 +3,14 @@ import Icon from "antd/es/icon";
 import Upload from "antd/es/upload";
 import React from "react";
 import { useDispatch } from "react-redux";
+import styled from "styled-components";
 import { parseOpenApiFile } from "../document/document-slice";
+import { UPLOAD_SPEC_MSG } from "./constants";
+
+const StyledButton = styled(Button)`
+  border-top-left-radius: 4px !important;
+  border-bottom-left-radius: 4px !important;
+`;
 
 export const OpenApiLoader: React.FC = () => {
   const dispatch = useDispatch();
@@ -12,11 +19,12 @@ export const OpenApiLoader: React.FC = () => {
     dispatch(parseOpenApiFile(file));
     return false;
   }
+
   return (
     <Upload beforeUpload={beforeUpload} showUploadList={false}>
-      <Button type="primary">
-        <Icon type="upload" /> Load OpenApi file
-      </Button>
+      <StyledButton type="primary">
+        <Icon type="upload" /> {UPLOAD_SPEC_MSG}
+      </StyledButton>
     </Upload>
   );
 };
