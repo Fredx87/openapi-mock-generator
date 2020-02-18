@@ -30,7 +30,10 @@ export const ProjectSider: React.FC<ProjectSiderProps> = props => {
   return (
     <Sider theme="light" width={300}>
       <Container>
-        <ProjectHeader projectName={projectName}></ProjectHeader>
+        <ProjectHeader
+          projectName={projectName}
+          document={props.document}
+        ></ProjectHeader>
         {props.document.status === "loaded" && (
           <DocumentTree tree={props.document.tree}></DocumentTree>
         )}
