@@ -8,7 +8,7 @@ Cypress.Commands.add(
       .wrap(subject, { log: false })
       .within({ log: false }, () =>
         cy
-          .get(".monaco-editor", { log: false })
+          .get(".monaco-editor.vs", { log: false })
           .first({ log: false })
           .as("editor")
       )
