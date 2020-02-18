@@ -26,9 +26,9 @@ Cypress.Commands.add(
       .wrap(subject, { log: false })
       .getMonacoEditor()
       .as("editor")
-      .type("{ctrl}a", { log: false })
       .within({ log: false }, () => {
         cy.get("textarea", { log: false })
+          .type("{ctrl}a", { log: false, force: true })
           .then(el => el.val())
           .as("value");
       })
