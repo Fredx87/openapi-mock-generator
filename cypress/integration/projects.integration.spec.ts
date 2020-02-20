@@ -228,7 +228,7 @@ describe("Projects Management", () => {
 
       cy.findByText(EMPTY_PROJECT_MSG).should("exist");
 
-      cy.findByText(PAGE_TITLE).click();
+      cy.contains("h1", PAGE_TITLE).click();
 
       cy.findByText(CREATE_PROJECT_MSG).should("exist");
     });
