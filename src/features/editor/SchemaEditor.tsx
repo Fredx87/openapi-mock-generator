@@ -1,3 +1,4 @@
+import debounce from "lodash-es/debounce";
 import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
 import React, { useEffect, useRef, useState } from "react";
 import MonacoEditor from "react-monaco-editor";
@@ -102,7 +103,7 @@ export const SchemaEditor: React.FC = () => {
       <MonacoEditor
         language="json"
         value={value}
-        onChange={onChange}
+        onChange={debounce(onChange, 500)}
         editorWillMount={editorWillMount}
         editorDidMount={editorDidMount}
         options={options}
