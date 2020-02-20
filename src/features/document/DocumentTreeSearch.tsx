@@ -6,6 +6,12 @@ const Container = styled.div`
   display: flex;
 `;
 
+const StyledInput = styled(Input)`
+  input {
+    border-radius: 0;
+  }
+`;
+
 interface DocumentTreeSearchProps {
   searchTerm: string;
   onChange: (value: string) => void;
@@ -18,12 +24,12 @@ export const DocumentTreeSearch: React.FC<DocumentTreeSearchProps> = props => {
 
   return (
     <Container>
-      <Input
+      <StyledInput
         allowClear
         placeholder="Search..."
         value={props.searchTerm}
         onChange={onChange}
-      ></Input>
+      ></StyledInput>
     </Container>
   );
 };
