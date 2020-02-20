@@ -1,4 +1,3 @@
-import "antd/dist/antd.css";
 import Layout from "antd/es/layout";
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
