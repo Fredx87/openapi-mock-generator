@@ -1,6 +1,7 @@
 import { emptyProjects } from "cypress/fixtures/db/emptyProjects";
 import { petStoreState } from "cypress/fixtures/db/petStore-state";
 import { DB_NAME } from "src/database/constants";
+import { EDITOR_DEBOUNCE_TIME } from "src/features/editor/constants";
 import {
   errorModel,
   newPetModel,
@@ -186,6 +187,8 @@ describe("Generation", () => {
       JSON.stringify(model, null, 2)
     );
 
+    cy.wait(EDITOR_DEBOUNCE_TIME);
+
     cy.findByTestId(generatedEditorTestId)
       .getMonacoValue()
       .should(value => {
@@ -238,6 +241,8 @@ describe("Generation", () => {
     cy.findByTestId(schemaEditorTestId).setMonacoValue(
       JSON.stringify(model, null, 2)
     );
+
+    cy.wait(EDITOR_DEBOUNCE_TIME);
 
     cy.findByTestId(generatedEditorTestId)
       .getMonacoValue()

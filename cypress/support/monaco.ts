@@ -48,12 +48,13 @@ Cypress.Commands.add(
       .wrap(subject, { log: false })
       .getMonacoEditor()
       .as("editor")
-      .type("{ctrl}a", { log: false })
       .within({ log: false }, () => {
         cy.get("textarea", { log: false })
+          .type("{ctrl}a", { log: false })
           .clear({ log: false })
           .invoke({ log: false }, "val", value)
-          .trigger("input", { log: false });
+          .trigger("input", { log: false })
+          .type("{backspace}");
       })
       .get("@editor", { log: false })
       .type("{esc}", { log: false });

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { getObjectByRef } from "../../shared/utils";
 import { getDocument, setRefValue } from "../document/document-slice";
+import { EDITOR_DEBOUNCE_TIME } from "./constants";
 import { EditorContainer } from "./EditorContainer";
 import { monacoDefaultOptions } from "./monaco-options";
 import { jsonDiagnosticOptions } from "./schemas";
@@ -103,7 +104,7 @@ export const SchemaEditor: React.FC = () => {
       <MonacoEditor
         language="json"
         value={value}
-        onChange={debounce(onChange, 500)}
+        onChange={debounce(onChange, EDITOR_DEBOUNCE_TIME)}
         editorWillMount={editorWillMount}
         editorDidMount={editorDidMount}
         options={options}
