@@ -7,7 +7,7 @@ import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
 import React, { useEffect, useRef, useState } from "react";
 import MonacoEditor from "react-monaco-editor";
 import { useSelector } from "react-redux";
-import { getObjectByRef } from "../../shared/utils";
+import { getObjectByRef, jsonSchemaRef } from "../../shared/utils";
 import { getDocument } from "../document/document-slice";
 import { EditorContainer } from "./EditorContainer";
 import { monacoDefaultOptions } from "./monaco-options";
@@ -33,7 +33,10 @@ export const GeneratedEditor: React.FC = () => {
 
   useEffect(() => {
     if (document && currentSchemaValue) {
-      const schema = JSON.parse(currentSchemaValue);
+      const parsed = JSON.parse(currentSchemaValue);
+      const schema = jsonSchemaRef.is(parsed)
+        ? cloneDeep(getObjectByRef(parsed.$ref, document))
+        : parsed;
       const schemas = document.components?.schemas;
 
       const schemaObj = {
@@ -47,10 +50,13 @@ export const GeneratedEditor: React.FC = () => {
         .dereference(schemaObj)
         .then(parsedSchema => {
           jsf.option("alwaysFakeOptionals", true);
+          jsf.option("failOnInvalidFormat", false);
           try {
             const generated = jsf.generate(parsedSchema);
             setValue(JSON.stringify(generated, null, 2));
-          } catch {}
+          } catch (e) {
+            console.error(e);
+          }
         })
         .catch(err => {
           console.error(err);
