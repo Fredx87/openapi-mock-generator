@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { getObjectByRef } from "../../shared/utils";
 import { getDocument, setRefValue } from "../document/document-slice";
-import { EDITOR_DEBOUNCE_TIME } from "./constants";
+import { EDITOR_DEBOUNCE_TIME, GO_TO_REFERENCE_MSG } from "./constants";
 import { EditorContainer } from "./EditorContainer";
 import { monacoDefaultOptions } from "./monaco-options";
 import { jsonDiagnosticOptions } from "./schemas";
@@ -41,6 +41,45 @@ export const SchemaEditor: React.FC = () => {
   }, [currentRef]);
 
   const containerRef = useEditorResize(editorRef);
+  const commandRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    const disposable = monacoEditor.languages.registerCodeLensProvider("json", {
+      provideCodeLenses: (model): monacoEditor.languages.CodeLensList => {
+        if (commandRef.current == null) {
+          return { lenses: [], dispose: () => {} };
+        }
+
+        const matches = model.findMatches(
+          `"\\$ref":\\s*"(#.*)"`,
+          false,
+          true,
+          false,
+          null,
+          true
+        );
+        const lenses = matches.map(m => {
+          const res: monacoEditor.languages.CodeLens = {
+            range: m.range,
+            command: {
+              title: GO_TO_REFERENCE_MSG,
+              id: commandRef.current!,
+              arguments: [m.matches?.[1]]
+            }
+          };
+          return res;
+        });
+        return { lenses, dispose: () => {} };
+      },
+      resolveCodeLens: (_, codeLens) => {
+        return codeLens;
+      }
+    });
+
+    return () => {
+      disposable.dispose();
+    };
+  }, []);
 
   const options: monacoEditor.editor.IStandaloneEditorConstructionOptions = {
     ...monacoDefaultOptions,
@@ -66,36 +105,8 @@ export const SchemaEditor: React.FC = () => {
     editorRef.current = editor;
     editor.focus();
 
-    const commandId = editor.addCommand(0, (_, ref: string) => {
+    commandRef.current = editorRef.current.addCommand(0, (_, ref: string) => {
       history.push(`/${projectId}/${projectName}/${encodeURIComponent(ref)}`);
-    });
-
-    monacoEditor.languages.registerCodeLensProvider("json", {
-      provideCodeLenses: (model): monacoEditor.languages.CodeLensList => {
-        const matches = model.findMatches(
-          `"\\$ref":\\s*"(#.*)"`,
-          false,
-          true,
-          false,
-          null,
-          true
-        );
-        const lenses = matches.map(m => {
-          const res: monacoEditor.languages.CodeLens = {
-            range: m.range,
-            command: {
-              title: "Go to reference",
-              id: commandId!,
-              arguments: [m.matches?.[1]]
-            }
-          };
-          return res;
-        });
-        return { lenses, dispose: () => {} };
-      },
-      resolveCodeLens: (_, codeLens) => {
-        return codeLens;
-      }
     });
   };
 
