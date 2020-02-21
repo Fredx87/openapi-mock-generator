@@ -10,6 +10,10 @@ import { BranchTreeNode, GeneralTreeNode } from "./tree-builder";
 
 const { TreeNode, DirectoryTree } = Tree;
 
+const Container = styled.div`
+  margin-top: 15px;
+`;
+
 const TreeContainer = styled.div`
   flex: 1;
   overflow: auto;
@@ -124,7 +128,7 @@ export const DocumentTree: React.FC<DocumentTreeProps> = props => {
   };
 
   return (
-    <>
+    <Container>
       <DocumentTreeSearch
         searchTerm={searchTerm}
         onChange={onSearchChange}
@@ -140,6 +144,6 @@ export const DocumentTree: React.FC<DocumentTreeProps> = props => {
           {props.tree.map(child => renderNode(child, searchTerm))}
         </DirectoryTree>
       </TreeContainer>
-    </>
+    </Container>
   );
 };

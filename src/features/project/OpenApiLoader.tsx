@@ -8,8 +8,10 @@ import { parseOpenApiFile } from "../document/document-slice";
 import { UPLOAD_SPEC_MSG } from "./constants";
 
 const StyledButton = styled(Button)`
-  border-top-left-radius: 4px !important;
-  border-bottom-left-radius: 4px !important;
+  &&& {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
 `;
 
 export const OpenApiLoader: React.FC = () => {

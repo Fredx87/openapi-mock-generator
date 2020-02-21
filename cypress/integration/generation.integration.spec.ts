@@ -126,6 +126,8 @@ describe("Generation", () => {
           .type(`{rightarrow}{enter}"maxItems": 1,`);
       });
 
+    cy.wait(EDITOR_DEBOUNCE_TIME);
+
     cy.findByTestId(schemaEditorTestId)
       .getMonacoValue()
       .should(value => {
