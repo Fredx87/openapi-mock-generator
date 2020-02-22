@@ -271,6 +271,18 @@ describe("Generation", () => {
             .to.match(/^\S+@fake.com$/);
         });
     });
+
+    it("should not generate value for empty playground", () => {
+      cy.findByTestId(treeTestId).within(() => {
+        cy.contains("li", "Playground").clickTreeNode();
+      });
+
+      cy.wait(EDITOR_DEBOUNCE_TIME);
+
+      cy.findByTestId(generatedEditorTestId)
+        .getMonacoValue()
+        .should("be.empty");
+    });
   });
 
   describe("Realword", () => {
