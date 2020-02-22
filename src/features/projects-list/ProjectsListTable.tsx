@@ -37,7 +37,7 @@ interface ProjectsListTableProps {
 }
 
 function renderDate(date: Date): string {
-  return Intl.DateTimeFormat().format(date);
+  return date.toLocaleString();
 }
 
 export const ProjectsListTable: React.FC<ProjectsListTableProps> = props => {
