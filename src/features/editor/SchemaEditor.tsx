@@ -1,4 +1,4 @@
-import debounce from "lodash-es/debounce";
+import throttle from "lodash-es/throttle";
 import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
 import React, { useEffect, useRef, useState } from "react";
 import MonacoEditor from "react-monaco-editor";
@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { getObjectByRef } from "../../shared/utils";
 import { getDocument, setRefValue } from "../document/document-slice";
-import { EDITOR_DEBOUNCE_TIME, GO_TO_REFERENCE_MSG } from "./constants";
+import { EDITOR_THROTTLE_TIME, GO_TO_REFERENCE_MSG } from "./constants";
 import { EditorContainer } from "./EditorContainer";
 import { monacoDefaultOptions } from "./monaco-options";
 import { jsonDiagnosticOptions } from "./schemas";
@@ -115,7 +115,7 @@ export const SchemaEditor: React.FC = () => {
       <MonacoEditor
         language="json"
         value={value}
-        onChange={debounce(onChange, EDITOR_DEBOUNCE_TIME)}
+        onChange={throttle(onChange, EDITOR_THROTTLE_TIME)}
         editorWillMount={editorWillMount}
         editorDidMount={editorDidMount}
         options={options}

@@ -2,7 +2,6 @@ import { emptyProjects } from "cypress/fixtures/db/emptyProjects";
 import { petStoreState } from "cypress/fixtures/db/petStore-state";
 import { realWorldState } from "cypress/fixtures/db/realworld-state";
 import { DB_NAME } from "src/database/constants";
-import { EDITOR_DEBOUNCE_TIME } from "src/features/editor/constants";
 import {
   errorModel,
   newPetModel,
@@ -131,8 +130,6 @@ describe("Generation", () => {
             .type(`{rightarrow}{enter}"maxItems": 1,`);
         });
 
-      cy.wait(EDITOR_DEBOUNCE_TIME);
-
       cy.findByTestId(schemaEditorTestId)
         .getMonacoValue()
         .should(value => {
@@ -194,8 +191,6 @@ describe("Generation", () => {
         JSON.stringify(model, null, 2)
       );
 
-      cy.wait(EDITOR_DEBOUNCE_TIME);
-
       cy.findByTestId(generatedEditorTestId)
         .getMonacoValue()
         .should(value => {
@@ -249,8 +244,6 @@ describe("Generation", () => {
         JSON.stringify(model, null, 2)
       );
 
-      cy.wait(EDITOR_DEBOUNCE_TIME);
-
       cy.findByTestId(generatedEditorTestId)
         .getMonacoValue()
         .should(value => {
@@ -277,8 +270,6 @@ describe("Generation", () => {
         cy.contains("li", "Playground").clickTreeNode();
       });
 
-      cy.wait(EDITOR_DEBOUNCE_TIME);
-
       cy.findByTestId(generatedEditorTestId)
         .getMonacoValue()
         .should("be.empty");
@@ -294,8 +285,6 @@ describe("Generation", () => {
       cy.visit(
         "/1/Realworld/%23%2Fpaths%2F~1users~1login%2Fpost%2Fresponses%2F200%2Fcontent%2Fapplication~1json%2Fschema"
       );
-
-      cy.wait(EDITOR_DEBOUNCE_TIME);
 
       cy.findByTestId(generatedEditorTestId)
         .getMonacoValue()
