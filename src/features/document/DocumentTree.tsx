@@ -12,6 +12,10 @@ const { TreeNode, DirectoryTree } = Tree;
 
 const Container = styled.div`
   margin-top: 15px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
 `;
 
 const TreeContainer = styled.div`

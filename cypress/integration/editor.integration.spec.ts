@@ -1,6 +1,8 @@
 import { emptyProjects } from "cypress/fixtures/db/emptyProjects";
 import { petStoreState } from "cypress/fixtures/db/petStore-state";
+import { PAGE_TITLE } from "src/components/MyHeader";
 import { DB_NAME } from "src/database/constants";
+import { GO_TO_REFERENCE_MSG } from "src/features/editor/constants";
 import { newPetModel, petModel } from "../fixtures/models/petstore-expanded";
 import {
   antTreeNodeSelectedClass,
@@ -304,7 +306,7 @@ describe("Editor", () => {
     cy.findByTestId(schemaEditorTestId)
       .getMonacoEditor()
       .within(() => {
-        cy.findByText(/go to reference/i).click();
+        cy.findByText(GO_TO_REFERENCE_MSG).click();
       });
 
     cy.findByTestId(treeTestId).within(() => {
@@ -328,5 +330,27 @@ describe("Editor", () => {
       .should(value => {
         expect(JSON.parse(value)).deep.equal(petModel);
       });
+  });
+
+  it("should show only one 'Go to reference' link when exiting and re-entering in a project", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Schemas").toggleTreeNode();
+      cy.contains("li", /^Pet$/).clickTreeNode();
+    });
+
+    cy.findAllByText(GO_TO_REFERENCE_MSG).should("have.length", 1);
+
+    cy.contains("h1", PAGE_TITLE).click();
+
+    cy.findByText("First Project").click();
+
+    cy.contains("h2", "First Project").click();
+
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Schemas").toggleTreeNode();
+      cy.contains("li", /^Pet$/).clickTreeNode();
+    });
+
+    cy.findAllByText(GO_TO_REFERENCE_MSG).should("have.length", 1);
   });
 });
