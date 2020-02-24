@@ -7,7 +7,7 @@ import {
 import { treeTestId } from "cypress/support/tree";
 import { DB_NAME } from "src/database/constants";
 
-xdescribe("Demo", () => {
+describe.skip("Demo", () => {
   it("Should run demo", () => {
     indexedDB.deleteDatabase(DB_NAME);
     cy.createProjects(emptyProjects);
@@ -116,6 +116,46 @@ xdescribe("Demo", () => {
           .type("{ctrl} ", { force: true })
           .type("{enter}", { force: true })
           .type("100", { force: true });
+      });
+
+    cy.findByTestId(generatedEditorTestId)
+      .getMonacoEditor()
+      .within(() => {
+        cy.get("textarea")
+          .type("{pageup}{home}", {
+            force: true
+          })
+          .type(
+            "{downarrow}{downarrow}{downarrow}{downarrow}{downarrow}{downarrow}{downarrow}{downarrow}{downarrow}{downarrow}{downarrow}{downarrow}",
+            {
+              force: true
+            }
+          )
+          .type("{shift}{end}", { force: true });
+      });
+
+    cy.wait(5000);
+
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Paths").toggleTreeNode();
+      cy.contains("li", /\/articles$/).toggleTreeNode();
+      cy.contains("li", "get").toggleTreeNode();
+      cy.contains("li", "200").clickTreeNode();
+      cy.contains("li", "Paths").scrollIntoView();
+    });
+
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoEditor()
+      .within(() => {
+        cy.get("textarea").type("{pageup}", { force: true });
+      });
+
+    cy.findByTestId(generatedEditorTestId)
+      .getMonacoEditor()
+      .within(() => {
+        cy.get("textarea").type("{pageup}", {
+          force: true
+        });
       });
   });
 });
