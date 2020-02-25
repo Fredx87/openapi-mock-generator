@@ -367,7 +367,10 @@ export const jsonDiagnosticOptions: monacoEditor.languages.json.DiagnosticsOptio
             type: "object",
             properties: {
               fake: {
-                type: "string"
+                type: "array",
+                items: {
+                  type: "string"
+                }
               },
               ...fakerObjProperties
             }
