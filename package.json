@@ -1,6 +1,6 @@
 {
   "name": "openapi-mock-generator",
-  "version": "0.1.0",
+  "version": "0.0.0-development",
   "private": true,
   "dependencies": {
     "@contactlab/appy": "^3.0.0-0",
@@ -79,7 +79,8 @@
     "cy:open": "cypress open --env coverage=false",
     "cy:run": "cypress run",
     "gen:chance": "ts-node --project ./scripts/tsconfig.json ./scripts/generate-chance-methods.ts",
-    "gen:faker": "ts-node --project ./scripts/tsconfig.json ./scripts/generate-faker-methods.ts"
+    "gen:faker": "ts-node --project ./scripts/tsconfig.json ./scripts/generate-faker-methods.ts",
+    "semantic-release": "semantic-release"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -117,5 +118,12 @@
     "exclude": [
       "src/serviceWorker.ts"
     ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fredx87/openapi-mock-generator.git"
+  },
+  "devDependencies": {
+    "semantic-release": "^17.0.4"
   }
 }
