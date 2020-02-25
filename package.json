@@ -123,5 +123,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Fredx87/openapi-mock-generator.git"
-  }
+  },
+  "homepage": "https://fredx87.github.io/openapi-mock-generator"
 }

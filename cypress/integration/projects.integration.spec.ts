@@ -17,7 +17,7 @@ describe("Projects Management", () => {
   describe("Creation", () => {
     beforeEach(() => {
       indexedDB.deleteDatabase(DB_NAME);
-      cy.visit("/");
+      cy.visit("#/");
     });
 
     it("should show empty data message with empty database", () => {
@@ -135,7 +135,7 @@ describe("Projects Management", () => {
   describe("Editing", () => {
     beforeEach(() => {
       indexedDB.deleteDatabase(DB_NAME);
-      cy.createProjects(emptyProjects).visit("/");
+      cy.createProjects(emptyProjects).visit("#/");
     });
 
     it("should edit project name", () => {
