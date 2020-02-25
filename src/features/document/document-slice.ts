@@ -3,6 +3,8 @@ import message from "antd/es/message";
 import * as E from "fp-ts/es6/Either";
 import * as O from "fp-ts/es6/Option";
 import { pipe } from "fp-ts/es6/pipeable";
+import cloneDeep from "lodash-es/cloneDeep";
+import merge from "lodash-es/merge";
 import set from "lodash-es/set";
 import { OpenAPIV3 } from "openapi-types";
 import { RootState } from "../../rootReducer";
@@ -43,11 +45,14 @@ const slice = createSlice({
   initialState: initialDocument(),
   reducers: {
     setDocument: (
-      _,
+      state,
       action: PayloadAction<OpenAPIV3.Document>
     ): LoadedDocumentState => {
+      const currentDocument =
+        state.status === "loaded" ? cloneDeep(state.content) : {};
+      const merged = merge(currentDocument, action.payload);
       const content: MyDocument = {
-        ...action.payload,
+        ...merged,
         playground: {}
       };
 
