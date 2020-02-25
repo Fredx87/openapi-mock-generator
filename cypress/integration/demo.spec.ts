@@ -13,7 +13,7 @@ describe.skip("Demo", () => {
     cy.createProjects(emptyProjects);
     cy.setProjectState(1, realWorldState);
     cy.viewport(1280, 720);
-    cy.visit("/1/Realworld");
+    cy.visit("#/1/Realworld");
 
     cy.findByTestId(treeTestId).within(() => {
       cy.contains("li", "Schemas").toggleTreeNode();

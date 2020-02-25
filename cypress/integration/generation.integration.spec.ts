@@ -22,7 +22,7 @@ describe("Generation", () => {
   describe("Petstore", () => {
     beforeEach(() => {
       cy.setProjectState(1, petStoreState);
-      cy.visit("/1/PetStore");
+      cy.visit("#/1/PetStore");
     });
 
     it("should generate JSON for NewPet model", () => {
@@ -283,7 +283,7 @@ describe("Generation", () => {
 
     it("should generate model for GetArticles response 200", () => {
       cy.visit(
-        "/1/Realworld/%23%2Fpaths%2F~1users~1login%2Fpost%2Fresponses%2F200%2Fcontent%2Fapplication~1json%2Fschema"
+        "#/1/Realworld/%23%2Fpaths%2F~1users~1login%2Fpost%2Fresponses%2F200%2Fcontent%2Fapplication~1json%2Fschema"
       );
 
       cy.findByTestId(generatedEditorTestId)

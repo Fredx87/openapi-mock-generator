@@ -14,7 +14,7 @@ describe("OpenAPI file loading and parsing", () => {
   });
 
   it("should return error when uploading invalid file", () => {
-    cy.visit("/1/PetStore");
+    cy.visit("#/1/PetStore");
 
     cy.findByText(EMPTY_PROJECT_MSG);
 
@@ -24,7 +24,7 @@ describe("OpenAPI file loading and parsing", () => {
   });
 
   it("should return success message and build document tree when uploading valid YAML file", () => {
-    cy.visit("/1/PetStore");
+    cy.visit("#/1/PetStore");
 
     cy.findByText(EMPTY_PROJECT_MSG);
 
@@ -42,7 +42,7 @@ describe("OpenAPI file loading and parsing", () => {
   it("should return success message and build document tree when uploading valid OpenAPI 2.0 file", () => {
     // TODO: convert to cypress native mock when this bug is fixed: https://github.com/cypress-io/cypress/issues/95
     cy.fixture("specs/petstore-2.0-converted.json").then(mocked => {
-      cy.visit("/1/PetStore", {
+      cy.visit("#/1/PetStore", {
         onBeforeLoad(win) {
           cy.stub(win, "fetch").resolves({
             ok: true,
@@ -70,7 +70,7 @@ describe("OpenAPI file loading and parsing", () => {
   it("should merge new uploaded definition with previous one", () => {
     cy.setProjectState(1, petStoreState);
 
-    cy.visit("/1/PetStore/%23%2Fcomponents%2Fschemas%2FNewPet");
+    cy.visit("#/1/PetStore/%23%2Fcomponents%2Fschemas%2FNewPet");
 
     cy.findByTestId(schemaEditorTestId)
       .getMonacoEditor()
@@ -86,7 +86,7 @@ describe("OpenAPI file loading and parsing", () => {
 
     expectMessage("success", /loaded.*success/i);
 
-    cy.visit("/1/PetStore/%23%2Fcomponents%2Fschemas%2FNewPet");
+    cy.visit("#/1/PetStore/%23%2Fcomponents%2Fschemas%2FNewPet");
 
     const expected = {
       type: "object",

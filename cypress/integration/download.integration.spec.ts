@@ -13,7 +13,7 @@ describe("Spec Download", () => {
   });
 
   it("should have download button disabled when spec file not uploaded", () => {
-    cy.visit("/1/PetStore");
+    cy.visit("#/1/PetStore");
 
     cy.findByText(EMPTY_PROJECT_MSG);
 
@@ -22,7 +22,7 @@ describe("Spec Download", () => {
 
   it("should have download button disabled when spec file uploaded", () => {
     cy.setProjectState(1, petStoreState);
-    cy.visit("/1/PetStore");
+    cy.visit("#/1/PetStore");
 
     cy.contains("button", DOWNLOAD_SPEC_MSG).should("be.enabled");
   });

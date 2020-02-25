@@ -20,7 +20,7 @@ import {
 export function getProjectId(): IOE.IOEither<Error, number> {
   return pipe(
     IOE.fromOption(() => new Error(`Saved Project Id not found`))(
-      O.fromNullable(window.location.pathname.split("/")?.[1])
+      O.fromNullable(window.location.hash.split("/")?.[1])
     ),
     IOE.map(res => +res)
   );

@@ -1,6 +1,6 @@
 import Layout from "antd/es/layout";
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { HashRouter, Route, Switch } from "react-router-dom";
 import { ProjectsListContainer } from "src/features/projects-list/ProjectsListContainer";
 import styled from "styled-components";
 import { MyHeader } from "./components/MyHeader";
@@ -14,7 +14,7 @@ const StyledLayout = styled(Layout)`
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <StyledLayout>
         <Header>
           <MyHeader></MyHeader>
@@ -28,7 +28,7 @@ const App: React.FC = () => {
           </Route>
         </Switch>
       </StyledLayout>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
