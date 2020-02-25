@@ -1,7 +1,6 @@
 {
   "name": "openapi-mock-generator",
   "version": "0.0.0-development",
-  "private": true,
   "dependencies": {
     "@contactlab/appy": "^3.0.0-0",
     "@devexperts/remote-data-ts": "^2.0.3",
