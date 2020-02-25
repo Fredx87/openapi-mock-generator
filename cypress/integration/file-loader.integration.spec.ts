@@ -1,4 +1,6 @@
 import { emptyProjects } from "cypress/fixtures/db/emptyProjects";
+import { petStoreState } from "cypress/fixtures/db/petStore-state";
+import { schemaEditorTestId } from "cypress/support/selectors";
 import { DB_NAME } from "src/database/constants";
 import { EMPTY_PROJECT_MSG } from "src/features/project/constants";
 import { expectMessage } from "../support/message-checker";
@@ -63,5 +65,47 @@ describe("OpenAPI file loading and parsing", () => {
       cy.findByText("Pets").should("exist");
       cy.findByText("Error").should("exist");
     });
+  });
+
+  it("should merge new uploaded definition with previous one", () => {
+    cy.setProjectState(1, petStoreState);
+
+    cy.visit("/1/PetStore/%23%2Fcomponents%2Fschemas%2FNewPet");
+
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoEditor()
+      .within(() => {
+        cy.get("textarea")
+          .type("{pagedown}{uparrow}{uparrow}{leftarrow}", {
+            force: true
+          })
+          .type(`,{enter}"x-chance": "animal"{esc}`, { force: true });
+      });
+
+    uploadFile("pestore-expanded.yaml");
+
+    expectMessage("success", /loaded.*success/i);
+
+    cy.visit("/1/PetStore/%23%2Fcomponents%2Fschemas%2FNewPet");
+
+    const expected = {
+      type: "object",
+      required: ["name"],
+      properties: {
+        name: {
+          type: "string"
+        },
+        tag: {
+          type: "string",
+          "x-chance": "animal"
+        }
+      }
+    };
+
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoValue()
+      .should(value => {
+        expect(JSON.parse(value)).deep.equal(expected);
+      });
   });
 });
