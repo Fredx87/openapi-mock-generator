@@ -1,0 +1,38 @@
+{
+  "files": {
+    "main.css": "/openapi-mock-generator/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/openapi-mock-generator/static/js/main.e7b50dc8.chunk.js",
+    "main.js.map": "/openapi-mock-generator/static/js/main.e7b50dc8.chunk.js.map",
+    "runtime-main.js": "/openapi-mock-generator/static/js/runtime-main.9fe5557a.js",
+    "runtime-main.js.map": "/openapi-mock-generator/static/js/runtime-main.9fe5557a.js.map",
+    "static/css/2.4126f13e.chunk.css": "/openapi-mock-generator/static/css/2.4126f13e.chunk.css",
+    "static/js/2.83061c89.chunk.js": "/openapi-mock-generator/static/js/2.83061c89.chunk.js",
+    "static/js/2.83061c89.chunk.js.map": "/openapi-mock-generator/static/js/2.83061c89.chunk.js.map",
+    "static/css/3.35f98baf.chunk.css": "/openapi-mock-generator/static/css/3.35f98baf.chunk.css",
+    "static/js/3.798590d8.chunk.js": "/openapi-mock-generator/static/js/3.798590d8.chunk.js",
+    "static/js/3.798590d8.chunk.js.map": "/openapi-mock-generator/static/js/3.798590d8.chunk.js.map",
+    "static/js/4.a2fbe845.chunk.js": "/openapi-mock-generator/static/js/4.a2fbe845.chunk.js",
+    "static/js/4.a2fbe845.chunk.js.map": "/openapi-mock-generator/static/js/4.a2fbe845.chunk.js.map",
+    "static/js/5.3b724193.chunk.js": "/openapi-mock-generator/static/js/5.3b724193.chunk.js",
+    "static/js/5.3b724193.chunk.js.map": "/openapi-mock-generator/static/js/5.3b724193.chunk.js.map",
+    "editor.worker.js": "/openapi-mock-generator/editor.worker.js",
+    "editor.worker.js.map": "/openapi-mock-generator/editor.worker.js.map",
+    "index.html": "/openapi-mock-generator/index.html",
+    "json.worker.js": "/openapi-mock-generator/json.worker.js",
+    "json.worker.js.map": "/openapi-mock-generator/json.worker.js.map",
+    "precache-manifest.20d901e82fd83d16e6cd88ff193c6cc2.js": "/openapi-mock-generator/precache-manifest.20d901e82fd83d16e6cd88ff193c6cc2.js",
+    "service-worker.js": "/openapi-mock-generator/service-worker.js",
+    "static/css/2.4126f13e.chunk.css.map": "/openapi-mock-generator/static/css/2.4126f13e.chunk.css.map",
+    "static/css/3.35f98baf.chunk.css.map": "/openapi-mock-generator/static/css/3.35f98baf.chunk.css.map",
+    "static/css/main.5ecd60fb.chunk.css.map": "/openapi-mock-generator/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/3.798590d8.chunk.js.LICENSE": "/openapi-mock-generator/static/js/3.798590d8.chunk.js.LICENSE",
+    "static/media/codicon.css": "/openapi-mock-generator/static/media/codicon.35bb8d56.ttf"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.9fe5557a.js",
+    "static/css/3.35f98baf.chunk.css",
+    "static/js/3.798590d8.chunk.js",
+    "static/css/main.5ecd60fb.chunk.css",
+    "static/js/main.e7b50dc8.chunk.js"
+  ]
+}
