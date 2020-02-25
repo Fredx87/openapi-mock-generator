@@ -1,60 +1,85 @@
-import { createSelector } from "@reduxjs/toolkit";
+import { Chance } from "chance";
 import faker from "faker";
+import * as E from "fp-ts/es6/Either";
+import { pipe } from "fp-ts/es6/pipeable";
+import * as TE from "fp-ts/es6/TaskEither";
 import jsf from "json-schema-faker";
 import $RefParser from "json-schema-ref-parser";
 import cloneDeep from "lodash-es/cloneDeep";
 import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MonacoEditor from "react-monaco-editor";
 import { useSelector } from "react-redux";
-import { getObjectByRef } from "../../shared/utils";
-import { getDocument } from "../document/document-slice";
-import { getCurrentRef } from "./editor-slice";
+import { getObjectByRef, jsonSchemaRef } from "../../shared/utils";
+import { getDocument, MyDocument } from "../document/document-slice";
+import { EditorContainer } from "./EditorContainer";
 import { monacoDefaultOptions } from "./monaco-options";
+import { useCurrentRef } from "./useCurrentRef";
+import { useEditorResize } from "./useEditorResize";
 
 jsf.extend("faker", () => faker);
+jsf.extend("chance", () => new Chance());
+jsf.option("alwaysFakeOptionals", true);
+jsf.option("failOnInvalidFormat", false);
 
-const getCurrentSchemaValue = createSelector(
-  [getDocument, getCurrentRef],
-  (document, currentRef) => {
+function generateValue(
+  schema: any,
+  document: MyDocument
+): TE.TaskEither<Error, string> {
+  if (Object.keys(schema).length === 0) {
+    return TE.right("");
+  }
+
+  const schemas = document.components?.schemas;
+
+  const schemaObj = {
+    ...schema,
+    components: {
+      schemas: cloneDeep(schemas)
+    }
+  };
+
+  return pipe(
+    TE.tryCatch(() => $RefParser.dereference(schemaObj), E.toError),
+    TE.chain(parsed =>
+      TE.fromEither(E.tryCatch(() => jsf.generate(parsed), E.toError))
+    ),
+    TE.map(gen => JSON.stringify(gen, null, 2))
+  );
+}
+
+export const GeneratedEditor: React.FC = () => {
+  const currentRef = useCurrentRef();
+
+  const document = useSelector(getDocument);
+  const currentSchemaValue = useSelector(_ => {
     if (document && currentRef) {
       return JSON.stringify(getObjectByRef(currentRef, document));
     }
-  }
-);
-
-export const GeneratedEditor: React.FC = () => {
-  const document = useSelector(getDocument);
-  const currentSchemaValue = useSelector(getCurrentSchemaValue);
+  });
 
   const [value, setValue] = useState(" ");
 
+  const editorRef = useRef<monacoEditor.editor.IStandaloneCodeEditor>();
+
   useEffect(() => {
     if (document && currentSchemaValue) {
-      const schema = JSON.parse(currentSchemaValue);
-      const schemas = document.components?.schemas;
+      const parsed = JSON.parse(currentSchemaValue);
+      const schema = jsonSchemaRef.is(parsed)
+        ? cloneDeep(getObjectByRef(parsed.$ref, document))
+        : parsed;
 
-      const schemaObj = {
-        ...schema,
-        components: {
-          schemas: cloneDeep(schemas)
+      generateValue(schema, document)().then(res => {
+        if (E.isRight(res)) {
+          setValue(res.right);
+        } else {
+          console.error(res.left);
         }
-      };
-
-      $RefParser
-        .dereference(schemaObj)
-        .then(parsedSchema => {
-          jsf.option("alwaysFakeOptionals", true);
-          try {
-            const generated = jsf.generate(parsedSchema);
-            setValue(JSON.stringify(generated, null, 2));
-          } catch {}
-        })
-        .catch(err => {
-          console.error(err);
-        });
+      });
     }
   }, [document, currentSchemaValue]);
+
+  const containerRef = useEditorResize(editorRef);
 
   const options: monacoEditor.editor.IStandaloneEditorConstructionOptions = {
     ...monacoDefaultOptions,
@@ -65,18 +90,18 @@ export const GeneratedEditor: React.FC = () => {
   const editorDidMount = (
     editor: monacoEditor.editor.IStandaloneCodeEditor
   ) => {
+    editorRef.current = editor;
     editor.focus();
   };
 
   return (
-    <div data-testid="generated-editor">
+    <EditorContainer data-testid="generated-editor" ref={containerRef}>
       <MonacoEditor
-        height={300}
         language="json"
         value={value}
         options={options}
         editorDidMount={editorDidMount}
       ></MonacoEditor>
-    </div>
+    </EditorContainer>
   );
 };

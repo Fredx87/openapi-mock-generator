@@ -1,15 +1,50 @@
+import { emptyProjects } from "cypress/fixtures/db/emptyProjects";
+import { petStoreState } from "cypress/fixtures/db/petStore-state";
+import { PAGE_TITLE } from "src/components/MyHeader";
+import { DB_NAME } from "src/database/constants";
+import { GO_TO_REFERENCE_MSG } from "src/features/editor/constants";
+import { newPetModel, petModel } from "../fixtures/models/petstore-expanded";
 import {
+  antTreeNodeSelectedClass,
   generatedEditorTestId,
   schemaEditorTestId,
   suggestionSelector
 } from "../support/selectors";
 import { treeTestId } from "../support/tree";
-import { uploadFile } from "../support/upload-file";
+
+function equalSize(testId: string) {
+  cy.findByTestId(testId).then(container => {
+    const containerWidth = container.width();
+    const containerHeight = container.height();
+    cy.wrap(container)
+      .getMonacoEditor()
+      .should(editor => {
+        expect(editor.width()).be.equal(containerWidth);
+        expect(editor.height()).be.equal(containerHeight);
+      });
+  });
+}
 
 describe("Editor", () => {
   beforeEach(() => {
-    cy.visit("/");
-    uploadFile("pestore-expanded.yaml");
+    indexedDB.deleteDatabase(DB_NAME);
+    cy.createProjects(emptyProjects);
+    cy.setProjectState(1, petStoreState);
+    cy.visit("#/1/PetStore");
+  });
+
+  it("should resize editor when window resize", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Playground").clickTreeNode();
+    });
+
+    equalSize(schemaEditorTestId);
+    equalSize(generatedEditorTestId);
+
+    cy.viewport("macbook-15");
+
+    equalSize(schemaEditorTestId);
+    equalSize(generatedEditorTestId);
   });
 
   it("should load Error schema for /pets - get - default response", () => {
@@ -20,9 +55,7 @@ describe("Editor", () => {
         .toggleTreeNode()
         .contains("li", /get.*findPets/)
         .toggleTreeNode()
-        .contains("li", "responses")
-        .toggleTreeNode()
-        .contains("li", "default")
+        .contains("li", "response - default")
         .clickTreeNode();
     });
 
@@ -85,6 +118,10 @@ describe("Editor", () => {
   });
 
   it("should show autocomplete box with OpenAPI Schema suggestions when CTRL + space pressed", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Playground").clickTreeNode();
+    });
+
     cy.findByTestId(schemaEditorTestId)
       .getMonacoEditor()
       .within(() =>
@@ -102,6 +139,10 @@ describe("Editor", () => {
   });
 
   it("should show autocomplete values for type property", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Playground").clickTreeNode();
+    });
+
     cy.findByTestId(schemaEditorTestId)
       .getMonacoEditor()
       .type("{ctrl}a")
@@ -131,6 +172,10 @@ describe("Editor", () => {
   });
 
   it("should show autocomplete values for x-faker string", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Playground").clickTreeNode();
+    });
+
     cy.findByTestId(schemaEditorTestId)
       .getMonacoEditor()
       .type("{ctrl}a")
@@ -159,6 +204,10 @@ describe("Editor", () => {
   });
 
   it("should show autocomplete values for x-faker object", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Playground").clickTreeNode();
+    });
+
     cy.findByTestId(schemaEditorTestId)
       .getMonacoEditor()
       .type("{ctrl}a")
@@ -183,5 +232,125 @@ describe("Editor", () => {
       cy.contains("address.country").should("exist");
       cy.contains("address.latitude").should("exist");
     });
+  });
+
+  it("should show autocomplete values for x-chance string", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Playground").clickTreeNode();
+    });
+
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoEditor()
+      .type("{ctrl}a")
+      .within(() =>
+        cy
+          .get("textarea")
+          .as("textarea")
+          .type(`{{}{enter}"x-ch`)
+          .type("{ctrl} ")
+          .get(suggestionSelector)
+          .as("suggestions")
+          .within(() => {
+            cy.contains("x-chance").click();
+          })
+          .get("@textarea")
+          .type(`: "lo`)
+          .type("{ctrl} ")
+      );
+
+    cy.get("@suggestions").within(() => {
+      cy.contains("locale").should("exist");
+      cy.contains("locales").should("exist");
+      cy.contains("loremPicsum").should("exist");
+      cy.contains("longitude").should("exist");
+    });
+  });
+
+  it("should show autocomplete values for x-chance object", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Playground").clickTreeNode();
+    });
+
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoEditor()
+      .type("{ctrl}a")
+      .within(() =>
+        cy
+          .get("textarea")
+          .as("textarea")
+          .type(`{{}{enter}"x-ch`)
+          .type("{ctrl} ")
+          .get(suggestionSelector)
+          .as("suggestions")
+          .within(() => {
+            cy.contains("x-chance").click();
+          })
+          .get("@textarea")
+          .type(`: {{}{enter}`)
+          .type("{ctrl} ")
+      );
+
+    cy.get("@suggestions").within(() => {
+      cy.contains("address").should("exist");
+      cy.contains("age").should("exist");
+      cy.contains("altitude").should("exist");
+    });
+  });
+
+  it("click 'Go to reference' should show linked model and back button should show previous model", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Schemas").toggleTreeNode();
+      cy.contains("li", /^Pet$/).clickTreeNode();
+    });
+
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoEditor()
+      .within(() => {
+        cy.findByText(GO_TO_REFERENCE_MSG).click();
+      });
+
+    cy.findByTestId(treeTestId).within(() => {
+      cy.findByTitle("NewPet").should("have.class", antTreeNodeSelectedClass);
+    });
+
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoValue()
+      .should(value => {
+        expect(JSON.parse(value)).deep.equal(newPetModel);
+      });
+
+    cy.go("back");
+
+    cy.findByTestId(treeTestId).within(() => {
+      cy.findByTitle("Pet").should("have.class", antTreeNodeSelectedClass);
+    });
+
+    cy.findByTestId(schemaEditorTestId)
+      .getMonacoValue()
+      .should(value => {
+        expect(JSON.parse(value)).deep.equal(petModel);
+      });
+  });
+
+  it("should show only one 'Go to reference' link when exiting and re-entering in a project", () => {
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Schemas").toggleTreeNode();
+      cy.contains("li", /^Pet$/).clickTreeNode();
+    });
+
+    cy.findAllByText(GO_TO_REFERENCE_MSG).should("have.length", 1);
+
+    cy.contains("h1", PAGE_TITLE).click();
+
+    cy.findByText("First Project").click();
+
+    cy.contains("h2", "First Project").click();
+
+    cy.findByTestId(treeTestId).within(() => {
+      cy.contains("li", "Schemas").toggleTreeNode();
+      cy.contains("li", /^Pet$/).clickTreeNode();
+    });
+
+    cy.findAllByText(GO_TO_REFERENCE_MSG).should("have.length", 1);
   });
 });

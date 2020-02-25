@@ -20,6 +20,12 @@ export function isOpenApiV3Document(
   return "openapi" in doc;
 }
 
+export function isOpenApiV2Document(
+  doc: OpenAPI.Document
+): doc is OpenAPIV3.Document {
+  return "swagger" in doc;
+}
+
 export function convertRefToPath(ref: string): O.Option<string> {
   return pipe(
     ref.split("/"),
@@ -59,8 +65,4 @@ export function isOpenApiComplexType(schema: OpenAPIV3.SchemaObject) {
     schema.type === "array" ||
     schema.type === "object"
   );
-}
-
-export function safeJsonParse(input: string): O.Option<any> {
-  return O.tryCatch(() => JSON.parse(input));
 }

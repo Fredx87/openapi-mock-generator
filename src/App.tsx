@@ -1,34 +1,34 @@
-import { Col, Layout, Row } from "antd";
+import Layout from "antd/es/layout";
 import React from "react";
-import "./App.css";
+import { HashRouter, Route, Switch } from "react-router-dom";
+import { ProjectsListContainer } from "src/features/projects-list/ProjectsListContainer";
+import styled from "styled-components";
 import { MyHeader } from "./components/MyHeader";
-import { DocumentTree } from "./features/document/DocumentTree";
-import { GeneratedEditor } from "./features/editor/GeneratedEditor";
-import { SchemaEditor } from "./features/editor/SchemaEditor";
+import { ProjectContainer } from "./features/project/ProjectContainer";
 
-const { Header, Sider, Content } = Layout;
+const { Header } = Layout;
+
+const StyledLayout = styled(Layout)`
+  height: 100vh;
+`;
+
 const App: React.FC = () => {
   return (
-    <Layout>
-      <Header>
-        <MyHeader></MyHeader>
-      </Header>
-      <Layout>
-        <Sider theme="light">
-          <DocumentTree></DocumentTree>
-        </Sider>
-        <Content>
-          <Row>
-            <Col span={12}>
-              <SchemaEditor></SchemaEditor>
-            </Col>
-            <Col span={12}>
-              <GeneratedEditor></GeneratedEditor>
-            </Col>
-          </Row>
-        </Content>
-      </Layout>
-    </Layout>
+    <HashRouter>
+      <StyledLayout>
+        <Header>
+          <MyHeader></MyHeader>
+        </Header>
+        <Switch>
+          <Route exact path="/">
+            <ProjectsListContainer />
+          </Route>
+          <Route path="/:projectId/:projectName">
+            <ProjectContainer />
+          </Route>
+        </Switch>
+      </StyledLayout>
+    </HashRouter>
   );
 };
 

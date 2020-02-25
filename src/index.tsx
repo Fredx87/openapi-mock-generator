@@ -1,19 +1,38 @@
+import "antd/dist/antd.css";
+import notification from "antd/es/notification";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import App from "./App";
+import { DbContext, openDatabase } from "./database/database";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
-import { store } from "./store";
+import { initStore } from "./store";
 
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById("root")
+openDatabase().then(
+  db => {
+    ReactDOM.render(
+      <DbContext.Provider value={db}>
+        <Provider store={initStore(db)}>
+          <App />
+        </Provider>
+      </DbContext.Provider>,
+      document.getElementById("root")
+    );
+  },
+  e => {
+    const errorMsg = `Error: Cannot open database: ${String(e)}`;
+    document.body.innerText = errorMsg;
+  }
 );
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+serviceWorker.register({
+  onUpdate: () => {
+    notification.info({
+      message: "New version available!",
+      description:
+        "To use the updated version, close all tabs for this site and reopen it",
+      duration: 0
+    });
+  }
+});

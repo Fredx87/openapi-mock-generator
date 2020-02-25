@@ -1,33 +1,37 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { message } from "antd";
+import message from "antd/es/message";
 import * as E from "fp-ts/es6/Either";
 import * as O from "fp-ts/es6/Option";
 import { pipe } from "fp-ts/es6/pipeable";
+import cloneDeep from "lodash-es/cloneDeep";
+import merge from "lodash-es/merge";
 import set from "lodash-es/set";
 import { OpenAPIV3 } from "openapi-types";
 import { RootState } from "../../rootReducer";
-import { convertRefToPath, safeJsonParse } from "../../shared/utils";
+import { convertRefToPath } from "../../shared/utils";
 import { AppThunk } from "../../store";
 import { openApiParser } from "./openapi-parser";
-import { BranchTreeNode, buildDocumentTree } from "./tree-builder";
+import { buildDocumentTree, GeneralTreeNode } from "./tree-builder";
+
+export interface MyDocument extends OpenAPIV3.Document {
+  playground: unknown;
+}
 
 interface EmptyDocumentState {
   status: "empty";
-  tree: BranchTreeNode[];
 }
 
 interface LoadedDocumentState {
   status: "loaded";
-  content: OpenAPIV3.Document;
-  tree: BranchTreeNode[];
+  content: MyDocument;
+  tree: GeneralTreeNode[];
 }
 
-type DocumentState = EmptyDocumentState | LoadedDocumentState;
+export type DocumentState = EmptyDocumentState | LoadedDocumentState;
 
-function initialState(): DocumentState {
+export function initialDocument(): DocumentState {
   return {
-    status: "empty",
-    tree: []
+    status: "empty"
   };
 }
 
@@ -38,23 +42,33 @@ interface SetRefValuePayload {
 
 const slice = createSlice({
   name: "document",
-  initialState: initialState(),
+  initialState: initialDocument(),
   reducers: {
     setDocument: (
-      _,
+      state,
       action: PayloadAction<OpenAPIV3.Document>
-    ): LoadedDocumentState => ({
-      status: "loaded",
-      content: action.payload,
-      tree: buildDocumentTree(action.payload)
-    }),
+    ): LoadedDocumentState => {
+      const currentDocument =
+        state.status === "loaded" ? cloneDeep(state.content) : {};
+      const merged = merge(currentDocument, action.payload);
+      const content: MyDocument = {
+        ...merged,
+        playground: {}
+      };
+
+      return {
+        status: "loaded",
+        content,
+        tree: buildDocumentTree(content)
+      };
+    },
     setRefValue(state, action: PayloadAction<SetRefValuePayload>) {
       if (state.status === "loaded") {
         const { ref, value } = action.payload;
 
         pipe(
-          safeJsonParse(value),
-          O.map(parsed =>
+          E.parseJSON(value, E.toError),
+          E.map(parsed =>
             pipe(
               convertRefToPath(ref),
               O.fold(

@@ -1,5 +1,6 @@
 import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
-import { fakerMethods } from "./faker-methods";
+import chanceMethods from "./chance-methods";
+import fakerMethods from "./faker-methods";
 
 const fakerObjProperties = fakerMethods.reduce((acc, current) => {
   return {
@@ -10,18 +11,46 @@ const fakerObjProperties = fakerMethods.reduce((acc, current) => {
   };
 }, {});
 
+const chanceObjProperties = chanceMethods.reduce((acc, current) => {
+  return {
+    ...acc,
+    [current]: {
+      oneOf: [{ type: "array" }, { type: "object" }]
+    }
+  };
+}, {});
+
 export const jsonDiagnosticOptions: monacoEditor.languages.json.DiagnosticsOptions = {
   validate: true,
   schemas: [
     {
       uri:
-        "https://spec.openapis.org/oas/3.0/schema/2019-04-02/definitions/Schema",
+        "https://spec.openapis.org/oas/3.0/schema/2019-04-02/definitions/SchemaOrReference",
       fileMatch: ["*"],
+      schema: {
+        oneOf: [
+          {
+            $ref:
+              "https://spec.openapis.org/oas/3.0/schema/2019-04-02/definitions/Schema"
+          },
+          {
+            $ref:
+              "https://spec.openapis.org/oas/3.0/schema/2019-04-02/definitions/Reference"
+          }
+        ]
+      }
+    },
+    {
+      uri:
+        "https://spec.openapis.org/oas/3.0/schema/2019-04-02/definitions/Schema",
       schema: {
         type: "object",
         properties: {
           "x-faker": {
             $ref: "https://github.com/Marak/faker.js/Schema"
+          },
+          "x-chance": {
+            $ref: "https://chancejs.com/Schema"
           },
           title: {
             type: "string"
@@ -338,10 +367,28 @@ export const jsonDiagnosticOptions: monacoEditor.languages.json.DiagnosticsOptio
             type: "object",
             properties: {
               fake: {
-                type: "string"
+                type: "array",
+                items: {
+                  type: "string"
+                }
               },
               ...fakerObjProperties
             }
+          }
+        ]
+      }
+    },
+    {
+      uri: "https://chancejs.com/Schema",
+      schema: {
+        oneOf: [
+          {
+            type: "string",
+            enum: chanceMethods
+          },
+          {
+            type: "object",
+            properties: chanceObjProperties
           }
         ]
       }
