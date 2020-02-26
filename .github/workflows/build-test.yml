@@ -16,3 +16,6 @@ jobs:
           start: npm run start:coverage
           wait-on: "http://localhost:3000"
           wait-on-timeout: 180
+      - uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
