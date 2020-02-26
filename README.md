@@ -1,3 +1,5 @@
+<div style="text-align: center">
+
 # OpenAPI Mock Generator
 
 Create realistic mocked data from an OpenAPI specification, using [faker.js](https://github.com/marak/Faker.js/) and [Chance](https://chancejs.com/) random data generators.
@@ -7,7 +9,11 @@ Create realistic mocked data from an OpenAPI specification, using [faker.js](htt
 ![GitHub release (latest SemVer)][version-shield]
 ![License][license-shield]
 
+[Go to app](https://fredx87.github.io/openapi-mock-generator/)
+
 ![](demo.gif)
+
+</div>
 
 ## Features
 
