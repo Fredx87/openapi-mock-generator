@@ -5,6 +5,7 @@
 Create realistic mocked data from an OpenAPI specification, using [faker.js](https://github.com/marak/Faker.js/) and [Chance](https://chancejs.com/) random data generators.
 
 [![GitHub Workflow Status][build-shield]][build]
+[![Cypress.io tests][cypress-shield]][cypress]
 [![Codecov][coverage-shield]][coverage]
 ![GitHub release (latest SemVer)][version-shield]
 ![License][license-shield]
@@ -207,3 +208,5 @@ MIT
 [coverage-shield]: https://img.shields.io/codecov/c/github/Fredx87/openapi-mock-generator
 [version-shield]: https://img.shields.io/github/v/release/Fredx87/openapi-mock-generator
 [license-shield]: https://img.shields.io/github/license/Fredx87/openapi-mock-generator
+[cypress]: https://dashboard.cypress.io/projects/ebmx24/runs
+[cypress-shield]: https://img.shields.io/badge/cypress.io-tests-green.svg
