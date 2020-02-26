@@ -2,6 +2,11 @@
 
 Create realistic mocked data from an OpenAPI specification, using [faker.js](https://github.com/marak/Faker.js/) and [Chance](https://chancejs.com/) random data generators.
 
+[![GitHub Workflow Status][build-shield]][build]
+[![Codecov][coverage-shield]][coverage]
+![GitHub release (latest SemVer)][version-shield]
+![License][license-shield]
+
 ![](demo.gif)
 
 ## Features
@@ -189,3 +194,10 @@ The code generation is based on [json-schema-faker](https://github.com/json-sche
 ## License
 
 MIT
+
+[build]: https://github.com/Fredx87/openapi-mock-generator/actions?query=workflow%3A%22Build+and+test%22
+[build-shield]: https://img.shields.io/github/workflow/status/Fredx87/openapi-mock-generator/Build%20and%20test
+[coverage]: https://codecov.io/gh/Fredx87/openapi-mock-generator
+[coverage-shield]: https://img.shields.io/codecov/c/github/Fredx87/openapi-mock-generator
+[version-shield]: https://img.shields.io/github/v/release/Fredx87/openapi-mock-generator
+[license-shield]: https://img.shields.io/github/license/Fredx87/openapi-mock-generator
