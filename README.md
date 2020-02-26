@@ -1,8 +1,20 @@
+<div align="center">
+
 # OpenAPI Mock Generator
 
 Create realistic mocked data from an OpenAPI specification, using [faker.js](https://github.com/marak/Faker.js/) and [Chance](https://chancejs.com/) random data generators.
 
+[![GitHub Workflow Status][build-shield]][build]
+[![Cypress.io tests][cypress-shield]][cypress]
+[![Codecov][coverage-shield]][coverage]
+![GitHub release (latest SemVer)][version-shield]
+![License][license-shield]
+
+[Go to app](https://fredx87.github.io/openapi-mock-generator/)
+
 ![](demo.gif)
+
+</div>
 
 ## Features
 
@@ -189,3 +201,12 @@ The code generation is based on [json-schema-faker](https://github.com/json-sche
 ## License
 
 MIT
+
+[build]: https://github.com/Fredx87/openapi-mock-generator/actions?query=workflow%3A%22Build+and+test%22
+[build-shield]: https://img.shields.io/github/workflow/status/Fredx87/openapi-mock-generator/Build%20and%20test
+[coverage]: https://codecov.io/gh/Fredx87/openapi-mock-generator
+[coverage-shield]: https://img.shields.io/codecov/c/github/Fredx87/openapi-mock-generator
+[version-shield]: https://img.shields.io/github/v/release/Fredx87/openapi-mock-generator
+[license-shield]: https://img.shields.io/github/license/Fredx87/openapi-mock-generator
+[cypress]: https://dashboard.cypress.io/projects/ebmx24/runs
+[cypress-shield]: https://img.shields.io/badge/cypress.io-tests-green.svg
