@@ -20,7 +20,7 @@
     "file-saver": "^2.0.2",
     "fp-ts": "^2.4.0",
     "idb": "^5.0.1",
-    "immer": "^5.3.4",
+    "immer": "^8.0.1",
     "io-ts": "^2.0.4",
     "json-schema-faker": "^0.5.0-rc23",
     "lint-staged": "^9.5.0",
