@@ -62,7 +62,7 @@
     "nyc": "^15.0.0",
     "prettier": "^1.19.1",
     "react-app-rewired": "^2.1.5",
-    "react-scripts": "3.3.0",
+    "react-scripts": "5.0.1",
     "source-map-support": "^0.5.16",
     "semantic-release": "^17.0.4",
     "ts-loader": "^6.2.1",
